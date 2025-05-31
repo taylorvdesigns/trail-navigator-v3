@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POI } from '../types';
+import { POI } from '../types/index';
 
 const BASE_URL = 'http://localhost:3001';
 

@@ -1,4 +1,4 @@
-import { TrailPoint } from '../types';
+import { TrailPoint } from '../types/index';
 
 // Convert meters to miles
 export const metersToMiles = (meters: number): number => {

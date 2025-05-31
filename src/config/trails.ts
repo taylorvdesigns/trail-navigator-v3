@@ -1,4 +1,4 @@
-import { TrailConfig } from '../types';
+import { TrailConfig } from '../types/index';
 
 export const TRAIL_ROUTES: TrailConfig[] = [
   {

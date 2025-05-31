@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { TrailPoint } from '../types';
+import { TrailPoint } from '../types/index';
 
 interface TrailData {
   points: TrailPoint[];

@@ -1,4 +1,4 @@
-import { TrailConfig } from '../types';
+import { TrailConfig } from '../types/index';
 
 const trailColors = {
   green: '#43D633',

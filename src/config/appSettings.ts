@@ -1,4 +1,4 @@
-import { TestLocation } from '../types';
+import { TestLocation } from '../types/index';
 
 export const TEST_LOCATIONS: TestLocation[] = [
   { 

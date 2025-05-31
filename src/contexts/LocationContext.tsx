@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { TEST_LOCATIONS } from '../config/appSettings';
-import { TestLocation } from '../types';
+import { TestLocation } from '../types/index';
 
 interface LocationContextType {
   currentLocation: [number, number] | null;
@@ -8,6 +8,8 @@ interface LocationContextType {
   isSimulationMode: boolean;
   setSimulationMode: (mode: boolean) => void;
   setTestLocation: (index: number) => void;
+  simDirection: 'top' | 'bottom';
+  setSimDirection: (dir: 'top' | 'bottom') => void;
 }
 
 export const LocationContext = createContext<LocationContextType | null>(null);
@@ -15,6 +17,7 @@ export const LocationContext = createContext<LocationContextType | null>(null);
 export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
   const [isSimulationMode, setSimulationMode] = useState(false);
+  const [simDirection, setSimDirection] = useState<'top' | 'bottom'>('top');
 
   // Initialize with first test location when simulation mode is enabled
   useEffect(() => {
@@ -43,7 +46,9 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setCurrentLocation,
         isSimulationMode,
         setSimulationMode,
-        setTestLocation
+        setTestLocation,
+        simDirection,
+        setSimDirection
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { POI } from '../types';
+import { POI } from '../types/index';
 import { getPOIs } from '../api/wordpress';
 
 export const usePOIs = () => {

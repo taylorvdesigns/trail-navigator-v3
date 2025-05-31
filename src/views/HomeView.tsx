@@ -5,7 +5,7 @@ import { useUser } from '../contexts/UserContext';
 import { MapView } from '../components/MapView/MapView';
 import { TRAIL_ROUTES } from '../config/routes.config';
 import { usePOIs } from '../hooks/usePOIs';
-import { POI } from '../types';
+import { POI } from '../types/index';
 
 export const HomeView: React.FC = () => {
   const { currentLocation } = useLocation();

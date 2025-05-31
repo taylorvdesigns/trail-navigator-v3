@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { LocomotionMode } from '../types';
+import { LocomotionMode } from '../types/index';
 
 interface UserContextType {
   locomotionMode: LocomotionMode;

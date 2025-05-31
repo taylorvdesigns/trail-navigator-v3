@@ -1,4 +1,4 @@
-import { POI } from '../types';
+import { POI } from '../types/index';
 import { calculateDistance as calcDistance } from './distance';
 
 export const clusterPOIs = (pois: POI[], maxDistance: number = 50): POI[][] => {

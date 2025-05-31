@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POI, TrailConfig } from '../types';
+import { POI, TrailConfig } from '../types/index';
 
 const BASE_URL = 'http://localhost:3001/api';
 

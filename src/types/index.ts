@@ -40,6 +40,7 @@ export interface POI {
   post_category: WordPressCategory[];
   amenities?: string[];
   distance?: number; // Distance from current position in meters
+  featured_image?: string | null; // URL of the featured image
 }
 
 export interface TestLocation {
@@ -53,9 +54,10 @@ export interface TrailPoint {
   longitude: number;
   elevation?: number;
   name?: string;
+  distance?: number; // Distance along the trail in meters
 }
 
-export type LocomotionMode = 'walking' | 'running' | 'biking';
+export type LocomotionMode = 'walking' | 'running' | 'biking' | 'accessible';
 
 export interface CategoryFilter {
   id: string;

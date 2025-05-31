@@ -81,7 +81,8 @@ app.get('/api/pois', async (req, res) => {
         longitude,
         post_tags: poi.post_tags || [],
         post_category: poi.post_category || [],
-        amenities: poi.amenities || []
+        amenities: poi.amenities || [],
+        featured_image: poi.featured_image?.src || null
       };
     });
     

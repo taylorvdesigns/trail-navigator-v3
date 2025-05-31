@@ -19,7 +19,7 @@ import {
   Close as CloseIcon,
   DirectionsWalk as WalkIcon
 } from '@mui/icons-material';
-import { POI } from '../../types';
+import { POI } from '../../types/index';
 import { useNavigate } from 'react-router-dom';
 import { calculateDistance } from '../../utils/distance';
 
@@ -32,6 +32,12 @@ interface ListViewProps {
 
 interface GroupedPOIs {
   [key: string]: POI[];
+}
+
+// Utility to extract first image src from HTML string
+function extractFirstImageSrc(html: string): string | null {
+  const match = html.match(/<img[^>]+src=["']([^"'>]+)["']/i);
+  return match ? match[1] : null;
 }
 
 export const ListView: React.FC<ListViewProps> = ({ 
@@ -83,12 +89,15 @@ export const ListView: React.FC<ListViewProps> = ({
 
   const handlePoiClick = (poi: POI) => {
     setSelectedPOI(poi);
-    onPoiClick(poi);
+    // onPoiClick(poi); // No longer needed for navigation
   };
 
   const handleShowOnMap = () => {
     if (selectedPOI?.coordinates) {
-      navigate('/', { state: { center: selectedPOI.coordinates, zoom: 17 } });
+      const latLng = [selectedPOI.coordinates[1], selectedPOI.coordinates[0]];
+      console.log('Navigating to map with center:', latLng, 'zoom: 17');
+      navigate('/', { state: { center: latLng, zoom: 17, highlightPOI: latLng } });
+      setSelectedPOI(null);
     }
   };
 
@@ -196,62 +205,71 @@ export const ListView: React.FC<ListViewProps> = ({
       >
         {selectedPOI && (
           <>
-            <DialogTitle sx={{ pr: 6 }}>
-              {selectedPOI.title.rendered}
+            {/* POI Image */}
+            {selectedPOI.featured_image ? (
+              <Box sx={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.100' }}>
+                <img
+                  src={selectedPOI.featured_image}
+                  alt={typeof selectedPOI.title === 'object' && typeof selectedPOI.title.rendered === 'string'
+                    ? selectedPOI.title.rendered
+                    : typeof selectedPOI.title === 'string'
+                      ? selectedPOI.title
+                      : ''}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </Box>
+            ) : selectedPOI.content?.rendered && extractFirstImageSrc(selectedPOI.content.rendered) ? (
+              <Box sx={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.100' }}>
+                <img
+                  src={extractFirstImageSrc(selectedPOI.content.rendered) as string}
+                  alt={typeof selectedPOI.title === 'object' && typeof selectedPOI.title.rendered === 'string'
+                    ? selectedPOI.title.rendered
+                    : typeof selectedPOI.title === 'string'
+                      ? selectedPOI.title
+                      : ''}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </Box>
+            ) : (
+              <Box sx={{ width: '100%', height: 200, bgcolor: 'grey.200', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="subtitle1" color="text.secondary">No Image Available</Typography>
+              </Box>
+            )}
+            {/* POI Name */}
+            <DialogTitle sx={{ pr: 6, textAlign: 'center', fontWeight: 700, fontSize: '1.3rem', color: 'common.white', bgcolor: 'grey.900' }}>
+              {typeof selectedPOI.title === 'object' && selectedPOI.title?.rendered
+                ? selectedPOI.title.rendered
+                : typeof selectedPOI.title === 'string'
+                  ? selectedPOI.title
+                  : ''}
               <IconButton
                 onClick={() => setSelectedPOI(null)}
-                sx={{ position: 'absolute', right: 8, top: 8 }}
+                sx={{ position: 'absolute', right: 8, top: 8, color: 'common.white' }}
               >
                 <CloseIcon />
               </IconButton>
             </DialogTitle>
-            <DialogContent>
-              {selectedPOI.description && (
-                <Typography variant="body1" component="div">
-                  {selectedPOI.description}
-                </Typography>
-              )}
-              {selectedPOI.content && (
-                <Box sx={{ mt: 2 }}>
-                  {selectedPOI.content.rendered && (
-                    <Box sx={{ mt: 2 }}>
-                      <Typography variant="body1" component="div" sx={{ mb: 2 }}>
-                        {selectedPOI.content.rendered}
-                      </Typography>
-                    </Box>
-                  )}
-                </Box>
-              )}
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="subtitle2" component="div" color="text.secondary">
-                  Categories
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                  {selectedPOI.post_category.map(cat => (
-                    <Chip key={cat.id} label={cat.name} size="small" />
-                  ))}
-                </Box>
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="subtitle2" component="div" color="text.secondary">
-                  Tags
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                  {selectedPOI.post_tags.map(tag => (
-                    <Chip key={tag.id} label={tag.name} size="small" />
-                  ))}
-                </Box>
+            {/* POI Description */}
+            <DialogContent sx={{ bgcolor: 'grey.900' }}>
+              <Box sx={{ mb: 2 }}>
+                {selectedPOI.description ? (
+                  <Typography variant="body1" sx={{ wordBreak: 'break-word', color: 'common.white' }} component="div">
+                    <span dangerouslySetInnerHTML={{ __html: selectedPOI.description }} />
+                  </Typography>
+                ) : (
+                  <Typography variant="body1" color="text.secondary">No description available.</Typography>
+                )}
               </Box>
             </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setSelectedPOI(null)}>Close</Button>
+            <DialogActions sx={{ bgcolor: 'grey.900' }}>
+              <Button onClick={() => setSelectedPOI(null)} sx={{ color: 'success.light' }}>Close</Button>
               <Button 
                 onClick={handleShowOnMap} 
                 variant="contained" 
                 startIcon={<PlaceIcon />}
                 disabled={!selectedPOI.coordinates}
               >
-                Show on Map
+                View on Map
               </Button>
             </DialogActions>
           </>

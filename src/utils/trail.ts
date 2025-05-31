@@ -1,11 +1,4 @@
-import { POI, TrailConfig } from '../types';
-
-interface TrailPoint {
-  x: number; // longitude
-  y: number; // latitude
-  d: number; // distance along trail
-  e: number; // elevation
-}
+import { POI, TrailConfig, TrailPoint } from '../types/index';
 
 interface SortedPOIs {
   ahead: POI[];
@@ -29,8 +22,8 @@ export const findNearestTrailPoint = (
     const distance = calculateDistance(
       location[0],
       location[1],
-      point.y,
-      point.x
+      point.latitude,
+      point.longitude
     );
 
     if (distance < minDistance) {
@@ -74,6 +67,11 @@ export const calculateDistance = (
  * Sort POIs into ahead and behind based on current location and trail direction
  */
 export const sortPOIsByLocation = (pois: POI[], currentPosition: number): SortedPOIs => {
+  console.log('Sorting POIs by location:', {
+    currentPosition,
+    totalPOIs: pois.length
+  });
+
   // First, ensure all POIs have a distance value
   const poisWithDistance = pois.map(poi => ({
     ...poi,
@@ -92,6 +90,11 @@ export const sortPOIsByLocation = (pois: POI[], currentPosition: number): Sorted
     },
     { ahead: [], behind: [] }
   );
+
+  console.log('Sorted POIs:', {
+    ahead: sorted.ahead.map(p => p.title.rendered),
+    behind: sorted.behind.map(p => p.title.rendered)
+  });
 
   // Sort POIs by absolute distance from current position
   sorted.ahead.sort((a, b) => Math.abs(a.distance || 0) - Math.abs(b.distance || 0));

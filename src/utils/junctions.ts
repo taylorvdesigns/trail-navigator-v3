@@ -1,4 +1,4 @@
-import { TrailPoint } from '../types';
+import { TrailPoint } from '../types/index';
 import { calculateDistance } from './distance';
 
 export const findNearestJunction = (
