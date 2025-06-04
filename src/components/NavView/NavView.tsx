@@ -23,6 +23,7 @@ import { NavContextCard } from './NavContextCard';
 import { usePOIs } from '../../hooks/usePOIs';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { calculateETA } from '../../utils/eta';
+import he from 'he';
 
 // Standard list row (full-width)
 const StandardRow = styled(Box)(({ theme }) => ({
@@ -255,18 +256,11 @@ export const NavView: React.FC<NavViewProps> = ({
   // Filter groups based on the first POI in each group
   const filteredGroups = Object.entries(groupedPOIs).filter(([groupName, pois]) => {
     if (!trailData?.points || !currentLocation) {
-      console.log('Skipping group:', groupName, '- Missing trail data or current location');
       return false;
     }
-
     const firstPOI = pois[0];
-    if (!firstPOI) {
-      console.log('Skipping group:', groupName, '- No POIs in group');
-      return false;
-    }
-
+    if (!firstPOI) return false;
     const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
-    console.log('POI group:', groupName, 'POI coords:', poiCoords, 'POI raw:', firstPOI.coordinates);
     const poiPoint = findNearestTrailPoint(
       poiCoords,
       trailData.points.map(p => ({
@@ -275,15 +269,8 @@ export const NavView: React.FC<NavViewProps> = ({
         distance: p.distance || 0
       }))
     );
-    if (!poiPoint) {
-      console.log('Skipping group:', groupName, '- No trail point found for first POI');
-      return false;
-    }
-    const poiToTrailDist = (poiPoint && poiPoint.distance) || null;
-    console.log('Nearest trail point to POI:', poiPoint, 'Distance from POI to trail (m):', poiToTrailDist);
-
+    if (!poiPoint) return false;
     const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
-    console.log('User coords:', userCoords, 'User raw:', currentLocation);
     const userPoint = findNearestTrailPoint(
       userCoords,
       trailData.points.map(p => ({
@@ -292,29 +279,11 @@ export const NavView: React.FC<NavViewProps> = ({
         distance: p.distance || 0
       }))
     );
-    if (!userPoint) {
-      console.log('Skipping group:', groupName, '- No trail point found for user location');
-      return false;
-    }
-    const userToTrailDist = (userPoint && userPoint.distance) || null;
-    console.log('Nearest trail point to user:', userPoint, 'Distance from user to trail (m):', userToTrailDist);
-
-    if (!userPoint?.point?.distance || !poiPoint?.point?.distance) {
-      console.log('Skipping group:', groupName, '- Missing position data');
-      return false;
-    }
-
+    if (!userPoint) return false;
     const userPosition = userPoint.point?.distance ?? 0;
     const poiPosition = poiPoint.point?.distance ?? 0;
-
-    console.log('Filtering group:', groupName, {
-      userPosition,
-      poiPosition,
-      simDirection
-    });
-
-    const isAhead = simDirection === 'top' ? poiPosition > userPosition : poiPosition < userPosition;
-    return isAhead;
+    // AHEAD: top = poi > user, bottom = poi < user
+    return simDirection === 'top' ? poiPosition > userPosition : poiPosition < userPosition;
   });
 
   console.log('Filtered Groups:', filteredGroups.map(([group]) => group));
@@ -336,10 +305,8 @@ export const NavView: React.FC<NavViewProps> = ({
   // Get the filtered POIs for destinations behind (opposite of ahead)
   const behindGroups = Object.entries(groupedPOIs).filter(([groupName, pois]) => {
     if (!trailData?.points || !currentLocation) return false;
-
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-
     const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
@@ -350,7 +317,6 @@ export const NavView: React.FC<NavViewProps> = ({
       }))
     );
     if (!poiPoint) return false;
-
     const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
     const userPoint = findNearestTrailPoint(
       userCoords,
@@ -361,11 +327,10 @@ export const NavView: React.FC<NavViewProps> = ({
       }))
     );
     if (!userPoint) return false;
-
     const userPosition = userPoint.point?.distance ?? 0;
     const poiPosition = poiPoint.point?.distance ?? 0;
-
-    return simDirection === 'top' ? poiPosition > userPosition : poiPosition < userPosition;
+    // BEHIND: top = poi < user, bottom = poi > user
+    return simDirection === 'top' ? poiPosition < userPosition : poiPosition > userPosition;
   });
 
   // Build array of group info with calculated distance and eta for ahead destinations
@@ -570,10 +535,10 @@ export const NavView: React.FC<NavViewProps> = ({
                 <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: groupName === 'Ungrouped' ? '#fff' : TRAIL_COLOR, textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
                   {groupName === 'Ungrouped'
                     ? <>
-                        {groupPois.map(poi => poi.title.rendered).join(', ')}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
+                        {groupPois.map(poi => he.decode(poi.title.rendered)).join(', ')}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
                       </>
                     : <>
-                        {groupName}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
+                        {he.decode(groupName)}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
                       </>
                   }
                 </Box>
@@ -699,10 +664,10 @@ export const NavView: React.FC<NavViewProps> = ({
                   <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: groupName === 'Ungrouped' ? '#fff' : TRAIL_COLOR, textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
                     {groupName === 'Ungrouped'
                       ? <>
-                          {groupPois.map(poi => poi.title.rendered).join(', ')}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
+                          {groupPois.map(poi => he.decode(poi.title.rendered)).join(', ')}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
                         </>
                       : <>
-                          {groupName}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
+                          {he.decode(groupName)}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
                         </>
                     }
                   </Box>

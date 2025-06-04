@@ -20,14 +20,12 @@ const modeIconMap = {
   walking: <FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 35, color: '#7FFF00' }} />,
   running: <FontAwesomeIcon icon={faPersonRunning} style={{ fontSize: 35, color: '#7FFF00' }} />,
   biking: <FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 35, color: '#7FFF00' }} />,
-  accessible: <Accessible sx={{ fontSize: 48, color: '#7FFF00' }} />,
 };
 
 const fadedIconMap = {
-  walking: [<FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="bike" />, <Accessible sx={{ fontSize: 32, color: '#888', opacity: 0.3, marginLeft: 16 }} key="accessible" />],
+  walking: [<FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="bike" />],
   running: [<FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="walk" />, <FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginLeft: 16 }} key="bike" />],
-  biking: [<FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="walk" />, <Accessible sx={{ fontSize: 32, color: '#888', opacity: 0.3, marginLeft: 16 }} key="accessible" />],
-  accessible: [<FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="walk" />, <FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginLeft: 16 }} key="bike" />],
+  biking: [<FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="walk" />],
 };
 
 const amenityIconMap = {
@@ -36,7 +34,6 @@ const amenityIconMap = {
   restroom: <Wc sx={{ fontSize: 28 }} />,
   cafe: <LocalCafe sx={{ fontSize: 28 }} />,
   store: <Store sx={{ fontSize: 28 }} />,
-  accessible: <Accessible sx={{ fontSize: 28 }} />,
 };
 
 const CATEGORIES = [
@@ -122,7 +119,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
           </Box>
           {/* Locomotion icons: active in center, inactive on sides */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', mt: 6 }}>
-            {(['walking', 'running', 'biking', 'accessible'] as const).map((m) => {
+            {(['walking', 'running', 'biking'] as const).map((m) => {
               const isActive = mode === m;
               return (
                 <Box
@@ -161,15 +158,6 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
                     <FontAwesomeIcon
                       icon={faPersonBiking}
                       style={{
-                        fontSize: isActive ? 38 : 19,
-                        color: isActive ? '#39FF14' : '#6B7280',
-                        transition: 'color 0.2s, font-size 0.2s',
-                      }}
-                    />
-                  )}
-                  {m === 'accessible' && (
-                    <Accessible
-                      sx={{
                         fontSize: isActive ? 38 : 19,
                         color: isActive ? '#39FF14' : '#6B7280',
                         transition: 'color 0.2s, font-size 0.2s',
