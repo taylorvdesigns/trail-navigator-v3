@@ -10,10 +10,13 @@ export const usePOIs = () => {
   useEffect(() => {
     const fetchPOIs = async () => {
       try {
+        console.log('Fetching POIs...');
         const data = await getPOIs();
+        console.log('POIs fetched:', data);
         setPois(data);
         setError(null);
       } catch (err) {
+        console.error('Error fetching POIs:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch POIs');
       } finally {
         setLoading(false);

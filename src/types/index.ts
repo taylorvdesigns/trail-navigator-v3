@@ -34,8 +34,6 @@ export interface POI {
   };
   description?: string;
   coordinates: [number, number]; // [longitude, latitude]
-  latitude: number;
-  longitude: number;
   post_tags: WordPressTag[];
   post_category: WordPressCategory[];
   amenities?: string[];

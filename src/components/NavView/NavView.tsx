@@ -260,7 +260,7 @@ export const NavView: React.FC<NavViewProps> = ({
     }
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-    const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
+    const poiCoords: [number, number] = [firstPOI.coordinates[0], firstPOI.coordinates[1]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
       trailData.points.map(p => ({
@@ -293,7 +293,7 @@ export const NavView: React.FC<NavViewProps> = ({
   console.log('Filtered POIs:', filteredPOIs.map(poi => ({
     name: poi.title.rendered,
     position: findNearestTrailPoint(
-      [poi.coordinates[1], poi.coordinates[0]],
+      [poi.coordinates[0], poi.coordinates[1]],
       trailData?.points.map(p => ({
         latitude: p.latitude,
         longitude: p.longitude,
@@ -307,7 +307,7 @@ export const NavView: React.FC<NavViewProps> = ({
     if (!trailData?.points || !currentLocation) return false;
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-    const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
+    const poiCoords: [number, number] = [firstPOI.coordinates[0], firstPOI.coordinates[1]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
       trailData.points.map(p => ({
@@ -348,7 +348,7 @@ export const NavView: React.FC<NavViewProps> = ({
       );
       const firstPOI = groupPois[0];
       const poiTrailPoint = findNearestTrailPoint(
-        [firstPOI.coordinates[1], firstPOI.coordinates[0]],
+        [firstPOI.coordinates[0], firstPOI.coordinates[1]],
         trailData.points.map(p => ({
           latitude: p.latitude,
           longitude: p.longitude,
@@ -385,7 +385,7 @@ export const NavView: React.FC<NavViewProps> = ({
       );
       const firstPOI = groupPois[0];
       const poiTrailPoint = findNearestTrailPoint(
-        [firstPOI.coordinates[1], firstPOI.coordinates[0]],
+        [firstPOI.coordinates[0], firstPOI.coordinates[1]],
         trailData.points.map(p => ({
           latitude: p.latitude,
           longitude: p.longitude,

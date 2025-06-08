@@ -11,7 +11,8 @@ export const useTrailsData = (trails: TrailConfig[]) => {
     queries: trails.map((trail) => ({
       queryKey: ['trail', trail.routeId],
       queryFn: async () => {
-        const response = await fetch(`http://localhost:3001/api/ridewithgps/${trail.routeId}`);
+        console.log('Fetching trail data for:', trail.routeId);
+        const response = await fetch(`http://localhost:4000/api/ridewithgps/${trail.routeId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch trail data');
         }
@@ -21,7 +22,7 @@ export const useTrailsData = (trails: TrailConfig[]) => {
           throw new Error('Invalid trail data format');
         }
 
-        return {
+        const trailData = {
           points: data.route.track_points.map((point: any) => ({
             latitude: point.y,
             longitude: point.x,
@@ -29,8 +30,18 @@ export const useTrailsData = (trails: TrailConfig[]) => {
           })),
           color: trail.color
         } as TrailData;
+
+        console.log('Trail data fetched:', {
+          routeId: trail.routeId,
+          pointsCount: trailData.points.length,
+          firstPoint: trailData.points[0]
+        });
+
+        return trailData;
       },
-      enabled: !!trail.routeId
+      enabled: !!trail.routeId,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
     }))
   });
 
@@ -39,6 +50,13 @@ export const useTrailsData = (trails: TrailConfig[]) => {
   const data = results
     .map((result: UseQueryResult<TrailData>) => result.data)
     .filter((data: unknown): data is TrailData => data !== undefined && data !== null);
+
+  console.log('useTrailsData result:', {
+    trailsCount: trails.length,
+    dataCount: data.length,
+    isLoading,
+    isError
+  });
 
   return {
     data,

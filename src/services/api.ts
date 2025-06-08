@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { POI, TrailConfig } from '../types/index';
 
-const BASE_URL = 'http://localhost:3001/api';
+const BASE_URL = 'http://localhost:4000/api';
 
 export const api = {
   async getRoute(routeId: string) {

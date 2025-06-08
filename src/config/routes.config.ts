@@ -8,7 +8,7 @@ const trailColors = {
 
 export const TRAIL_ROUTES: TrailConfig[] = [
   {
-    id: 'main-trail',
+    id: '50608713',  // Using routeId as id to match TrailView's expectation
     routeId: '50608713',  // Swamp Rabbit Trail route ID
     name: 'Main Trail',
     color: trailColors.green,
