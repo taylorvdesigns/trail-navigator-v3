@@ -254,7 +254,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
-  const { currentLocation: userLocation, entryPoint } = useAppLocation();
+  const { currentLocation: userLocation, entryPoint, isSimPlaying, simAnimatedLocation } = useAppLocation();
   const { locomotionMode } = useUser();
   const navigate = useNavigate();
   const [focusedGroup, setFocusedGroup] = useState<string | null>(null);
@@ -410,7 +410,7 @@ export const MapView: React.FC<MapViewProps> = ({
           />
           <GrayscaleMapLayer />
           <Pane name="group-labels" style={{ zIndex: 1000 }} />
-          {shouldFitBounds && allTrailCoords.length > 0 && (
+          {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && (
             <FitBounds coordinates={allTrailCoords} />
           )}
           
@@ -574,9 +574,9 @@ export const MapView: React.FC<MapViewProps> = ({
             );
           })}
 
-          {userLocation && (
+          {((isSimPlaying && simAnimatedLocation) || (!isSimPlaying && userLocation)) && (
             <Marker
-              position={[userLocation[0], userLocation[1]]}
+              position={isSimPlaying ? (simAnimatedLocation as [number, number]) : (userLocation as [number, number])}
               icon={userLocationIcon}
             />
           )}

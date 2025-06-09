@@ -249,12 +249,6 @@ export const NavView: React.FC<NavViewProps> = ({
     return groups;
   }, {} as Record<string, typeof pois>);
 
-  console.log('Initial POI Groups:', Object.keys(groupedPOIs).map(group => ({
-    group,
-    count: groupedPOIs[group].length,
-    firstPOI: groupedPOIs[group][0]?.title.rendered
-  })));
-
   // Filter groups based on the first POI in each group
   const filteredGroups = Object.entries(groupedPOIs).filter(([groupName, pois]) => {
     if (!trailData?.points || !currentLocation) {
@@ -290,21 +284,8 @@ export const NavView: React.FC<NavViewProps> = ({
     return simDirection === 'top' ? poiPosition > userPosition : poiPosition < userPosition;
   });
 
-  console.log('Filtered Groups:', filteredGroups.map(([group]) => group));
-
   // Get the filtered POIs for destinations ahead
   const filteredPOIs = filteredGroups.flatMap(([_, pois]) => pois);
-  console.log('Filtered POIs:', filteredPOIs.map(poi => ({
-    name: poi.title.rendered,
-    position: findNearestTrailPoint(
-      [poi.coordinates[1], poi.coordinates[0]],
-      trailData?.points.map(p => ({
-        latitude: p.latitude,
-        longitude: p.longitude,
-        distance: p.distance || 0
-      })) || []
-    )?.point.distance
-  })));
 
   // Get the filtered POIs for destinations behind (opposite of ahead)
   const behindGroups = Object.entries(groupedPOIs).filter(([groupName, pois]) => {
@@ -522,25 +503,10 @@ export const NavView: React.FC<NavViewProps> = ({
       userCoords,
       trailData.points.map(p => ({ latitude: p.latitude, longitude: p.longitude, distance: p.distance || 0 }))
     );
-    // Debug logging
-    console.log('[Entry Distance Debug]', {
-      entryCoords,
-      userCoords,
-      entryTrailPoint: entryTrailPoint && { index: entryTrailPoint.index, distance: entryTrailPoint.point.distance, lat: entryTrailPoint.point.latitude, lng: entryTrailPoint.point.longitude },
-      userTrailPoint: userTrailPoint && { index: userTrailPoint.index, distance: userTrailPoint.point.distance, lat: userTrailPoint.point.latitude, lng: userTrailPoint.point.longitude }
-    });
     if (entryTrailPoint && userTrailPoint) {
       const distMeters = Math.abs((userTrailPoint.point?.distance ?? 0) - (entryTrailPoint.point?.distance ?? 0));
       entryPointDistanceMiles = metersToMiles(distMeters);
     }
-  }
-
-  // Debug: print the coordinates of the first POI
-  if (pois.length > 0) {
-    console.log('[POI Coordinate Debug]', {
-      firstPOI: pois[0].title.rendered,
-      coordinates: pois[0].coordinates
-    });
   }
 
   if (!trailData) {

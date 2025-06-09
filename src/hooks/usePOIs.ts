@@ -10,9 +10,7 @@ export const usePOIs = () => {
   useEffect(() => {
     const fetchPOIs = async () => {
       try {
-        console.log('Fetching POIs...');
         const data = await getPOIs();
-        console.log('POIs fetched:', data);
         setPois(data);
         setError(null);
       } catch (err) {
