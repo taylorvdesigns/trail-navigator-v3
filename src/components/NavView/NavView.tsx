@@ -452,6 +452,60 @@ export const NavView: React.FC<NavViewProps> = ({
     }
   };
 
+  // Helper to generate a short elevation description
+  function getElevationDescription(
+    userTrailPoint: any,
+    poiTrailPoint: any
+  ): string {
+    if (!userTrailPoint || !poiTrailPoint) return '';
+    const startElev = userTrailPoint.point?.elevation ?? userTrailPoint.point?.e ?? null;
+    const endElev = poiTrailPoint.point?.elevation ?? poiTrailPoint.point?.e ?? null;
+    if (startElev == null || endElev == null) return '';
+    
+    const delta = endElev - startElev;
+    const absDelta = Math.abs(delta);
+    
+    // Get distance between points
+    const startDist = userTrailPoint.point?.distance ?? userTrailPoint.point?.d ?? 0;
+    const endDist = poiTrailPoint.point?.distance ?? poiTrailPoint.point?.d ?? 0;
+    const distance = Math.abs(endDist - startDist);
+    
+    // Calculate grade (elevation change per distance)
+    // Grade is typically expressed as a percentage
+    const grade = (absDelta / distance) * 100;
+    
+    // For urban trails, we'll use more conservative thresholds
+    if (absDelta < 1 || grade < 0.5) return 'Flat';
+    if (grade < 2) return delta > 0 ? 'Slight incline' : 'Slight decline';
+    if (grade < 4) return delta > 0 ? 'Gradual climb' : 'Gradual downhill';
+    if (grade < 6) return delta > 0 ? 'Moderate climb' : 'Moderate downhill';
+    return delta > 0 ? 'Steep climb' : 'Steep downhill';
+  }
+
+  // Find the closest-ahead group (bottom of groupEntries)
+  const closestAheadGroup = groupEntries.length > 0 ? groupEntries[groupEntries.length - 1] : null;
+  let elevationDescription = '';
+  if (closestAheadGroup && trailData?.points && currentLocation) {
+    // Find nearest trail point to user
+    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+    const userTrailPoint = findNearestTrailPoint(userCoords, trailData.points);
+    // Find nearest trail point to the closest-ahead POI in the group
+    const closestPOI: POI | null = closestAheadGroup.closestPOI as POI | null;
+    let poiTrailPoint = null;
+    if (closestPOI) {
+      const poiCoords: [number, number] = [closestPOI.coordinates[1], closestPOI.coordinates[0]];
+      poiTrailPoint = findNearestTrailPoint(poiCoords, trailData.points);
+    }
+    const desc = getElevationDescription(userTrailPoint, poiTrailPoint);
+    if (desc) {
+      elevationDescription = `${desc} to ${closestAheadGroup.groupName}`;
+    } else {
+      elevationDescription = 'Enjoy the trail!';
+    }
+  } else {
+    elevationDescription = 'Enjoy the trail!';
+  }
+
   if (!trailData) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -605,15 +659,27 @@ export const NavView: React.FC<NavViewProps> = ({
         </Box>
         {/* Context card with matching positive margin-top */}
         <Box sx={{ width: '100%', mt: '-15px' }}>
-          <NavContextCard
-            destination={"Travelers Rest"}
-            trail={trailConfig.name}
-            distanceMiles={metersToMiles(trailData.distance || 0)}
-            description={"Pretty flat to Swamp Rabbit Café & Groceries"}
-            mode={locomotionMode}
-            amenities={['food', 'water', 'restroom', 'cafe', 'store']}
-            onLocomotionChange={onLocomotionChange}
-          />
+          {groupEntries.length > 0 ? (
+            <NavContextCard
+              destination={groupEntries[0].groupName.toUpperCase()}
+              trail={trailConfig.name.toUpperCase()}
+              distanceMiles={metersToMiles(trailData.distance || 0)}
+              description={elevationDescription}
+              mode={locomotionMode}
+              amenities={['food', 'water', 'restroom', 'cafe', 'store']}
+              onLocomotionChange={onLocomotionChange}
+            />
+          ) : (
+            <NavContextCard
+              destination={"END OF THE TRAIL"}
+              trail={""}
+              distanceMiles={metersToMiles(trailData.distance || 0)}
+              description={"Enjoy the trail!"}
+              mode={locomotionMode}
+              amenities={[]}
+              onLocomotionChange={onLocomotionChange}
+            />
+          )}
         </Box>
       </Box>
       {/* Destinations Behind Heading */}
