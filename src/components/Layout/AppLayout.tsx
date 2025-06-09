@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, AppBar, Toolbar, Typography, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { Map, Navigation, List } from '@mui/icons-material';
+import { Map, Navigation, List, Settings } from '@mui/icons-material';
 import { ViewMode } from '../../types';
+import { useDevMode } from '../../contexts/DevContext';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface AppLayoutProps {
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onViewChange }) => {
+  const { isDevMode } = useDevMode();
   return (
     <Box sx={{ 
       height: '100vh', 
@@ -53,6 +55,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
           value="list"
           icon={<List />}
         />
+        {isDevMode && (
+          <BottomNavigationAction
+            label="DEV"
+            value="dev"
+            icon={<Settings />}
+          />
+        )}
       </BottomNavigation>
     </Box>
   );

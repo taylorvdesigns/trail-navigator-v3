@@ -11,6 +11,8 @@ import { ViewMode, LocomotionMode } from '../types/index';
 import { TRAIL_ROUTES } from '../config/routes.config';
 import { usePOIs } from '../hooks/usePOIs';
 import { useLocation as useGeoLocation } from '../hooks/useLocation';
+import { useDevMode } from '../contexts/DevContext';
+import { DevPanel } from './DevPanel/DevPanel';
 
 export const AppContent: React.FC = () => {
   const [locomotionMode, setLocomotionMode] = useState<LocomotionMode>('walking');
@@ -18,10 +20,20 @@ export const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentLocation } = useGeoLocation();
-  
-  const currentView: ViewMode = location.pathname === '/nav' ? 'nav' 
-    : location.pathname === '/list' ? 'list' 
-    : 'map';
+  const { isDevMode } = useDevMode();
+
+  // Only use devTab to force DevPanel view when route is /dev
+  const [devTab, setDevTab] = useState<boolean>(false);
+
+  // Determine current view
+  let currentView: ViewMode;
+  if (isDevMode && (devTab || location.pathname === '/dev')) {
+    currentView = 'dev';
+  } else {
+    currentView = location.pathname === '/nav' ? 'nav'
+      : location.pathname === '/list' ? 'list'
+      : 'map';
+  }
 
   // Get map center and zoom from navigation state if present
   const state = location.state as { center?: [number, number], zoom?: number } | undefined;
@@ -39,6 +51,13 @@ export const AppContent: React.FC = () => {
     }
   }, [state, usedNavState]);
 
+  // Reset devTab if dev mode is exited
+  React.useEffect(() => {
+    if (!isDevMode && devTab) {
+      setDevTab(false);
+    }
+  }, [isDevMode, devTab]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -48,9 +67,21 @@ export const AppContent: React.FC = () => {
   }
 
   const handleViewChange = (view: ViewMode) => {
+    if (view === 'dev' && !isDevMode) return;
+    // Preserve ?mode=dev if present
+    const searchParams = new URLSearchParams(location.search);
+    const modeParam = searchParams.get('mode');
+    const devQuery = modeParam === 'dev' ? '?mode=dev' : '';
+    if (isDevMode && view === 'dev') {
+      setDevTab(true);
+      navigate('/dev' + devQuery);
+      return;
+    } else {
+      setDevTab(false);
+    }
     switch(view) {
       case 'map':
-        navigate('/', { 
+        navigate('/map' + devQuery, { 
           state: { 
             center: mapCenter,
             zoom: mapZoom
@@ -58,10 +89,10 @@ export const AppContent: React.FC = () => {
         });
         break;
       case 'nav':
-        navigate('/nav');
+        navigate('/nav' + devQuery);
         break;
       case 'list':
-        navigate('/list');
+        navigate('/list' + devQuery);
         break;
     }
   };
@@ -69,14 +100,18 @@ export const AppContent: React.FC = () => {
   return (
     <AppLayout currentView={currentView} onViewChange={handleViewChange}>
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/map" replace />} />
-          <Route path="/map" element={<MapView trails={TRAIL_ROUTES} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} />} />
-          <Route path="/nav" element={<NavView trailConfig={TRAIL_ROUTES[0]} onLocomotionChange={setLocomotionMode} locomotionMode={locomotionMode} />} />
-          <Route path="/list" element={<ListView pois={pois} onPoiClick={() => {}} currentLocation={currentLocation || undefined} />} />
-          <Route path="/trail/:id" element={<TrailView />} />
-          <Route path="*" element={<NotFoundView />} />
-        </Routes>
+        {currentView === 'dev' ? (
+          <DevPanel />
+        ) : (
+          <Routes>
+            <Route path="/" element={<Navigate to="/map" replace />} />
+            <Route path="/map" element={<MapView trails={TRAIL_ROUTES} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} />} />
+            <Route path="/nav" element={<NavView trailConfig={TRAIL_ROUTES[0]} onLocomotionChange={setLocomotionMode} locomotionMode={locomotionMode} />} />
+            <Route path="/list" element={<ListView pois={pois} onPoiClick={() => {}} currentLocation={currentLocation || undefined} />} />
+            <Route path="/trail/:id" element={<TrailView />} />
+            <Route path="*" element={<NotFoundView />} />
+          </Routes>
+        )}
       </Box>
     </AppLayout>
   );

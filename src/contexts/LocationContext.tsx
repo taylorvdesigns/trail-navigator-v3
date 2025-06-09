@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import { TEST_LOCATIONS } from '../config/appSettings';
 import { TestLocation } from '../types/index';
 
-interface LocationContextType {
+export interface LocationContextType {
   currentLocation: [number, number] | null;
   setCurrentLocation: (location: [number, number]) => void;
   isSimulationMode: boolean;
@@ -12,7 +12,7 @@ interface LocationContextType {
   setSimDirection: (dir: 'top' | 'bottom') => void;
 }
 
-export const LocationContext = createContext<LocationContextType | null>(null);
+export const LocationContext = createContext<LocationContextType | undefined>(undefined);
 
 export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
@@ -63,17 +63,16 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [isSimulationMode]);
 
   const setTestLocation = (index: number) => {
-    if (isSimulationMode && TEST_LOCATIONS[index]) {
-      const location = TEST_LOCATIONS[index];
-      // Convert [lat, lng] to [lng, lat] for consistency
+    const location = TEST_LOCATIONS[index];
+    if (location) {
       setCurrentLocation([location.coordinates[1], location.coordinates[0]]);
     }
   };
 
   return (
-    <LocationContext.Provider
-      value={{
-        currentLocation,
+    <LocationContext.Provider 
+      value={{ 
+        currentLocation, 
         setCurrentLocation,
         isSimulationMode,
         setSimulationMode,

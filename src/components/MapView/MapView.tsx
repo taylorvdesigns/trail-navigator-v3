@@ -7,7 +7,6 @@ import { useTrailsData } from '../../hooks/useTrailsData';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import { useLocation as useAppLocation } from '../../hooks/useLocation';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
-import { SimulationControl } from '../SimulationControl/SimulationControl';
 import StarIcon from '@mui/icons-material/Star';
 import { useTrailData } from '../../hooks/useTrailData';
 import { findNearestTrailPoint } from '../../utils/trail';
@@ -410,7 +409,6 @@ export const MapView: React.FC<MapViewProps> = ({
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GrayscaleMapLayer />
-          <SimulationControl />
           <Pane name="group-labels" style={{ zIndex: 1000 }} />
           {shouldFitBounds && allTrailCoords.length > 0 && (
             <FitBounds coordinates={allTrailCoords} />

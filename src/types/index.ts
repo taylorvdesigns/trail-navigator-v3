@@ -64,7 +64,7 @@ export interface CategoryFilter {
   isActive: boolean;
 }
 
-export type ViewMode = 'map' | 'nav' | 'list';
+export type ViewMode = 'map' | 'nav' | 'list' | 'dev';
 
 export interface TrailData {
   points: TrailPoint[];
