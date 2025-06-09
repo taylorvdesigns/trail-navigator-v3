@@ -92,13 +92,22 @@ export const ListView: React.FC<ListViewProps> = ({
     // onPoiClick(poi); // No longer needed for navigation
   };
 
-  const handleShowOnMap = () => {
-    if (selectedPOI?.coordinates) {
-      const latLng = [selectedPOI.coordinates[1], selectedPOI.coordinates[0]];
-      console.log('Navigating to map with center:', latLng, 'zoom: 17');
-      navigate('/', { state: { center: latLng, zoom: 17, highlightPOI: latLng } });
-      setSelectedPOI(null);
-    }
+  const handleShowOnMap = (poi: POI) => {
+    // Swap coordinates to match Leaflet's expected format [latitude, longitude]
+    const latLng: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
+    
+    console.log('POI coordinates:', {
+      original: poi.coordinates,
+      swapped: latLng,
+      poiName: poi.title.rendered
+    });
+
+    navigate('/map', { 
+      state: { 
+        highlightPOI: latLng,
+        zoom: 16
+      }
+    });
   };
 
   return (
@@ -264,7 +273,7 @@ export const ListView: React.FC<ListViewProps> = ({
             <DialogActions sx={{ bgcolor: 'grey.900' }}>
               <Button onClick={() => setSelectedPOI(null)} sx={{ color: 'success.light' }}>Close</Button>
               <Button 
-                onClick={handleShowOnMap} 
+                onClick={() => handleShowOnMap(selectedPOI)} 
                 variant="contained" 
                 startIcon={<PlaceIcon />}
                 disabled={!selectedPOI.coordinates}

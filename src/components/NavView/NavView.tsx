@@ -260,7 +260,8 @@ export const NavView: React.FC<NavViewProps> = ({
     }
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-    const poiCoords: [number, number] = [firstPOI.coordinates[0], firstPOI.coordinates[1]];
+    // Convert POI coordinates to [latitude, longitude] format
+    const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
       trailData.points.map(p => ({
@@ -270,7 +271,8 @@ export const NavView: React.FC<NavViewProps> = ({
       }))
     );
     if (!poiPoint) return false;
-    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
+    // Convert current location to [latitude, longitude] format
+    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
     const userPoint = findNearestTrailPoint(
       userCoords,
       trailData.points.map(p => ({
@@ -307,7 +309,8 @@ export const NavView: React.FC<NavViewProps> = ({
     if (!trailData?.points || !currentLocation) return false;
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-    const poiCoords: [number, number] = [firstPOI.coordinates[0], firstPOI.coordinates[1]];
+    // Convert POI coordinates to [latitude, longitude] format
+    const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
       trailData.points.map(p => ({
@@ -317,7 +320,8 @@ export const NavView: React.FC<NavViewProps> = ({
       }))
     );
     if (!poiPoint) return false;
-    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
+    // Convert current location to [latitude, longitude] format
+    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
     const userPoint = findNearestTrailPoint(
       userCoords,
       trailData.points.map(p => ({
@@ -333,33 +337,65 @@ export const NavView: React.FC<NavViewProps> = ({
     return simDirection === 'top' ? poiPosition < userPosition : poiPosition > userPosition;
   });
 
+  // Helper to find the closest POI in a group to the user
+  function getClosestPOIAndDistance(
+    pois: POI[],
+    trailPoints: { latitude: number; longitude: number; distance: number }[],
+    userCoords: [number, number]
+  ) {
+    let minDistance = Infinity;
+    let closestPOI: POI | null = null;
+    let closestTrailPoint: any = null;
+    pois.forEach((poi: POI) => {
+      const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
+      const poiTrailPoint = findNearestTrailPoint(
+        poiCoords,
+        trailPoints.map((p: { latitude: number; longitude: number; distance: number }) => ({
+          latitude: p.latitude,
+          longitude: p.longitude,
+          distance: p.distance || 0
+        }))
+      );
+      const userTrailPoint = findNearestTrailPoint(
+        userCoords,
+        trailPoints.map((p: { latitude: number; longitude: number; distance: number }) => ({
+          latitude: p.latitude,
+          longitude: p.longitude,
+          distance: p.distance || 0
+        }))
+      );
+      if (poiTrailPoint && userTrailPoint) {
+        const userDistance = userTrailPoint.point?.distance ?? 0;
+        const poiDistance = poiTrailPoint.point?.distance ?? 0;
+        const absDist = Math.abs(poiDistance - userDistance);
+        if (absDist < minDistance) {
+          minDistance = absDist;
+          closestPOI = poi;
+          closestTrailPoint = poiTrailPoint;
+        }
+      }
+    });
+    return { closestPOI, minDistance, closestTrailPoint };
+  }
+
   // Build array of group info with calculated distance and eta for ahead destinations
   const groupEntries = filteredGroups.map(([groupName, groupPois]) => {
     let distanceMeters = 0;
     let etaSeconds = 0;
+    let closestPOI = null;
     if (trailData?.points && currentLocation) {
-      const userTrailPoint = findNearestTrailPoint(
-        [currentLocation[0], currentLocation[1]],
-        trailData.points.map(p => ({
-          latitude: p.latitude,
-          longitude: p.longitude,
-          distance: p.distance || 0
-        }))
-      );
-      const firstPOI = groupPois[0];
-      const poiTrailPoint = findNearestTrailPoint(
-        [firstPOI.coordinates[0], firstPOI.coordinates[1]],
-        trailData.points.map(p => ({
-          latitude: p.latitude,
-          longitude: p.longitude,
-          distance: p.distance || 0
-        }))
-      );
-      if (userTrailPoint && poiTrailPoint) {
-        const userDistance = userTrailPoint.point?.distance ?? 0;
-        const poiDistance = poiTrailPoint.point?.distance ?? 0;
-        distanceMeters = Math.abs(poiDistance - userDistance);
+      const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+      // Ensure distance is always a number
+      const safeTrailPoints = trailData.points.map(p => ({
+        latitude: p.latitude,
+        longitude: p.longitude,
+        distance: typeof p.distance === 'number' ? p.distance : 0
+      }));
+      const { closestPOI: poi, minDistance, closestTrailPoint } = getClosestPOIAndDistance(groupPois, safeTrailPoints, userCoords);
+      if (poi && closestTrailPoint) {
+        distanceMeters = minDistance;
         etaSeconds = calculateETA(distanceMeters, locomotionMode);
+        closestPOI = poi;
       }
     }
     return {
@@ -367,6 +403,7 @@ export const NavView: React.FC<NavViewProps> = ({
       groupPois,
       distanceMeters,
       etaSeconds,
+      closestPOI
     };
   });
 
@@ -374,29 +411,20 @@ export const NavView: React.FC<NavViewProps> = ({
   const behindGroupEntries = behindGroups.map(([groupName, groupPois]) => {
     let distanceMeters = 0;
     let etaSeconds = 0;
+    let closestPOI = null;
     if (trailData?.points && currentLocation) {
-      const userTrailPoint = findNearestTrailPoint(
-        [currentLocation[0], currentLocation[1]],
-        trailData.points.map(p => ({
-          latitude: p.latitude,
-          longitude: p.longitude,
-          distance: p.distance || 0
-        }))
-      );
-      const firstPOI = groupPois[0];
-      const poiTrailPoint = findNearestTrailPoint(
-        [firstPOI.coordinates[0], firstPOI.coordinates[1]],
-        trailData.points.map(p => ({
-          latitude: p.latitude,
-          longitude: p.longitude,
-          distance: p.distance || 0
-        }))
-      );
-      if (userTrailPoint && poiTrailPoint) {
-        const userDistance = userTrailPoint.point?.distance ?? 0;
-        const poiDistance = poiTrailPoint.point?.distance ?? 0;
-        distanceMeters = Math.abs(poiDistance - userDistance);
+      const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+      // Ensure distance is always a number
+      const safeTrailPoints = trailData.points.map(p => ({
+        latitude: p.latitude,
+        longitude: p.longitude,
+        distance: typeof p.distance === 'number' ? p.distance : 0
+      }));
+      const { closestPOI: poi, minDistance, closestTrailPoint } = getClosestPOIAndDistance(groupPois, safeTrailPoints, userCoords);
+      if (poi && closestTrailPoint) {
+        distanceMeters = minDistance;
         etaSeconds = calculateETA(distanceMeters, locomotionMode);
+        closestPOI = poi;
       }
     }
     return {
@@ -404,8 +432,14 @@ export const NavView: React.FC<NavViewProps> = ({
       groupPois,
       distanceMeters,
       etaSeconds,
+      closestPOI
     };
   });
+
+  // Sort ahead: furthest at top, closest at bottom
+  groupEntries.sort((a, b) => b.distanceMeters - a.distanceMeters);
+  // Sort behind: closest at top, furthest at bottom
+  behindGroupEntries.sort((a, b) => a.distanceMeters - b.distanceMeters);
 
   const getLocomotionIcon = (mode: LocomotionMode) => {
     switch (mode) {
@@ -487,8 +521,6 @@ export const NavView: React.FC<NavViewProps> = ({
         <SubwayLine />
         {/* Destinations Ahead Subway List */}
         {(() => {
-          // Sort by distanceMeters descending (furthest at top, closest at bottom)
-          groupEntries.sort((a, b) => b.distanceMeters - a.distanceMeters);
           return groupEntries.map(({ groupName, groupPois, distanceMeters, etaSeconds }) => {
             const etaMinutes = Math.round(etaSeconds / 60);
             let etaDisplay;
@@ -613,8 +645,6 @@ export const NavView: React.FC<NavViewProps> = ({
         <Box sx={{ position: 'relative' }}>
           <SubwayLine sx={{ top: '-8px', bottom: 0, height: 'calc(100% + 8px)' }} />
           {(() => {
-            // Sort by distanceMeters ascending (closest at top, furthest at bottom)
-            behindGroupEntries.sort((a, b) => a.distanceMeters - b.distanceMeters);
             return behindGroupEntries.map(({ groupName, groupPois, distanceMeters, etaSeconds }, idx) => {
               const etaMinutes = Math.round(etaSeconds / 60);
               let etaDisplay;

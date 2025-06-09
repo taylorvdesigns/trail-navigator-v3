@@ -19,23 +19,54 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSimulationMode, setSimulationMode] = useState(false);
   const [simDirection, setSimDirection] = useState<'top' | 'bottom'>('top');
 
+  // Handle real-time GPS tracking when not in simulation mode
+  useEffect(() => {
+    if (!isSimulationMode) {
+      if ("geolocation" in navigator) {
+        const watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            setCurrentLocation([position.coords.longitude, position.coords.latitude]);
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+            // If location access is denied, prompt to enter simulation mode
+            if (error.code === error.PERMISSION_DENIED) {
+              setSimulationMode(true);
+            }
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+        );
+
+        return () => {
+          navigator.geolocation.clearWatch(watchId);
+        };
+      } else {
+        console.log('Geolocation is not supported by this browser');
+        setSimulationMode(true);
+      }
+    }
+  }, [isSimulationMode]);
+
   // Initialize with first test location when simulation mode is enabled
   useEffect(() => {
     if (isSimulationMode) {
       const firstLocation = TEST_LOCATIONS[0];
       if (firstLocation) {
-        setCurrentLocation(firstLocation.coordinates);
+        // Convert [lat, lng] to [lng, lat] for consistency
+        setCurrentLocation([firstLocation.coordinates[1], firstLocation.coordinates[0]]);
       }
-    } else {
-      // Reset location when simulation mode is disabled
-      setCurrentLocation(null);
     }
   }, [isSimulationMode]);
 
   const setTestLocation = (index: number) => {
     if (isSimulationMode && TEST_LOCATIONS[index]) {
       const location = TEST_LOCATIONS[index];
-      setCurrentLocation(location.coordinates);
+      // Convert [lat, lng] to [lng, lat] for consistency
+      setCurrentLocation([location.coordinates[1], location.coordinates[0]]);
     }
   };
 

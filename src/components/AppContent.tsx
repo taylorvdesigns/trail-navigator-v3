@@ -34,18 +34,10 @@ export const AppContent: React.FC = () => {
   const [usedNavState, setUsedNavState] = React.useState(false);
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout | undefined;
     if (state && (state.center || state.zoom) && !usedNavState) {
       setUsedNavState(true);
-      timeout = setTimeout(() => {
-        navigate(location.pathname, { replace: true });
-        setUsedNavState(false);
-      }, 500);
     }
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
-  }, [state, usedNavState, navigate, location.pathname]);
+  }, [state, usedNavState]);
 
   if (loading) {
     return <div>Loading...</div>;

@@ -207,7 +207,8 @@ app.get('/api/pois', async (req, res) => {
     const response = await makeApiCall('https://srtmaps.elev8maps.com/wp-json/geodir/v2/places', {
       params: {
         per_page: 100,
-        page: 1
+        page: 1,
+        _embed: true  // Add this parameter to include featured image data
       },
       timeout: 10000, // Increased timeout to 10 seconds
       headers: {
@@ -220,11 +221,11 @@ app.get('/api/pois', async (req, res) => {
       id: poi.id,
       title: poi.title,
       content: poi.content,
-      coordinates: [parseFloat(poi.latitude), parseFloat(poi.longitude)],
+      coordinates: [parseFloat(poi.longitude), parseFloat(poi.latitude)],
       post_tags: poi.post_tags || [],
       post_category: poi.post_category || [],
       description: poi.content?.rendered || '',
-      featured_image: poi.featured_image || null
+      featured_image: poi._embedded?.['wp:featuredmedia']?.[0]?.source_url || null
     }));
 
     const duration = Date.now() - startTime;

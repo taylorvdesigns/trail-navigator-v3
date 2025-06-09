@@ -7,6 +7,16 @@
   box-shadow: 0 0 2px rgba(0,0,0,0.2);
 }
 
+.highlight-poi-marker {
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
+
+.highlight-poi-marker > div {
+  pointer-events: none;
+}
+
 .group-label-box {
   background: #fff;
   border-radius: 6px;
@@ -19,4 +29,43 @@
   white-space: nowrap;
   margin-left: 4px;
   display: inline-block;
+}
+
+/* Pulsing location marker */
+.pulse-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pulse-marker-inner {
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+
+.pulse-marker-outer {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  animation: pulse 1s ease-out infinite;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
 } 

@@ -299,17 +299,19 @@ export const MapView: React.FC<MapViewProps> = ({
   // Swap coordinates to match Leaflet's expected format [latitude, longitude]
   const safeCenter = useMemo(() => {
     if (highlightPOI) {
-      return [highlightPOI[1], highlightPOI[0]] as [number, number];
+      return highlightPOI as [number, number];
     }
     return center || [35.7796, -78.6382]; // Default to Raleigh
   }, [highlightPOI, center]);
 
   // Create custom icons
-  const highlightIcon = new L.Icon({
-    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32],
+  const highlightIcon = new L.DivIcon({
+    className: 'highlight-poi-marker',
+    iconAnchor: [8, 8],
+    html: `<div style="display:flex;align-items:center;">
+      <div style='width:14px;height:14px;background:#e53935;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);'></div>
+      <div style='margin-left:8px;padding:2px 8px;background:#fff;border-radius:4px;font-size:14px;font-weight:bold;color:#333;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;'>POI_LABEL</div>
+    </div>`
   });
 
   const defaultIcon = new L.Icon({
@@ -322,10 +324,14 @@ export const MapView: React.FC<MapViewProps> = ({
     shadowSize: [41, 41]
   });
 
-  const userLocationIcon = new L.Icon({
-    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/green-dot.png',
+  const userLocationIcon = new L.DivIcon({
+    className: 'pulse-marker',
     iconSize: [24, 24],
-    iconAnchor: [12, 12]
+    iconAnchor: [12, 12],
+    html: `
+      <div class="pulse-marker-inner"></div>
+      <div class="pulse-marker-outer"></div>
+    `
   });
 
   const poiIcon = L.divIcon({
@@ -347,6 +353,13 @@ export const MapView: React.FC<MapViewProps> = ({
       mapRef.current.fitBounds(allTrailCoords as [number, number][]);
     }
   };
+
+  // Show zoom out button when viewing a highlighted POI
+  useEffect(() => {
+    if (highlightPOI) {
+      setShowZoomOut(true);
+    }
+  }, [highlightPOI]);
 
   // Listen for map move/zoom to hide buttons if user pans/zooms away
   useEffect(() => {
@@ -527,27 +540,41 @@ export const MapView: React.FC<MapViewProps> = ({
             />
           ))}
 
-          {pois?.map((poi, index) => (
-            <Marker
-              key={`poi-${index}`}
-              position={[poi.coordinates[1], poi.coordinates[0]]}
-              icon={highlightPOI && poi.coordinates[0] === highlightPOI[0] && poi.coordinates[1] === highlightPOI[1] ? highlightIcon : poiIcon}
-              eventHandlers={{
-                click: () => onPoiClick?.(poi)
-              }}
-            >
-              <Popup>
-                <Box sx={{ p: 1 }}>
-                  <Typography variant="h6" component="div" sx={{ mb: 1 }}>
-                    {poi.title.rendered}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {poi.content.rendered}
-                  </Typography>
-                </Box>
-              </Popup>
-            </Marker>
-          ))}
+          {pois?.map((poi, index) => {
+            const isHighlighted = highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1];
+            let markerIcon = poiIcon;
+            if (isHighlighted) {
+              markerIcon = new L.DivIcon({
+                className: 'highlight-poi-marker',
+                iconAnchor: [8, 8],
+                html: `<div style="display:flex;align-items:center;">
+                  <div style='width:16px;height:16px;background:#e53935;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.18);margin-right:4px;z-index:2;'></div>
+                  <div style='padding:2px 8px;background:#fff;border-radius:4px;font-size:14px;font-weight:bold;color:#333;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:1;'>${poi.title.rendered}</div>
+                </div>`
+              });
+            }
+            return (
+              <Marker
+                key={`poi-${index}`}
+                position={[poi.coordinates[1], poi.coordinates[0]]}
+                icon={markerIcon}
+                eventHandlers={{
+                  click: () => onPoiClick?.(poi)
+                }}
+              >
+                <Popup>
+                  <Box sx={{ p: 1 }}>
+                    <Typography variant="h6" component="div" sx={{ mb: 1 }}>
+                      {poi.title.rendered}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {poi.content.rendered}
+                    </Typography>
+                  </Box>
+                </Popup>
+              </Marker>
+            );
+          })}
 
           {userLocation && (
             <Marker
