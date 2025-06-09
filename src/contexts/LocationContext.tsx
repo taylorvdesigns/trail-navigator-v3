@@ -10,6 +10,9 @@ export interface LocationContextType {
   setTestLocation: (index: number) => void;
   simDirection: 'top' | 'bottom';
   setSimDirection: (dir: 'top' | 'bottom') => void;
+  entryPoint: [number, number] | null;
+  setEntryPoint: (location: [number, number]) => void;
+  clearEntryPoint: () => void;
 }
 
 export const LocationContext = createContext<LocationContextType | undefined>(undefined);
@@ -18,6 +21,56 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
   const [isSimulationMode, setSimulationMode] = useState(false);
   const [simDirection, setSimDirection] = useState<'top' | 'bottom'>('top');
+  const [entryPoint, setEntryPointState] = useState<[number, number] | null>(null);
+
+  // Load entry point from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('entryPoint');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length === 2) {
+          setEntryPointState(parsed as [number, number]);
+        }
+      } catch {}
+    }
+    // Load currentLocation from localStorage on mount
+    const storedLoc = localStorage.getItem('currentLocation');
+    if (storedLoc) {
+      try {
+        const parsedLoc = JSON.parse(storedLoc);
+        if (Array.isArray(parsedLoc) && parsedLoc.length === 2) {
+          setCurrentLocation(parsedLoc as [number, number]);
+        }
+      } catch {}
+    }
+  }, []);
+
+  // Persist entry point to localStorage
+  useEffect(() => {
+    if (entryPoint) {
+      localStorage.setItem('entryPoint', JSON.stringify(entryPoint));
+    } else {
+      localStorage.removeItem('entryPoint');
+    }
+  }, [entryPoint]);
+
+  // Persist currentLocation to localStorage
+  useEffect(() => {
+    if (currentLocation) {
+      localStorage.setItem('currentLocation', JSON.stringify(currentLocation));
+    } else {
+      localStorage.removeItem('currentLocation');
+    }
+  }, [currentLocation]);
+
+  const setEntryPoint = (location: [number, number]) => {
+    setEntryPointState(location);
+  };
+
+  const clearEntryPoint = () => {
+    setEntryPointState(null);
+  };
 
   // Handle real-time GPS tracking when not in simulation mode
   useEffect(() => {
@@ -65,7 +118,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setTestLocation = (index: number) => {
     const location = TEST_LOCATIONS[index];
     if (location) {
-      setCurrentLocation([location.coordinates[1], location.coordinates[0]]);
+      setCurrentLocation([location.coordinates[0], location.coordinates[1]]);
     }
   };
 
@@ -78,7 +131,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setSimulationMode,
         setTestLocation,
         simDirection,
-        setSimDirection
+        setSimDirection,
+        entryPoint,
+        setEntryPoint,
+        clearEntryPoint
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Typography, List, ListItem, ListItemText, Divider, IconButton } from '@mui/material';
+import { Box, Paper, Typography, List, ListItem, ListItemText, Divider, IconButton, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LocomotionMode, POI, TrailConfig } from '../../types/index';
 import { 
@@ -226,15 +226,17 @@ interface NavViewProps {
   trailConfig: TrailConfig;
   onLocomotionChange: (mode: LocomotionMode) => void;
   locomotionMode: LocomotionMode;
+  onChangeEntryPoint?: () => void;
 }
 
 export const NavView: React.FC<NavViewProps> = ({
   trailConfig,
   onLocomotionChange,
-  locomotionMode
+  locomotionMode,
+  onChangeEntryPoint
 }) => {
   const { data: trailData } = useTrailData(trailConfig.routeId);
-  const { currentLocation, isSimulationMode, simDirection } = useLocation();
+  const { currentLocation, isSimulationMode, simDirection, entryPoint, clearEntryPoint } = useLocation();
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
 
   // Group POIs by their tags
@@ -260,7 +262,7 @@ export const NavView: React.FC<NavViewProps> = ({
     }
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-    // Convert POI coordinates to [latitude, longitude] format
+    // Convert POI coordinates to [latitude, longitude] format (POIs are [lng, lat])
     const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
@@ -272,7 +274,7 @@ export const NavView: React.FC<NavViewProps> = ({
     );
     if (!poiPoint) return false;
     // Convert current location to [latitude, longitude] format
-    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
     const userPoint = findNearestTrailPoint(
       userCoords,
       trailData.points.map(p => ({
@@ -295,7 +297,7 @@ export const NavView: React.FC<NavViewProps> = ({
   console.log('Filtered POIs:', filteredPOIs.map(poi => ({
     name: poi.title.rendered,
     position: findNearestTrailPoint(
-      [poi.coordinates[0], poi.coordinates[1]],
+      [poi.coordinates[1], poi.coordinates[0]],
       trailData?.points.map(p => ({
         latitude: p.latitude,
         longitude: p.longitude,
@@ -309,7 +311,7 @@ export const NavView: React.FC<NavViewProps> = ({
     if (!trailData?.points || !currentLocation) return false;
     const firstPOI = pois[0];
     if (!firstPOI) return false;
-    // Convert POI coordinates to [latitude, longitude] format
+    // Convert POI coordinates to [latitude, longitude] format (POIs are [lng, lat])
     const poiCoords: [number, number] = [firstPOI.coordinates[1], firstPOI.coordinates[0]];
     const poiPoint = findNearestTrailPoint(
       poiCoords,
@@ -321,7 +323,7 @@ export const NavView: React.FC<NavViewProps> = ({
     );
     if (!poiPoint) return false;
     // Convert current location to [latitude, longitude] format
-    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
     const userPoint = findNearestTrailPoint(
       userCoords,
       trailData.points.map(p => ({
@@ -384,7 +386,7 @@ export const NavView: React.FC<NavViewProps> = ({
     let etaSeconds = 0;
     let closestPOI = null;
     if (trailData?.points && currentLocation) {
-      const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+      const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
       // Ensure distance is always a number
       const safeTrailPoints = trailData.points.map(p => ({
         latitude: p.latitude,
@@ -413,7 +415,7 @@ export const NavView: React.FC<NavViewProps> = ({
     let etaSeconds = 0;
     let closestPOI = null;
     if (trailData?.points && currentLocation) {
-      const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+      const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
       // Ensure distance is always a number
       const safeTrailPoints = trailData.points.map(p => ({
         latitude: p.latitude,
@@ -487,7 +489,7 @@ export const NavView: React.FC<NavViewProps> = ({
   let elevationDescription = '';
   if (closestAheadGroup && trailData?.points && currentLocation) {
     // Find nearest trail point to user
-    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
     const userTrailPoint = findNearestTrailPoint(userCoords, trailData.points);
     // Find nearest trail point to the closest-ahead POI in the group
     const closestPOI: POI | null = closestAheadGroup.closestPOI as POI | null;
@@ -504,6 +506,41 @@ export const NavView: React.FC<NavViewProps> = ({
     }
   } else {
     elevationDescription = 'Enjoy the trail!';
+  }
+
+  // Entry point distance calculation
+  let entryPointDistanceMiles: number | null = null;
+  if (entryPoint && currentLocation && trailData?.points) {
+    // Find nearest trail point to entryPoint and currentLocation
+    const entryCoords = [entryPoint[0], entryPoint[1]] as [number, number];
+    const userCoords = [currentLocation[0], currentLocation[1]] as [number, number];
+    const entryTrailPoint = findNearestTrailPoint(
+      entryCoords,
+      trailData.points.map(p => ({ latitude: p.latitude, longitude: p.longitude, distance: p.distance || 0 }))
+    );
+    const userTrailPoint = findNearestTrailPoint(
+      userCoords,
+      trailData.points.map(p => ({ latitude: p.latitude, longitude: p.longitude, distance: p.distance || 0 }))
+    );
+    // Debug logging
+    console.log('[Entry Distance Debug]', {
+      entryCoords,
+      userCoords,
+      entryTrailPoint: entryTrailPoint && { index: entryTrailPoint.index, distance: entryTrailPoint.point.distance, lat: entryTrailPoint.point.latitude, lng: entryTrailPoint.point.longitude },
+      userTrailPoint: userTrailPoint && { index: userTrailPoint.index, distance: userTrailPoint.point.distance, lat: userTrailPoint.point.latitude, lng: userTrailPoint.point.longitude }
+    });
+    if (entryTrailPoint && userTrailPoint) {
+      const distMeters = Math.abs((userTrailPoint.point?.distance ?? 0) - (entryTrailPoint.point?.distance ?? 0));
+      entryPointDistanceMiles = metersToMiles(distMeters);
+    }
+  }
+
+  // Debug: print the coordinates of the first POI
+  if (pois.length > 0) {
+    console.log('[POI Coordinate Debug]', {
+      firstPOI: pois[0].title.rendered,
+      coordinates: pois[0].coordinates
+    });
   }
 
   if (!trailData) {
@@ -668,6 +705,8 @@ export const NavView: React.FC<NavViewProps> = ({
               mode={locomotionMode}
               amenities={['food', 'water', 'restroom', 'cafe', 'store']}
               onLocomotionChange={onLocomotionChange}
+              entryPointDistanceMiles={entryPointDistanceMiles}
+              onChangeEntryPoint={onChangeEntryPoint}
             />
           ) : (
             <NavContextCard
@@ -678,6 +717,8 @@ export const NavView: React.FC<NavViewProps> = ({
               mode={locomotionMode}
               amenities={[]}
               onLocomotionChange={onLocomotionChange}
+              entryPointDistanceMiles={entryPointDistanceMiles}
+              onChangeEntryPoint={onChangeEntryPoint}
             />
           )}
         </Box>

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Divider, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Typography, Divider, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
 import { useLocation } from '../../hooks/useLocation';
 import { TEST_LOCATIONS } from '../../config/appSettings';
+import { TRAIL_ROUTES } from '../../config/routes.config';
+import { useTrailsData } from '../../hooks/useTrailsData';
 
 export const DevPanel: React.FC = () => {
-  const { currentLocation, setTestLocation, simDirection, setSimDirection, setSimulationMode } = useLocation();
+  const { currentLocation, setTestLocation, simDirection, setSimDirection, setSimulationMode, clearEntryPoint, setEntryPoint, entryPoint } = useLocation();
   const [selectedLocation, setSelectedLocation] = useState(0);
+  const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
 
   // Automatically enable simulation mode when DevPanel mounts
   useEffect(() => {
@@ -15,9 +18,11 @@ export const DevPanel: React.FC = () => {
   // Update selectedLocation when test location changes
   useEffect(() => {
     if (currentLocation) {
+      // Use a small tolerance for floating-point comparison
+      const TOL = 1e-5;
       const idx = TEST_LOCATIONS.findIndex(loc =>
-        loc.coordinates[1] === currentLocation[0] &&
-        loc.coordinates[0] === currentLocation[1]
+        Math.abs(loc.coordinates[0] - currentLocation[0]) < TOL &&
+        Math.abs(loc.coordinates[1] - currentLocation[1]) < TOL
       );
       if (idx !== -1) setSelectedLocation(idx);
     }
@@ -100,6 +105,43 @@ export const DevPanel: React.FC = () => {
         label={<Typography sx={{ color: '#FFFFFF', fontSize: '0.9rem' }}>Direction: {simDirection === 'top' ? 'Top' : 'Bottom'}</Typography>}
         sx={{ mt: 2 }}
       />
+      <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+      {/* Entry Point Selection */}
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          Set Entry Point (Test Locations):
+        </Typography>
+        <Box sx={{ maxHeight: 180, overflowY: 'auto', border: '1px solid #444', borderRadius: 2, p: 1, background: '#222' }}>
+          {TEST_LOCATIONS.map((loc, idx) => {
+            const isCurrent = entryPoint && entryPoint[0] === loc.coordinates[0] && entryPoint[1] === loc.coordinates[1];
+            return (
+              <Button
+                key={idx}
+                variant={isCurrent ? 'contained' : 'outlined'}
+                color={isCurrent ? 'primary' : 'secondary'}
+                size="small"
+                sx={{
+                  mb: 1,
+                  mr: 1,
+                  minWidth: 0,
+                  fontSize: 12,
+                  fontWeight: isCurrent ? 700 : 400,
+                  bgcolor: isCurrent ? '#e91e63' : undefined,
+                  color: isCurrent ? '#fff' : '#e91e63',
+                  borderColor: '#e91e63',
+                  '&:hover': { bgcolor: isCurrent ? '#d81b60' : '#fce4ec' }
+                }}
+                onClick={() => setEntryPoint([loc.coordinates[0], loc.coordinates[1]])}
+              >
+                {loc.name}
+              </Button>
+            );
+          })}
+        </Box>
+      </Box>
+      <Button variant="outlined" color="secondary" fullWidth onClick={clearEntryPoint}>
+        Reset Entry Point
+      </Button>
     </Box>
   );
 }; 

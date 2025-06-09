@@ -14,6 +14,8 @@ interface NavContextCardProps {
   mode: LocomotionMode;
   amenities: Array<'food' | 'water' | 'restroom' | 'cafe' | 'store' | 'accessible'>;
   onLocomotionChange?: (mode: LocomotionMode) => void;
+  entryPointDistanceMiles?: number | null;
+  onChangeEntryPoint?: () => void;
 }
 
 const modeIconMap = {
@@ -52,6 +54,8 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
   mode,
   amenities,
   onLocomotionChange,
+  entryPointDistanceMiles,
+  onChangeEntryPoint,
 }) => {
   const theme = useTheme();
   return (
@@ -86,17 +90,34 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
 
       {/* 3-column grid for main content */}
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', width: '100%', alignItems: 'center', flex: 1 }}>
-        {/* Left: Distance */}
-        <Box sx={{ textAlign: 'left', maxWidth: 120, justifySelf: 'start' }}>
-          <Typography variant="body2" sx={{ color: '#222', fontWeight: 500 }}>
-            YOU ARE
-          </Typography>
-          <Typography variant="h5" sx={{ color: '#222', fontWeight: 900, lineHeight: 1 }}>
-            {distanceMiles.toFixed(1)} MILES
-          </Typography>
-          <Typography variant="caption" sx={{ color: '#222', fontWeight: 400 }}>
-            FROM WHERE YOU STARTED ON THE TRAIL
-          </Typography>
+        {/* Left: Entry Point Distance and Change Button */}
+        <Box sx={{ textAlign: 'left', maxWidth: 140, justifySelf: 'start', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          {typeof entryPointDistanceMiles === 'number' ? (
+            <>
+              <Typography variant="body2" sx={{ color: '#222', fontWeight: 500, mb: 0.5 }}>
+                You are {entryPointDistanceMiles.toFixed(2)} miles from where you started on the trail.
+              </Typography>
+              {onChangeEntryPoint && (
+                <Box sx={{ mt: 0.5 }}>
+                  <button
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#e91e63',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      fontSize: 13,
+                      padding: 0,
+                      fontWeight: 500
+                    }}
+                    onClick={onChangeEntryPoint}
+                  >
+                    Change starting location?
+                  </button>
+                </Box>
+              )}
+            </>
+          ) : null}
         </Box>
         {/* Center: Main circle */}
         <Box
