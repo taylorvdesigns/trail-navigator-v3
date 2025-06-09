@@ -24,7 +24,8 @@ export const useTrailData = (routeId: string) => {
         points: data.route.track_points.map((point: any) => ({
           latitude: point.y,
           longitude: point.x,
-          distance: point.d || 0
+          distance: point.d || 0,
+          elevation: typeof point.e === 'number' ? point.e : undefined
         })),
         distance: data.route.distance || 0
       };
