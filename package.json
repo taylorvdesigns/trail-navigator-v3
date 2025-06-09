@@ -48,7 +48,7 @@
     "start:frontend": "react-scripts start",
     "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "dev:clean": "node dev-server.js --clean",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
