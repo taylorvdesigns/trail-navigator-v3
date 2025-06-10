@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { POI } from '../types/index';
 
-const BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:4000'  // Development backend
-  : '';  // Production - use relative URL for Vercel API routes
+const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
 
 export const getPOIs = async (): Promise<POI[]> => {
   try {
