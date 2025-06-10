@@ -15,9 +15,9 @@ export interface RideWithGPSRoute {
   };
 }
 
-export const getRoute = async (routeId: string): Promise<RideWithGPSRoute> => {
-  const response = await axios.get(`${BASE_URL}/api/ridewithgps/route`, {
+export async function getRoute(routeId: string): Promise<RideWithGPSRoute> {
+  const response = await axios.get(`/api/ridewithgps/route.js`, {
     params: { id: routeId }
   });
   return response.data;
-};
+}

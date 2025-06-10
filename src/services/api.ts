@@ -5,7 +5,7 @@ const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000
 
 export const api = {
   async getRoute(routeId: string) {
-    const response = await axios.get(`${BASE_URL}/ridewithgps/route`, {
+    const response = await axios.get(`${BASE_URL}/ridewithgps/route.js`, {
       params: { id: routeId }
     });
     return response.data;
