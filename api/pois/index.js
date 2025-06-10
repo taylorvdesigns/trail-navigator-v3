@@ -8,6 +8,30 @@ const cache = new NodeCache({
   useClones: false
 });
 
+// Helper function for API calls with retries
+async function makeApiCall(url, options, maxRetries = 3) {
+  let lastError;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await axios(url, options);
+      return response;
+    } catch (error) {
+      lastError = error;
+      if (error.response?.status === 429) {
+        const retryAfter = parseInt(error.response.headers['retry-after']) || Math.pow(2, i);
+        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+        continue;
+      }
+      if (error.code === 'ECONNABORTED' || !error.response) {
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw lastError;
+}
+
 // Vercel serverless function handler
 module.exports = async (req, res) => {
   // Enable CORS
@@ -28,31 +52,38 @@ module.exports = async (req, res) => {
   }
   
   try {
-    // Sample POIs data
-    const pois = [
-      {
-        id: 1,
-        name: "Sample POI 1",
-        type: "restaurant",
-        coordinates: [34.8507, -82.3988],
-        description: "A sample point of interest"
+    // Fetch POIs from WordPress API
+    const response = await makeApiCall('https://srtmaps.elev8maps.com/wp-json/geodir/v2/places', {
+      params: {
+        per_page: 100,
+        page: 1,
+        _embed: true
       },
-      {
-        id: 2,
-        name: "Sample POI 2",
-        type: "cafe",
-        coordinates: [34.8517, -82.3998],
-        description: "Another sample point of interest"
+      timeout: 10000,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'TrailNavigator/1.0'
       }
-    ];
+    });
 
-    return res.status(200).json(pois);
+    const pois = response.data.map(poi => ({
+      id: poi.id,
+      title: poi.title,
+      content: poi.content,
+      coordinates: [parseFloat(poi.longitude), parseFloat(poi.latitude)],
+      post_tags: poi.post_tags || [],
+      post_category: poi.post_category || [],
+      description: poi.content?.rendered || '',
+      featured_image: poi._embedded?.['wp:featuredmedia']?.[0]?.source_url || null
+    }));
+
+    res.status(200).json(pois);
   } catch (error) {
-    console.error('Error in POIs endpoint:', error);
-    return res.status(500).json({ 
+    console.error('WordPress API Error:', error.message);
+    res.status(error.response?.status || 500).json({
       error: 'Failed to fetch POIs',
       details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      status: error.response?.status
     });
   }
 }; 
