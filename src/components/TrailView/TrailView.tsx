@@ -9,7 +9,10 @@ import { TrailPoint } from '../../types';
 export const TrailView: React.FC = () => {
   const { trailId } = useParams();
   const trail = TRAIL_ROUTES.find(t => t.id === trailId);
-  const { data: trailData, isLoading, isError } = useTrailData(trail?.routeId || '');
+  const trailQuery = useTrailData(trail?.routeId || '');
+  const trailData = trailQuery.data as import('../../types').TrailData | undefined;
+  const isLoading = trailQuery.isLoading;
+  const isError = trailQuery.isError;
 
   if (!trail) {
     return (
