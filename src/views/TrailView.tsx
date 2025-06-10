@@ -34,6 +34,8 @@ export const TrailView: React.FC = () => {
   
   console.log('TrailView render:', { trailId, trail, currentLocation, poisCount: pois.length });
 
+  const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
+
   useEffect(() => {
     const fetchTrailData = async () => {
       if (!trailId) {
@@ -44,7 +46,7 @@ export const TrailView: React.FC = () => {
       try {
         console.log('Fetching trail data for ID:', trailId);
         setLoading(true);
-        const response = await axios.get<TrailData>(`http://localhost:4000/api/ridewithgps/${trailId}`);
+        const response = await axios.get<TrailData>(`${BASE_URL}/api/ridewithgps/${trailId}`);
         console.log('Trail data response:', response.data);
         setTrailData(response.data);
         setError(null);

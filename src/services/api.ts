@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { POI, TrailConfig } from '../types/index';
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000/api' : '/api';
 
 export const api = {
   async getRoute(routeId: string) {
@@ -44,4 +44,6 @@ export const trailConfigs: TrailConfig[] = [
     startPoint: [34.8630, -82.4210], // Unity Park
     endPoint: [34.9266, -82.4432]  // Furman University
   }
-]; 
+];
+
+export default BASE_URL; 

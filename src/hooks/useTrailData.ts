@@ -6,11 +6,13 @@ interface TrailData {
   distance: number;
 }
 
+const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
+
 export const useTrailData = (routeId: string) => {
   return useQuery<TrailData>({
     queryKey: ['trail', routeId],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:4000/api/ridewithgps/${routeId}`);
+      const response = await fetch(`${BASE_URL}/api/ridewithgps/${routeId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch trail data');
       }
