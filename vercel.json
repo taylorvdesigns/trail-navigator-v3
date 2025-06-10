@@ -19,7 +19,22 @@
       "dest": "/api/$1"
     },
     {
-      "handle": "filesystem"
+      "src": "/manifest.json",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      "continue": true
+    },
+    {
+      "src": "/static/(.*)",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      "continue": true
     },
     {
       "src": "/(.*)",
