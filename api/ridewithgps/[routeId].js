@@ -1,12 +1,4 @@
 const axios = require('axios');
-const NodeCache = require('node-cache');
-
-// Initialize cache with 5 minute TTL
-const cache = new NodeCache({ 
-  stdTTL: 300,
-  checkperiod: 60,
-  useClones: false
-});
 
 // Helper function for API calls with retries
 async function makeApiCall(url, options, maxRetries = 3) {
@@ -50,18 +42,9 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const startTime = Date.now();
   const { routeId } = req.query;
-  const cacheKey = `ridewithgps:${routeId}`;
 
   try {
-    // Check cache first
-    const cachedData = cache.get(cacheKey);
-    if (cachedData) {
-      console.log(`Cache hit for route ${routeId}`);
-      return res.json(cachedData);
-    }
-
     const apiUrl = `https://ridewithgps.com/routes/${routeId}.json`;
     const params = {
       version: 2,
@@ -70,7 +53,7 @@ module.exports = async (req, res) => {
     };
     
     console.log(`Fetching RideWithGPS route ${routeId}`);
-    const response = await makeApiCall(apiUrl, { 
+    const response = await makeApiCall(apiUrl, {
       params,
       timeout: 10000
     });
@@ -78,9 +61,7 @@ module.exports = async (req, res) => {
     const duration = Date.now() - startTime;
     console.log(`RideWithGPS response status: ${response.status} - Duration: ${duration}ms`);
 
-    // Cache the response
-    cache.set(cacheKey, response.data);
-    res.json(response.data);
+    res.status(200).json(response.data);
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error(`RideWithGPS API Error (${duration}ms):`, error.message);
