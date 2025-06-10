@@ -12,7 +12,7 @@ export const useTrailData = (routeId: string) => {
   return useQuery<TrailData>({
     queryKey: ['trail', routeId],
     queryFn: async () => {
-      const response = await fetch(`${BASE_URL}/api/ridewithgps/${routeId}`);
+      const response = await fetch(`${BASE_URL}/api/ridewithgps/route?id=${routeId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch trail data');
       }

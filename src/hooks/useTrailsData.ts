@@ -13,7 +13,7 @@ export const useTrailsData = (trails: TrailConfig[]) => {
     queries: trails.map((trail) => ({
       queryKey: ['trail', trail.routeId],
       queryFn: async () => {
-        const response = await fetch(`${BASE_URL}/api/ridewithgps/${trail.routeId}`);
+        const response = await fetch(`${BASE_URL}/api/ridewithgps/route?id=${trail.routeId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch trail data');
         }
