@@ -235,7 +235,7 @@ export const NavView: React.FC<NavViewProps> = ({
   locomotionMode,
   onChangeEntryPoint
 }) => {
-  const { data: trailData } = useTrailData(trailConfig.routeId);
+  const { data: trailData } = useTrailData(trailConfig.routeId) as { data: import('../../types').TrailData | undefined };
   const { currentLocation, isSimulationMode, simDirection, entryPoint, clearEntryPoint } = useLocation();
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
 
@@ -509,6 +509,11 @@ export const NavView: React.FC<NavViewProps> = ({
     }
   }
 
+  // Helper to get total trail distance
+  const totalTrailDistance = trailData?.points?.length
+    ? trailData.points[trailData.points.length - 1].distance || 0
+    : 0;
+
   if (!trailData) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -666,7 +671,7 @@ export const NavView: React.FC<NavViewProps> = ({
             <NavContextCard
               destination={groupEntries[0].groupName.toUpperCase()}
               trail={trailConfig.name.toUpperCase()}
-              distanceMiles={metersToMiles(trailData.distance || 0)}
+              distanceMiles={metersToMiles(totalTrailDistance)}
               description={elevationDescription}
               mode={locomotionMode}
               amenities={['food', 'water', 'restroom', 'cafe', 'store']}
@@ -678,7 +683,7 @@ export const NavView: React.FC<NavViewProps> = ({
             <NavContextCard
               destination={"END OF THE TRAIL"}
               trail={""}
-              distanceMiles={metersToMiles(trailData.distance || 0)}
+              distanceMiles={metersToMiles(totalTrailDistance)}
               description={"Enjoy the trail!"}
               mode={locomotionMode}
               amenities={[]}
