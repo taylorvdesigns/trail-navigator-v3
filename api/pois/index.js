@@ -9,7 +9,7 @@ const cache = new NodeCache({
 });
 
 // Vercel serverless function handler
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -46,12 +46,13 @@ export default async function handler(req, res) {
       }
     ];
 
-    res.json(pois);
+    return res.status(200).json(pois);
   } catch (error) {
-    console.error('Error fetching POIs:', error);
-    res.status(500).json({ 
+    console.error('Error in POIs endpoint:', error);
+    return res.status(500).json({ 
       error: 'Failed to fetch POIs',
-      details: error.message
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
-} 
+}; 
