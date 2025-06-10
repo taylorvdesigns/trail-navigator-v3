@@ -45,7 +45,8 @@ module.exports = async (req, res) => {
   const { routeId } = req.query;
 
   try {
-    const apiUrl = `https://ridewithgps.com/routes/${routeId}.json`;
+    // Use the correct RideWithGPS v1 API endpoint
+    const apiUrl = `https://ridewithgps.com/api/v1/routes/${routeId}.json`;
     const params = {
       version: 2,
       apikey: process.env.RIDEWITHGPS_API_KEY,
