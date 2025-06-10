@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 
   try {
     console.log(`Fetching RideWithGPS route ${id}`);
-    const apiUrl = `https://ridewithgps.com/api/v1/routes/${id}.json`;
+    const apiUrl = `https://ridewithgps.com/routes/${id}.json`;
     const params = {
       version: 2,
       apikey: process.env.RIDEWITHGPS_API_KEY,
