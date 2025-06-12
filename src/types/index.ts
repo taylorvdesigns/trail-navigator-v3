@@ -1,9 +1,12 @@
-export interface TrailConfig {
-  id: string;
+export interface WordPressTrailConfig {
   routeId: string;
   name: string;
   color: string;
   type: 'main' | 'spur';
+}
+
+export interface TrailConfig extends WordPressTrailConfig {
+  id: string;
   endpoint1: [number, number];  // First endpoint of the trail
   endpoint2: [number, number];  // Second endpoint of the trail
   coordinates?: [number, number][];

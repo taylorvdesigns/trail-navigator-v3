@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { POI, TrailConfig } from '../types/index';
+import { wordpressConfig, WordPressConfig } from './wordpressConfig';
 
 const BASE_URL = '';
 
@@ -14,10 +15,14 @@ export const api = {
   async getPOIs(): Promise<POI[]> {
     const response = await axios.get(`/api/pois`);
     return response.data;
+  },
+
+  async getWordPressConfig(): Promise<WordPressConfig> {
+    return wordpressConfig.getConfig();
   }
 };
 
-// Example trail configurations
+// Example trail configurations - will be replaced by WordPress config
 export const TRAIL_ROUTES: TrailConfig[] = [
   {
     id: 'main-trail',

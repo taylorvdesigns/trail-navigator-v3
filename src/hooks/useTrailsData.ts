@@ -2,8 +2,13 @@ import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { TrailConfig, TrailPoint } from '../types/index';
 
 interface TrailData {
+  id: string;
   points: TrailPoint[];
   color: string;
+  endpoints: {
+    start: [number, number];
+    end: [number, number];
+  };
 }
 
 const BASE_URL = ''; // Empty string means it will use the same origin (localhost:3000)
@@ -28,13 +33,24 @@ export const useTrailsData = (trails: TrailConfig[]) => {
             throw new Error('Invalid trail data format');
           }
 
+          const points = data.route.track_points.map((point: any) => ({
+            latitude: point.y,
+            longitude: point.x,
+            distance: point.d || 0
+          }));
+
+          // Get the first and last points as endpoints
+          const startPoint = points[0];
+          const endPoint = points[points.length - 1];
+
           const trailData = {
-            points: data.route.track_points.map((point: any) => ({
-              latitude: point.y,
-              longitude: point.x,
-              distance: point.d || 0
-            })),
-            color: trail.color
+            id: trail.routeId,
+            points,
+            color: trail.color,
+            endpoints: {
+              start: [startPoint.longitude, startPoint.latitude] as [number, number],
+              end: [endPoint.longitude, endPoint.latitude] as [number, number]
+            }
           } as TrailData;
 
           return trailData;

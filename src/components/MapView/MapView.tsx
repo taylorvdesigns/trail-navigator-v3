@@ -8,6 +8,7 @@ import { useLocation as useAppLocation } from '../../hooks/useLocation';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
 import StarIcon from '@mui/icons-material/Star';
 import { useTrailsData } from '../../hooks/useTrailsData';
+import { useTrailJunctions } from '../../hooks/useTrailJunctions';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
@@ -15,6 +16,7 @@ import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 
 interface TrailData {
+  id: string;
   points: TrailPoint[];
   color: string;
 }
@@ -262,6 +264,15 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Fetch trail data for all trails
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
+
+  // Find trail junctions with a higher threshold (20 meters)
+  const junctions = useTrailJunctions(
+    trailsData?.map(data => ({
+      id: data.id,
+      points: data.points
+    })) || [],
+    20 // Increased threshold from 10 to 20 meters
+  );
 
   // Transform trail data to include coordinates
   const trailsWithCoordinates = useMemo(() => {
@@ -538,6 +549,32 @@ export const MapView: React.FC<MapViewProps> = ({
               opacity: 0.8
             }}
           />
+        ))}
+
+        {/* Draw junctions */}
+        {junctions.map((junction, index) => (
+          <Marker
+            key={`junction-${index}`}
+            position={[junction.location[1], junction.location[0]]}
+            icon={L.divIcon({
+              className: 'junction-marker',
+              html: `<div style="
+                background-color: white;
+                border: 2px solid #666;
+                border-radius: 50%;
+                width: 12px;
+                height: 12px;
+                margin-left: -6px;
+                margin-top: -6px;
+              "></div>`
+            })}
+          >
+            <Popup>
+              <Typography variant="body2">
+                Junction of {junction.trails.length} trails
+              </Typography>
+            </Popup>
+          </Marker>
         ))}
 
         {pois?.map((poi, index) => {
