@@ -3,12 +3,11 @@ import { MapContainer, TileLayer, Polyline, Marker, Polygon, useMap, Popup, Pane
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { POI, TrailConfig, TrailPoint } from '../../types/index';
 import L from 'leaflet';
-import { useTrailsData } from '../../hooks/useTrailsData';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import { useLocation as useAppLocation } from '../../hooks/useLocation';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
 import StarIcon from '@mui/icons-material/Star';
-import { useTrailData } from '../../hooks/useTrailData';
+import { useTrailsData } from '../../hooks/useTrailsData';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
@@ -253,7 +252,6 @@ export const MapView: React.FC<MapViewProps> = ({
 }) => {
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
-  const { data: trailsData, isLoading, isError } = useTrailsData(trails);
   const { currentLocation: userLocation, entryPoint, isSimPlaying, simAnimatedLocation } = useAppLocation();
   const { locomotionMode } = useUser();
   const navigate = useNavigate();
@@ -261,6 +259,20 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showViewList, setShowViewList] = useState(false);
   const [showZoomOut, setShowZoomOut] = useState(false);
   const [lastBounds, setLastBounds] = useState<[number, number][]>([]);
+
+  // Fetch trail data for all trails
+  const { data: trailsData, isLoading, isError } = useTrailsData(trails);
+
+  // Transform trail data to include coordinates
+  const trailsWithCoordinates = useMemo(() => {
+    return trails.map((trail, index) => {
+      const trailData = trailsData[index];
+      return {
+        ...trail,
+        coordinates: trailData?.points.map(point => [point.latitude, point.longitude] as [number, number]) || []
+      };
+    });
+  }, [trails, trailsData]);
 
   // Get highlightPOI from navigation state
   const { highlightPOI, highlightZoom } = location.state || {};
@@ -283,17 +295,13 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Get all trail coordinates for bounds fitting
   const allTrailCoords = useMemo(() => {
-    if (!trailsData) return [];
-    return trailsData.flatMap(trail => 
-      trail.points.map(point => [point.latitude, point.longitude] as [number, number])
-    );
-  }, [trailsData]);
+    return trailsWithCoordinates.flatMap(trail => trail.coordinates || []);
+  }, [trailsWithCoordinates]);
 
   // Determine if we should fit bounds
   const shouldFitBounds = useMemo(() => {
-    // If we have trail data and we're not highlighting a POI, fit bounds
-    return trailsData && trailsData.length > 0 && !highlightPOI;
-  }, [trailsData, highlightPOI]);
+    return trailsWithCoordinates && trailsWithCoordinates.length > 0 && !highlightPOI;
+  }, [trailsWithCoordinates, highlightPOI]);
 
   // Swap coordinates to match Leaflet's expected format [latitude, longitude]
   const safeCenter = useMemo(() => {
@@ -378,244 +386,237 @@ export const MapView: React.FC<MapViewProps> = ({
     return () => { map.off('moveend', onMove); };
   }, [focusedGroup, lastBounds]);
 
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Typography color="error">Error loading trail data</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ height: '100vh', width: '100%', position: 'relative' }}>
-      {isLoading ? (
-        <Box sx={{ 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)',
-          zIndex: 1000
-        }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <MapContainer
-          center={safeCenter}
-          zoom={highlightZoom || zoom}
-          style={{ height: '100%', width: '100%' }}
-          whenReady={() => {
-            if (mapRef.current) {
-              if (highlightPOI) {
-                mapRef.current.setView(safeCenter, highlightZoom || 16);
-              }
+      <MapContainer
+        center={safeCenter}
+        zoom={highlightZoom || zoom}
+        style={{ height: '100%', width: '100%' }}
+        whenReady={() => {
+          if (mapRef.current) {
+            if (highlightPOI) {
+              mapRef.current.setView(safeCenter, highlightZoom || 16);
             }
-          }}
-          ref={mapRef}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <GrayscaleMapLayer />
-          <Pane name="group-labels" style={{ zIndex: 1000 }} />
-          {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && (
-            <FitBounds coordinates={allTrailCoords} />
-          )}
-          
-          {/* Draw convex hull polygons for each POI group */}
-          {Object.entries(groupedPOIs).map(([groupName, groupPOIs], idx) => {
-            if (groupPOIs.length < 3) return null;
-            // All calculations in [lng, lat]
-            const pointsLngLat = groupPOIs.map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
-            const hullLngLat = mapUtils.convexHull(pointsLngLat);
-            const expandedHullLngLat = mapUtils.expandHullFromCentroid(hullLngLat, 0.0005);
-            // Calculate centroid in [lng, lat] for the expanded hull
-            const centroidLngLat = expandedHullLngLat.reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1]], [0, 0]);
-            centroidLngLat[0] /= expandedHullLngLat.length;
-            centroidLngLat[1] /= expandedHullLngLat.length;
-            // For rendering, convert centroid to [lat, lng]
-            const centroidLatLng: [number, number] = [centroidLngLat[1], centroidLngLat[0]];
-            return (
-              <React.Fragment key={groupName}>
-                <Polygon
-                  positions={expandedHullLngLat.map(([lng, lat]) => [lat, lng]) as [number, number][]}
-                  pathOptions={{
-                    color: 'rgba(30,144,255,1)',
-                    fillColor: 'rgba(30,144,255,0.5)',
-                    fillOpacity: 0.5,
-                    weight: 2
-                  }}
-                  eventHandlers={{
-                    click: () => {
-                      if (mapRef.current) {
-                        const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
-                        console.log('Zooming to group:', groupName, 'Bounds:', latLngBounds);
-                        const map = mapRef.current;
-                        console.log('Before fitBounds: zoom', map.getZoom(), 'bounds', map.getBounds());
-                        const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
-                        console.log('L.latLngBounds:', boundsObj);
-                        map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
-                        setTimeout(() => {
-                          const afterZoom = map.getZoom();
-                          const afterBounds = map.getBounds();
-                          console.log('After fitBounds: zoom', afterZoom, 'bounds', afterBounds);
-                          if (afterZoom < 16) {
-                            const center = boundsObj.getCenter();
-                            map.setView(center, 16);
-                            console.log('Force zoom to 16 at center', center);
-                          }
-                        }, 500);
-                        setFocusedGroup(groupName);
-                        setShowViewList(true);
-                        setShowZoomOut(true);
-                        setLastBounds(latLngBounds as [number, number][]);
-                      }
+          }
+        }}
+        ref={mapRef}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <GrayscaleMapLayer />
+        <Pane name="group-labels" style={{ zIndex: 1000 }} />
+        {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && (
+          <FitBounds coordinates={allTrailCoords} />
+        )}
+        
+        {/* Draw convex hull polygons for each POI group */}
+        {Object.entries(groupedPOIs).map(([groupName, groupPOIs], idx) => {
+          if (groupPOIs.length < 3) return null;
+          // All calculations in [lng, lat]
+          const pointsLngLat = groupPOIs.map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
+          const hullLngLat = mapUtils.convexHull(pointsLngLat);
+          const expandedHullLngLat = mapUtils.expandHullFromCentroid(hullLngLat, 0.0005);
+          // Calculate centroid in [lng, lat] for the expanded hull
+          const centroidLngLat = expandedHullLngLat.reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1]], [0, 0]);
+          centroidLngLat[0] /= expandedHullLngLat.length;
+          centroidLngLat[1] /= expandedHullLngLat.length;
+          // For rendering, convert centroid to [lat, lng]
+          const centroidLatLng: [number, number] = [centroidLngLat[1], centroidLngLat[0]];
+          return (
+            <React.Fragment key={groupName}>
+              <Polygon
+                positions={expandedHullLngLat.map(([lng, lat]) => [lat, lng]) as [number, number][]}
+                pathOptions={{
+                  color: 'rgba(30,144,255,1)',
+                  fillColor: 'rgba(30,144,255,0.5)',
+                  fillOpacity: 0.5,
+                  weight: 2
+                }}
+                eventHandlers={{
+                  click: () => {
+                    if (mapRef.current) {
+                      const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
+                      const map = mapRef.current;
+                      const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
+                      map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
+                      setTimeout(() => {
+                        const afterZoom = map.getZoom();
+                        if (afterZoom < 16) {
+                          const center = boundsObj.getCenter();
+                          map.setView(center, 16);
+                        }
+                      }, 500);
+                      setFocusedGroup(groupName);
+                      setShowViewList(true);
+                      setShowZoomOut(true);
+                      setLastBounds(latLngBounds as [number, number][]);
                     }
-                  }}
-                />
-                {/* Centered group label */}
+                  }
+                }}
+              />
+              {/* Centered group label */}
+              <Marker
+                position={centroidLatLng}
+                pane="group-labels"
+                icon={L.divIcon({
+                  className: 'group-label-marker',
+                  iconAnchor: [0, 16],
+                  html: `<div class='group-label-box' style='z-index:1000; position:relative;'>${groupName}</div>`
+                })}
+                eventHandlers={{
+                  click: () => {
+                    if (mapRef.current) {
+                      const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
+                      const map = mapRef.current;
+                      const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
+                      map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
+                      setTimeout(() => {
+                        const afterZoom = map.getZoom();
+                        if (afterZoom < 16) {
+                          const center = boundsObj.getCenter();
+                          map.setView(center, 16);
+                        }
+                      }, 500);
+                      setFocusedGroup(groupName);
+                      setShowViewList(true);
+                      setShowZoomOut(true);
+                      setLastBounds(latLngBounds as [number, number][]);
+                    }
+                  }
+                }}
+              />
+              {/* View List button below label */}
+              {focusedGroup === groupName && showViewList && (
                 <Marker
-                  position={centroidLatLng}
+                  position={[centroidLatLng[0] - 0.00015, centroidLatLng[1]]}
                   pane="group-labels"
                   icon={L.divIcon({
-                    className: 'group-label-marker',
-                    iconAnchor: [0, 16],
-                    html: `<div class='group-label-box' style='z-index:1000; position:relative;'>${groupName}</div>`
+                    className: 'view-list-btn',
+                    iconAnchor: [60, -10],
+                    html: `<button style='background:#1976d2;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:15px;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.15);cursor:pointer;'>View List</button>`
                   })}
                   eventHandlers={{
                     click: () => {
-                      if (mapRef.current) {
-                        const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
-                        console.log('Zooming to group:', groupName, 'Bounds:', latLngBounds);
-                        const map = mapRef.current;
-                        console.log('Before fitBounds: zoom', map.getZoom(), 'bounds', map.getBounds());
-                        const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
-                        console.log('L.latLngBounds:', boundsObj);
-                        map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
-                        setTimeout(() => {
-                          const afterZoom = map.getZoom();
-                          const afterBounds = map.getBounds();
-                          console.log('After fitBounds: zoom', afterZoom, 'bounds', afterBounds);
-                          if (afterZoom < 16) {
-                            const center = boundsObj.getCenter();
-                            map.setView(center, 16);
-                            console.log('Force zoom to 16 at center', center);
-                          }
-                        }, 500);
-                        setFocusedGroup(groupName);
-                        setShowViewList(true);
-                        setShowZoomOut(true);
-                        setLastBounds(latLngBounds as [number, number][]);
+                      const tag = getGroupTag(groupName);
+                      if (tag) {
+                        navigate('/list', { state: { group: groupName, tag } });
                       }
                     }
                   }}
                 />
-                {/* View List button below label */}
-                {focusedGroup === groupName && showViewList && (
-                  <Marker
-                    position={[centroidLatLng[0] - 0.00015, centroidLatLng[1]]}
-                    pane="group-labels"
-                    icon={L.divIcon({
-                      className: 'view-list-btn',
-                      iconAnchor: [60, -10],
-                      html: `<button style='background:#1976d2;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:15px;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.15);cursor:pointer;'>View List</button>`
-                    })}
-                    eventHandlers={{
-                      click: () => {
-                        const tag = getGroupTag(groupName);
-                        if (tag) {
-                          navigate('/list', { state: { group: groupName, tag } });
-                        }
-                      }
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
+              )}
+            </React.Fragment>
+          );
+        })}
 
-          {trailsData?.map((trail: TrailData, index: number) => (
-            <Polyline
-              key={`trail-${index}`}
-              positions={trail.points.map(point => [point.latitude, point.longitude] as [number, number])}
-              pathOptions={{
-                color: trail.color || '#1e90ff',
-                weight: 4,
-                opacity: 0.8
+        {/* Draw trails */}
+        {trailsWithCoordinates.map((trail, index) => (
+          <Polyline
+            key={`trail-${index}`}
+            positions={trail.coordinates || []}
+            pathOptions={{
+              color: trail.color || '#1e90ff',
+              weight: 4,
+              opacity: 0.8
+            }}
+          />
+        ))}
+
+        {pois?.map((poi, index) => {
+          const isHighlighted = highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1];
+          let markerIcon = poiIcon;
+          if (isHighlighted) {
+            markerIcon = new L.DivIcon({
+              className: 'highlight-poi-marker',
+              iconAnchor: [8, 8],
+              html: `<div style="display:flex;align-items:center;">
+                <div style='width:16px;height:16px;background:#e53935;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.18);margin-right:4px;z-index:2;'></div>
+                <div style='padding:2px 8px;background:#fff;border-radius:4px;font-size:14px;font-weight:bold;color:#333;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:1;'>${poi.title.rendered}</div>
+              </div>`
+            });
+          }
+          return (
+            <Marker
+              key={`poi-${index}`}
+              position={[poi.coordinates[1], poi.coordinates[0]]}
+              icon={markerIcon}
+              eventHandlers={{
+                click: () => onPoiClick?.(poi)
               }}
-            />
-          ))}
+            >
+              <Popup>
+                <Box sx={{ p: 1 }}>
+                  <Typography variant="h6" component="div" sx={{ mb: 1 }}>
+                    {poi.title.rendered}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {poi.content.rendered}
+                  </Typography>
+                </Box>
+              </Popup>
+            </Marker>
+          );
+        })}
 
-          {pois?.map((poi, index) => {
-            const isHighlighted = highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1];
-            let markerIcon = poiIcon;
-            if (isHighlighted) {
-              markerIcon = new L.DivIcon({
-                className: 'highlight-poi-marker',
-                iconAnchor: [8, 8],
-                html: `<div style="display:flex;align-items:center;">
-                  <div style='width:16px;height:16px;background:#e53935;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.18);margin-right:4px;z-index:2;'></div>
-                  <div style='padding:2px 8px;background:#fff;border-radius:4px;font-size:14px;font-weight:bold;color:#333;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:1;'>${poi.title.rendered}</div>
-                </div>`
-              });
-            }
-            return (
-              <Marker
-                key={`poi-${index}`}
-                position={[poi.coordinates[1], poi.coordinates[0]]}
-                icon={markerIcon}
-                eventHandlers={{
-                  click: () => onPoiClick?.(poi)
-                }}
-              >
-                <Popup>
-                  <Box sx={{ p: 1 }}>
-                    <Typography variant="h6" component="div" sx={{ mb: 1 }}>
-                      {poi.title.rendered}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {poi.content.rendered}
-                    </Typography>
-                  </Box>
-                </Popup>
-              </Marker>
-            );
-          })}
+        {((isSimPlaying && simAnimatedLocation) || (!isSimPlaying && userLocation)) && (
+          <Marker
+            position={isSimPlaying ? (simAnimatedLocation as [number, number]) : (userLocation as [number, number])}
+            icon={userLocationIcon}
+          />
+        )}
 
-          {((isSimPlaying && simAnimatedLocation) || (!isSimPlaying && userLocation)) && (
-            <Marker
-              position={isSimPlaying ? (simAnimatedLocation as [number, number]) : (userLocation as [number, number])}
-              icon={userLocationIcon}
-            />
-          )}
+        {/* Entry Point Marker */}
+        {entryPoint && (
+          <Marker
+            position={[entryPoint[0], entryPoint[1]]}
+            icon={L.divIcon({
+              className: 'entry-point-marker',
+              iconAnchor: [8, 8],
+              html: `
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <div style=\"width:16px;height:16px;background:#e91e63;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:2;\"></div>
+                  <div style=\"margin-top:4px;background:#fff;color:#e91e63;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;\">Starting Point</div>
+                </div>
+              `
+            })}
+          />
+        )}
 
-          {/* Entry Point Marker */}
-          {entryPoint && (
-            <Marker
-              position={[entryPoint[0], entryPoint[1]]}
-              icon={L.divIcon({
-                className: 'entry-point-marker',
-                iconAnchor: [8, 8],
-                html: `
-                  <div style="display: flex; flex-direction: column; align-items: center;">
-                    <div style=\"width:16px;height:16px;background:#e91e63;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:2;\"></div>
-                    <div style=\"margin-top:4px;background:#fff;color:#e91e63;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;\">Starting Point</div>
-                  </div>
-                `
-              })}
-            />
-          )}
-
-          {/* Zoom Out button at bottom center */}
-          {showZoomOut && (
-            <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: 80, display: 'flex', justifyContent: 'center', zIndex: 1200 }}>
-              <button
-                style={{ background: '#fff', color: '#1976d2', border: '2px solid #1976d2', borderRadius: 8, padding: '10px 28px', fontSize: 16, fontWeight: 'bold', boxShadow: '0 2px 8px rgba(0,0,0,0.10)', cursor: 'pointer' }}
-                onClick={() => {
-                  fitTrail();
-                  setShowViewList(false);
-                  setShowZoomOut(false);
-                  setFocusedGroup(null);
-                }}
-              >
-                Zoom Out
-              </button>
-            </Box>
-          )}
-        </MapContainer>
-      )}
+        {/* Zoom Out button at bottom center */}
+        {showZoomOut && (
+          <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: 80, display: 'flex', justifyContent: 'center', zIndex: 1200 }}>
+            <button
+              style={{ background: '#fff', color: '#1976d2', border: '2px solid #1976d2', borderRadius: 8, padding: '10px 28px', fontSize: 16, fontWeight: 'bold', boxShadow: '0 2px 8px rgba(0,0,0,0.10)', cursor: 'pointer' }}
+              onClick={() => {
+                fitTrail();
+                setShowViewList(false);
+                setShowZoomOut(false);
+                setFocusedGroup(null);
+              }}
+            >
+              Zoom Out
+            </button>
+          </Box>
+        )}
+      </MapContainer>
     </Box>
   );
 };

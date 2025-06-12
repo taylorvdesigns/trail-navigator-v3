@@ -1,50 +1,50 @@
 import axios from 'axios';
 import { POI, TrailConfig } from '../types/index';
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000/api' : '/api';
+const BASE_URL = '';
 
 export const api = {
   async getRoute(routeId: string) {
-    const response = await axios.get(`${BASE_URL}/ridewithgps/route.js`, {
+    const response = await axios.get(`/api/ridewithgps/route.js`, {
       params: { id: routeId }
     });
     return response.data;
   },
 
   async getPOIs(): Promise<POI[]> {
-    const response = await axios.get(`${BASE_URL}/pois`);
+    const response = await axios.get(`/api/pois`);
     return response.data;
   }
 };
 
 // Example trail configurations
-export const trailConfigs: TrailConfig[] = [
+export const TRAIL_ROUTES: TrailConfig[] = [
   {
-    id: 'green-trail',
-    routeId: '1234567',
-    name: 'Green Trail',
+    id: 'main-trail',
+    routeId: '51203086',
+    name: 'Main Trail',
     color: '#43D633',
     type: 'main',
-    startPoint: [34.8526, -82.3940], // Greenville, SC
-    endPoint: [34.9266, -82.4432]  // Furman University
+    endpoint1: [34.8526, -82.3940], // Greenville, SC
+    endpoint2: [34.9266, -82.4432]  // Furman University
   },
   {
-    id: 'blue-trail',
-    routeId: '7654321',
-    name: 'Blue Trail',
+    id: 'spur-trail',
+    routeId: '51203084',
+    name: 'Spur Trail',
     color: '#6995E8',
     type: 'spur',
-    startPoint: [34.8526, -82.3940], // Downtown Greenville
-    endPoint: [34.8630, -82.4210]  // Unity Park
+    endpoint1: [34.8526, -82.3940], // Downtown Greenville
+    endpoint2: [34.8630, -82.4210]  // Unity Park
   },
   {
-    id: 'orange-trail',
-    routeId: '9876543',
-    name: 'Orange Trail',
+    id: 'orange-spur',
+    routeId: '51203945',
+    name: 'Orange Spur',
     color: '#FFB134',
     type: 'main',
-    startPoint: [34.8630, -82.4210], // Unity Park
-    endPoint: [34.9266, -82.4432]  // Furman University
+    endpoint1: [34.8630, -82.4210], // Unity Park
+    endpoint2: [34.9266, -82.4432]  // Furman University
   }
 ];
 

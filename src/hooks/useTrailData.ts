@@ -1,14 +1,14 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { TrailData } from '../types';
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
+const BASE_URL = '';
 
 export const useTrailData = (routeId: string | undefined) => {
   return useQuery<TrailData | undefined>({
     queryKey: ['trail', routeId],
     queryFn: async () => {
       if (!routeId) return undefined;
-      const response = await fetch(`${BASE_URL}/api/ridewithgps/route.js?id=${routeId}`);
+      const response = await fetch(`${BASE_URL}/api/ridewithgps?id=${routeId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch trail data');
       }

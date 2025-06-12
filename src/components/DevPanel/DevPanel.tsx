@@ -77,8 +77,10 @@ export const DevPanel: React.FC = () => {
         minIdx = i;
       }
     }
-    setSimIndex(minIdx);
-  }, [currentLocation, trailPoints]);
+    if (simIndex !== minIdx) {
+      setSimIndex(minIdx);
+    }
+  }, [currentLocation, trailPoints, simIndex, setSimIndex]);
 
   // Keep simulation trail points in sync with context
   useEffect(() => {

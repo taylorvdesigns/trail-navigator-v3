@@ -6,33 +6,41 @@ interface TrailData {
   color: string;
 }
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
+const BASE_URL = ''; // Empty string means it will use the same origin (localhost:3000)
 
 export const useTrailsData = (trails: TrailConfig[]) => {
   const results = useQueries({
     queries: trails.map((trail) => ({
       queryKey: ['trail', trail.routeId],
       queryFn: async () => {
-        const response = await fetch(`${BASE_URL}/api/ridewithgps/route.js?id=${trail.routeId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch trail data');
-        }
-        const data = await response.json();
-        
-        if (!data.route || !data.route.track_points) {
-          throw new Error('Invalid trail data format');
-        }
+        try {
+          const url = `${BASE_URL}/api/ridewithgps.js?id=${trail.routeId}`;
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to fetch trail data: ${response.status} ${response.statusText} - ${errorText}`);
+          }
 
-        const trailData = {
-          points: data.route.track_points.map((point: any) => ({
-            latitude: point.y,
-            longitude: point.x,
-            distance: point.d || 0
-          })),
-          color: trail.color
-        } as TrailData;
+          const data = await response.json();
+          
+          if (!data.route || !data.route.track_points) {
+            throw new Error('Invalid trail data format');
+          }
 
-        return trailData;
+          const trailData = {
+            points: data.route.track_points.map((point: any) => ({
+              latitude: point.y,
+              longitude: point.x,
+              distance: point.d || 0
+            })),
+            color: trail.color
+          } as TrailData;
+
+          return trailData;
+        } catch (error) {
+          throw error;
+        }
       },
       enabled: !!trail.routeId,
       staleTime: 5 * 60 * 1000, // 5 minutes

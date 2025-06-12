@@ -4,8 +4,8 @@ export interface TrailConfig {
   name: string;
   color: string;
   type: 'main' | 'spur';
-  startPoint: [number, number];
-  endPoint: [number, number];
+  endpoint1: [number, number];  // First endpoint of the trail
+  endpoint2: [number, number];  // Second endpoint of the trail
   coordinates?: [number, number][];
   description?: string;
 }
