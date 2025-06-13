@@ -16,6 +16,7 @@ interface NavContextCardProps {
   onLocomotionChange?: (mode: LocomotionMode) => void;
   entryPointDistanceMiles?: number | null;
   onChangeEntryPoint?: () => void;
+  borderColor?: string;
 }
 
 const modeIconMap = {
@@ -56,6 +57,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
   onLocomotionChange,
   entryPointDistanceMiles,
   onChangeEntryPoint,
+  borderColor = '#39FF14',
 }) => {
   const theme = useTheme();
   return (
@@ -63,7 +65,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
       elevation={4}
       sx={{
         borderRadius: 6,
-        border: '15px solid #39FF14',
+        border: `15px solid ${borderColor}`,
         background: '#fff',
         p: 2.5,
         display: 'flex',

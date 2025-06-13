@@ -72,4 +72,27 @@ export type ViewMode = 'map' | 'nav' | 'list' | 'dev';
 export interface TrailData {
   points: TrailPoint[];
   color: string;
-} 
+}
+
+// Define stop types for navigation view
+export interface POIStop {
+  id: string;
+  name: string;
+  trailId: string;
+  position: number;
+  type: 'poi';
+  etaSeconds?: number;
+  distanceMeters?: number;
+}
+export interface JunctionStop {
+  id: string;
+  name: string;
+  trailId: string;
+  position: number;
+  type: 'junction';
+  branchTrails: string[];
+  color: string;
+  distanceMeters?: number;
+  etaSeconds?: number;
+}
+export type Stop = POIStop | JunctionStop; 

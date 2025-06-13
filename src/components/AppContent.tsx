@@ -15,6 +15,7 @@ import { DevPanel } from './DevPanel/DevPanel';
 import { EntryPointModal } from './EntryPointModal/EntryPointModal';
 import { useWordPressConfig } from '../hooks/useWordPressConfig';
 import { useTrailsData } from '../hooks/useTrailsData';
+import { useTrailJunctions } from '../hooks/useTrailJunctions';
 
 // Convert WordPress trail config to TrailConfig
 const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
@@ -44,6 +45,9 @@ export const AppContent: React.FC = () => {
   const trails = wpConfig?.trails?.map((wpTrail, index) => 
     convertToTrailConfig(wpTrail, trailData?.[index])
   ) || [];
+
+  // Get real junctions from trail data
+  const junctions = useTrailJunctions(trailData || []);
 
   // Only use devTab to force DevPanel view when route is /dev
   const [devTab, setDevTab] = useState<boolean>(false);
@@ -142,7 +146,7 @@ export const AppContent: React.FC = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/map" replace />} />
             <Route path="/map" element={<MapView trails={trails} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} />} />
-            <Route path="/nav" element={<NavView trailConfig={trails[0]} onLocomotionChange={setLocomotionMode} locomotionMode={locomotionMode} onChangeEntryPoint={() => setEntryModalOpen(true)} />} />
+            <Route path="/nav" element={<NavView trailConfig={trails[0]} junctions={junctions} onLocomotionChange={setLocomotionMode} locomotionMode={locomotionMode} onChangeEntryPoint={() => setEntryModalOpen(true)} />} />
             <Route path="/list" element={<ListView pois={pois} onPoiClick={() => {}} currentLocation={currentLocation || undefined} />} />
             <Route path="/trail/:id" element={<TrailView />} />
             <Route path="*" element={<NotFoundView />} />

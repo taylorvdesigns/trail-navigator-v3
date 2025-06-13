@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, Paper, Typography, List, ListItem, ListItemText, Divider, IconButton, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { LocomotionMode, POI, TrailConfig } from '../../types/index';
+import { LocomotionMode, POI, TrailConfig, Stop, POIStop, JunctionStop } from '../../types/index';
+import { trailColors } from '../../config/trailColors';
 import { 
   DirectionsWalk, 
   DirectionsRun, 
@@ -24,6 +25,8 @@ import { usePOIs } from '../../hooks/usePOIs';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { calculateETA } from '../../utils/eta';
 import he from 'he';
+import { getNavViewSplitData, Junction } from '../../utils/navViewSplit';
+import { useWordPressConfig } from '../../hooks/useWordPressConfig';
 
 // Standard list row (full-width)
 const StandardRow = styled(Box)(({ theme }) => ({
@@ -224,6 +227,7 @@ const StopIndicator = styled(Box)(({ theme }) => ({
 
 interface NavViewProps {
   trailConfig: TrailConfig;
+  junctions: Junction[];
   onLocomotionChange: (mode: LocomotionMode) => void;
   locomotionMode: LocomotionMode;
   onChangeEntryPoint?: () => void;
@@ -231,6 +235,7 @@ interface NavViewProps {
 
 export const NavView: React.FC<NavViewProps> = ({
   trailConfig,
+  junctions,
   onLocomotionChange,
   locomotionMode,
   onChangeEntryPoint
@@ -238,6 +243,13 @@ export const NavView: React.FC<NavViewProps> = ({
   const { data: trailData } = useTrailData(trailConfig.routeId) as { data: import('../../types').TrailData | undefined };
   const { currentLocation, isSimulationMode, simDirection, entryPoint, clearEntryPoint } = useLocation();
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
+  const { data: wpConfig } = useWordPressConfig();
+
+  console.log('WordPress Config:', {
+    wpConfig,
+    trails: wpConfig?.trails,
+    orangeTrail: wpConfig?.trails?.find(t => t.routeId === '51203945')
+  });
 
   // Group POIs by their tags
   const groupedPOIs = pois.reduce((groups, poi) => {
@@ -514,6 +526,311 @@ export const NavView: React.FC<NavViewProps> = ({
     ? trailData.points[trailData.points.length - 1].distance || 0
     : 0;
 
+  // 1. Prepare stops and merge junctions as special stops
+  const currentTrailId = trailConfig.routeId;
+
+  // Get user's current position along the main trail
+  let userPosition = 0;
+  if (trailData?.points && currentLocation) {
+    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
+    const userTrailPoint = findNearestTrailPoint(
+      userCoords,
+      trailData.points.map(p => ({
+        latitude: p.latitude,
+        longitude: p.longitude,
+        distance: p.distance || 0
+      }))
+    );
+    if (userTrailPoint) {
+      userPosition = userTrailPoint.point.distance || 0;
+    }
+  }
+
+  // Filter junctions to only those ahead of the user
+  const junctionsAhead = junctions
+    .filter(j => j.position > userPosition)
+    .sort((a, b) => a.position - b.position)
+    .slice(0, 2); // Only next 2 junctions ahead
+
+  // Map groupEntries to stops
+  let stops: Stop[] = groupEntries.map((entry, idx) => {
+    let position = idx;
+    // Safely handle closestPOI possibly being null
+    const poi = entry.closestPOI !== null ? (entry.closestPOI as POI | undefined) : undefined;
+    if (poi && poi.coordinates && trailData?.points) {
+      // Find the nearest trail point to the POI and use its distance as the position
+      const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
+      const poiTrailPoint = findNearestTrailPoint(
+        poiCoords,
+        trailData.points.map(p => ({
+          latitude: p.latitude,
+          longitude: p.longitude,
+          distance: p.distance || 0
+        }))
+      );
+      if (poiTrailPoint) {
+        position = poiTrailPoint.point.distance || idx;
+      }
+    }
+    return {
+      id: String(poi?.id ?? `stop-${idx}`),
+      name: entry.groupName,
+      trailId: currentTrailId, // TODO: update if POIs are on different trails
+      position,
+      type: 'poi',
+      etaSeconds: entry.etaSeconds,
+      distanceMeters: entry.distanceMeters
+    };
+  });
+
+  console.log('[DEBUG] Full stops array before inserting junctions:', JSON.parse(JSON.stringify(stops)));
+  console.log('[DEBUG] All junctions:', junctions.map(j => ({id: j.id, position: j.position, trails: j.trails})));
+  console.log('[DEBUG] All stop positions:', stops.map(s => ({id: s.id, position: s.position, name: s.name, type: s.type})));
+
+  // Insert only relevant junctions as stops
+  junctionsAhead.forEach((junction, jIdx) => {
+    console.log('[DEBUG] Inserting junction:', junction);
+    // Find the closest stop index by position
+    let insertIdx = stops.findIndex(stop => stop.position >= junction.position);
+    if (insertIdx === -1) insertIdx = stops.length;
+    // Calculate distance and ETA from user to junction
+    let distanceMeters = undefined;
+    let etaSeconds = undefined;
+    if (trailData?.points && currentLocation) {
+      const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
+      // Find nearest trail point to user
+      let userPosition = 0;
+      let minDist = Infinity;
+      for (const p of trailData.points) {
+        const dist = Math.sqrt(
+          Math.pow(userCoords[0] - p.latitude, 2) +
+          Math.pow(userCoords[1] - p.longitude, 2)
+        );
+        if (dist < minDist) {
+          minDist = dist;
+          userPosition = p.distance || 0;
+        }
+      }
+      distanceMeters = Math.abs(junction.position - userPosition);
+      etaSeconds = calculateETA(distanceMeters, locomotionMode);
+    }
+
+    // Find the intersecting trail (the one that's not the current trail)
+    const intersectingTrailId = junction.trails.find(trailId => trailId !== currentTrailId);
+    const intersectingTrailInfo = intersectingTrailId ? getTrailInfo(intersectingTrailId) : null;
+
+    console.log('Intersecting trail info:', {
+      intersectingTrailId,
+      intersectingTrailInfo,
+      currentTrailInfo: getTrailInfo(currentTrailId)
+    });
+
+    stops.splice(insertIdx, 0, {
+      id: `junction-${junction.id}`,
+      name: `Junction`,
+      trailId: currentTrailId,
+      position: junction.position,
+      type: 'junction',
+      branchTrails: junction.trails,
+      color: intersectingTrailInfo?.color || '#FFA500',
+      distanceMeters,
+      etaSeconds,
+    });
+  });
+
+  console.log('[DEBUG] Full stops array after inserting junctions:', JSON.parse(JSON.stringify(stops)));
+
+  // Sort stops by position
+  stops = stops.sort((a, b) => a.position - b.position);
+
+  // 2. Call split logic
+  const navSplit = getNavViewSplitData(currentTrailId, stops, junctions, 3);
+
+  console.log('[DEBUG] navSplit result:', {
+    beforeJunction: navSplit.beforeJunction.map(s => ({id: s.id, name: s.name, type: s.type, trailId: s.trailId, position: s.position})),
+    afterJunction: navSplit.afterJunction.map(s => ({id: s.id, name: s.name, type: s.type, trailId: s.trailId, position: s.position})),
+    branches: Object.fromEntries(Object.entries(navSplit.branches).map(([tid, stops]) => [tid, stops.map(s => ({id: s.id, name: s.name, type: s.type, trailId: s.trailId, position: s.position}))])),
+    junction: navSplit.junction
+  });
+
+  // Determine if we are in split view (junction within 3 stops ahead)
+  const isSplitView = !!navSplit.junction && Object.keys(navSplit.branches).length > 0;
+  console.log('[DEBUG] isSplitView:', isSplitView, 'junction:', navSplit.junction, 'branchTrailIds:', Object.keys(navSplit.branches));
+
+  // Get the intersecting trail info for the junction
+  const intersectingTrailId = isSplitView && navSplit.junction ? 
+    navSplit.junction.trails.find(t => t !== currentTrailId) : null;
+  const intersectingTrailInfo = intersectingTrailId ? getTrailInfo(intersectingTrailId) : null;
+
+  console.log('Split view info:', {
+    isSplitView,
+    junction: navSplit.junction,
+    branches: navSplit.branches,
+    branchTrailIds: Object.keys(navSplit.branches),
+    intersectingTrailId,
+    intersectingTrailInfo
+  });
+
+  // Determine current trail color and name
+  function getTrailInfo(trailId: string) {
+    console.log('Getting trail info for:', {
+      trailId,
+      trailConfig: {
+        routeId: trailConfig.routeId,
+        name: trailConfig.name,
+        color: trailConfig.color,
+        type: trailConfig.type
+      },
+      wpConfig: wpConfig?.trails?.find(t => t.routeId === trailId),
+      matchingStop: stops.find(s => s.trailId === trailId && s.type === 'poi')
+    });
+
+    // Try to get color and name from WordPress config first
+    const wpTrail = wpConfig?.trails?.find(t => t.routeId === trailId);
+    if (wpTrail) {
+      const info = { color: wpTrail.color, name: wpTrail.name };
+      console.log('Found trail in WordPress config:', info);
+      return info;
+    }
+
+    // Fallback to current trail config if it matches
+    if (trailConfig.routeId === trailId) {
+      const info = { color: trailConfig.color, name: trailConfig.name };
+      console.log('Found trail in current trailConfig:', info);
+      return info;
+    }
+
+    // Fallback to stops if available
+    const stop = stops.find(s => s.trailId === trailId && s.type === 'poi');
+    if (stop && (stop as any).color) {
+      const info = { color: (stop as any).color, name: (stop as any).name };
+      console.log('Found trail in stops:', info);
+      return info;
+    }
+
+    // Final fallback
+    const fallback = { color: '#39FF14', name: 'Unknown Trail' };
+    console.log('Using fallback trail info:', fallback);
+    return fallback;
+  }
+  const currentTrailInfo = getTrailInfo(currentTrailId);
+
+  // For split view, get main and branch trail IDs
+  const mainTrailId = currentTrailId;
+  const branchTrailIds = isSplitView ? Object.keys(navSplit.branches) : [];
+
+  console.log('Trail IDs and Info:', {
+    mainTrailId,
+    branchTrailIds,
+    currentTrailInfo,
+    trailConfig: {
+      routeId: trailConfig.routeId,
+      name: trailConfig.name,
+      color: trailConfig.color,
+      type: trailConfig.type
+    }
+  });
+
+  // Helper to render a column of stops (POIs), junction, and TRAIL END
+  function renderTrailColumn(trailId: string, stops: Stop[], isMain: boolean) {
+    // Reverse the order so closest POI is at the bottom
+    const orderedStops = [...stops].reverse();
+    return (
+      <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch', borderRight: isMain ? '1px solid #333' : 'none' }}>
+        {/* TRAIL END pill for this trail (at the top) */}
+        <Box sx={{ width: '100%', m: '0 10px 0 10px', borderTop: 'none', paddingTop: 0 }}>
+          <Box sx={{
+            background: getTrailInfo(trailId).color,
+            borderRadius: '999px',
+            color: '#000',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            fontSize: '1.1rem',
+            px: 3,
+            py: 1,
+            textAlign: 'center',
+            width: '100%',
+            maxWidth: '100%',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Box sx={{
+              position: 'absolute',
+              left: 12,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              background: '#242424',
+            }} />
+            <Box sx={{
+              pl: '32px',
+              pr: '12px',
+              width: '100%',
+              textAlign: 'center',
+              fontWeight: 700,
+            }}>
+              TRAIL END
+            </Box>
+          </Box>
+        </Box>
+        {orderedStops.map((stop, idx) => {
+          if (stop.type === 'junction') return null; // Junction row is rendered separately
+          // POI stop rendering (reuse existing logic)
+          const etaMinutes = stop.etaSeconds ? Math.round(stop.etaSeconds / 60) : null;
+          let etaDisplay;
+          if (etaMinutes !== null && etaMinutes >= 60) {
+            const hours = Math.floor(etaMinutes / 60);
+            const minutes = etaMinutes % 60;
+            etaDisplay = (
+              <>
+                {hours}
+                <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>h</Box>
+                {minutes > 0 && (
+                  <>
+                    {'\u00A0'}
+                    {minutes}
+                    <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>m</Box>
+                  </>
+                )}
+              </>
+            );
+          } else if (etaMinutes !== null) {
+            etaDisplay = (
+              <>
+                {etaMinutes}
+                <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>m</Box>
+              </>
+            );
+          }
+          return (
+            <SubwayStop key={stop.id}>
+              {/* Distance (col 1) */}
+              <Box sx={{ width: 45, textAlign: 'right', fontSize: 12, color: 'text.secondary', pr: 1, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end' }}>
+                {stop.distanceMeters !== undefined ? metersToMiles(stop.distanceMeters).toFixed(2) : ''}
+              </Box>
+              {/* Subway line + stop (col 2) */}
+              <SubwayLineCol>
+                <StopIndicator />
+              </SubwayLineCol>
+              {/* Time (col 3) */}
+              <Box sx={{ width: 45, textAlign: 'left', fontSize: 12, color: 'text.secondary', pl: 1, display: 'flex', alignItems: 'baseline', whiteSpace: 'nowrap' }}>
+                {etaDisplay}
+              </Box>
+              {/* Name (col 4, absolutely centered in row) */}
+              <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: (stop as any).color || '#fff', textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
+                {stop.name}
+              </Box>
+            </SubwayStop>
+          );
+        })}
+      </Box>
+    );
+  }
+
   if (!trailData) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -535,111 +852,136 @@ export const NavView: React.FC<NavViewProps> = ({
 
   return (
     <Box sx={{ p: 2 }}>
-      {/* TRAIL END pill header */}
-      <Box sx={{
-        width: '100%',
-        m: '10px 10px 0 10px', // keep top margin for separation from top, but no bottom margin
-        pb: 0, // remove any bottom padding
-      }}>
+      {/* TRAIL END pill header (only show when not in split view) */}
+      { !isSplitView && (
         <Box sx={{
-          background: '#39FF14',
-          borderRadius: '999px',
-          color: '#000',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          fontSize: '1.1rem',
-          px: 3,
-          py: 1,
-          textAlign: 'center',
           width: '100%',
-          maxWidth: '100%',
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          m: '10px 10px 0 10px', // keep top margin for separation from top, but no bottom margin
+          pb: 0, // remove any bottom padding
         }}>
           <Box sx={{
-            position: 'absolute',
-            left: 12,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: 20,
-            height: 20,
-            borderRadius: '50%',
-            background: '#242424',
-          }} />
-          <Box sx={{
-            pl: '32px',
-            pr: '12px',
-            width: '100%',
-            textAlign: 'center',
+            background: '#39FF14',
+            borderRadius: '999px',
+            color: '#000',
             fontWeight: 700,
+            textTransform: 'uppercase',
+            fontSize: '1.1rem',
+            px: 3,
+            py: 1,
+            textAlign: 'center',
+            width: '100%',
+            maxWidth: '100%',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-            TRAIL END
+            <Box sx={{
+              position: 'absolute',
+              left: 12,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              background: '#242424',
+            }} />
+            <Box sx={{
+              pl: '32px',
+              pr: '12px',
+              width: '100%',
+              textAlign: 'center',
+              fontWeight: 700,
+            }}>
+              TRAIL END
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
       <SubwayList sx={{ pt: 0, mt: 0 }}>
         <SubwayLine />
         {/* Destinations Ahead Subway List */}
-        {(() => {
-          return groupEntries.map(({ groupName, groupPois, distanceMeters, etaSeconds }) => {
-            const etaMinutes = Math.round(etaSeconds / 60);
-            let etaDisplay;
-            if (etaMinutes >= 60) {
-              const hours = Math.floor(etaMinutes / 60);
-              const minutes = etaMinutes % 60;
-              etaDisplay = (
-                <>
-                  {hours}
-                  <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>h</Box>
-                  {minutes > 0 && (
-                    <>
-                      {'\u00A0'}
-                      {minutes}
-                      <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>m</Box>
-                    </>
-                  )}
-                </>
-              );
-            } else {
-              etaDisplay = (
-                <>
-                  {etaMinutes}
-                  <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>m</Box>
-                </>
+        {isSplitView ? (
+          <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+            {/* Left: main trail column (before junction + after junction on main trail) */}
+            {renderTrailColumn(mainTrailId, [
+              ...navSplit.beforeJunction.filter(s => s.trailId === mainTrailId),
+              ...(navSplit.afterJunction.filter(s => s.trailId === mainTrailId) || [])
+            ], true)}
+            {/* Right: branch trail columns (for each branch, but only show the first branch for now) */}
+            {branchTrailIds.length > 0 && renderTrailColumn(branchTrailIds[0], navSplit.branches[branchTrailIds[0]] || [], false)}
+          </Box>
+        ) : (
+          // Default: single column
+          stops.map((stop) => {
+            if (stop.type === 'junction') {
+              const etaMinutes = stop.etaSeconds ? Math.round(stop.etaSeconds / 60) : null;
+              let etaDisplay;
+              if (etaMinutes !== null && etaMinutes >= 60) {
+                const hours = Math.floor(etaMinutes / 60);
+                const minutes = etaMinutes % 60;
+                etaDisplay = (
+                  <>
+                    {hours}
+                    <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>h</Box>
+                    {minutes > 0 && (
+                      <>
+                        {'\u00A0'}
+                        {minutes}
+                        <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>m</Box>
+                      </>
+                    )}
+                  </>
+                );
+              } else if (etaMinutes !== null) {
+                etaDisplay = (
+                  <>
+                    {etaMinutes}
+                    <Box component="span" sx={{ fontSize: 9, display: 'inline' }}>m</Box>
+                  </>
+                );
+              }
+              return (
+                <SubwayStop key={stop.id}>
+                  {/* Distance (col 1) */}
+                  <Box sx={{ width: 45, textAlign: 'right', fontSize: 12, color: 'text.secondary', pr: 1, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end' }}>
+                    {stop.distanceMeters !== undefined ? metersToMiles(stop.distanceMeters).toFixed(2) : ''}
+                  </Box>
+                  {/* Subway line + stop (col 2) */}
+                  <SubwayLineCol>
+                    <StopIndicator />
+                  </SubwayLineCol>
+                  {/* Time (col 3) */}
+                  <Box sx={{ width: 45, textAlign: 'left', fontSize: 12, color: 'text.secondary', pl: 1, display: 'flex', alignItems: 'baseline', whiteSpace: 'nowrap' }}>
+                    {etaDisplay}
+                  </Box>
+                  {/* Name (col 4, absolutely centered in row) */}
+                  <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: (stop as any).color || '#fff', textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
+                    {stop.name}
+                  </Box>
+                </SubwayStop>
               );
             }
-            return (
-              <SubwayStop key={groupName}>
-                {/* Distance (col 1) */}
-                <Box sx={{ width: 45, textAlign: 'right', fontSize: 12, color: 'text.secondary', pr: 1, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end' }}>
-                  {metersToMiles(distanceMeters).toFixed(2)}
-                  <Box component="span" sx={{ fontSize: 9, ml: 0.5 }}>mi</Box>
-                </Box>
-                {/* Subway line + stop (col 2) */}
-                <SubwayLineCol>
-                  <StopIndicator />
-                </SubwayLineCol>
-                {/* Time (col 3) */}
-                <Box sx={{ width: 45, textAlign: 'left', fontSize: 12, color: 'text.secondary', pl: 1, display: 'flex', alignItems: 'baseline', whiteSpace: 'nowrap' }}>
-                  {etaDisplay}
-                </Box>
-                {/* Name (col 4, absolutely centered in row) */}
-                <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: groupName === 'Ungrouped' ? '#fff' : TRAIL_COLOR, textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
-                  {groupName === 'Ungrouped'
-                    ? <>
-                        {groupPois.map(poi => he.decode(poi.title.rendered)).join(', ')}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
-                      </>
-                    : <>
-                        {he.decode(groupName)}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
-                      </>
-                  }
-                </Box>
-              </SubwayStop>
-            );
-          });
-        })()}
+            // ... existing POI rendering ...
+            // ... existing code ...
+          })
+        )}
+        {/* Junction row (in split view, render after both columns, spanning full width, use branch trail color) */}
+        {isSplitView && navSplit.junction && (
+          <SubwayStop key={`junction-${navSplit.junction.id}`} sx={{ 
+            background: intersectingTrailInfo?.color || '#FFA500', 
+            color: '#222', 
+            fontWeight: 700, 
+            borderLeft: `6px solid ${intersectingTrailInfo?.color || '#FFA500'}`, 
+            borderRight: `6px solid ${intersectingTrailInfo?.color || '#FFA500'}`, 
+            borderRadius: 2, 
+            my: 1 
+          }}>
+            <Box sx={{ width: '100%', textAlign: 'center', fontWeight: 700, color: '#222', fontSize: 15 }}>
+              {intersectingTrailInfo ? `Junction with ${intersectingTrailInfo.name}` : 'Junction'}
+            </Box>
+          </SubwayStop>
+        )}
       </SubwayList>
       {/* Top heading and context card wrapper */}
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
@@ -667,9 +1009,9 @@ export const NavView: React.FC<NavViewProps> = ({
         </Box>
         {/* Context card with matching positive margin-top */}
         <Box sx={{ width: '100%', mt: '-15px' }}>
-          {groupEntries.length > 0 ? (
+          {stops.length > 0 ? (
             <NavContextCard
-              destination={groupEntries[0].groupName.toUpperCase()}
+              destination={stops[0].name.toUpperCase()}
               trail={trailConfig.name.toUpperCase()}
               distanceMiles={metersToMiles(totalTrailDistance)}
               description={elevationDescription}
@@ -678,6 +1020,7 @@ export const NavView: React.FC<NavViewProps> = ({
               onLocomotionChange={onLocomotionChange}
               entryPointDistanceMiles={entryPointDistanceMiles}
               onChangeEntryPoint={onChangeEntryPoint}
+              borderColor={currentTrailInfo.color}
             />
           ) : (
             <NavContextCard
@@ -690,6 +1033,7 @@ export const NavView: React.FC<NavViewProps> = ({
               onLocomotionChange={onLocomotionChange}
               entryPointDistanceMiles={entryPointDistanceMiles}
               onChangeEntryPoint={onChangeEntryPoint}
+              borderColor={currentTrailInfo.color}
             />
           )}
         </Box>
@@ -769,15 +1113,8 @@ export const NavView: React.FC<NavViewProps> = ({
                     {etaDisplay}
                   </Box>
                   {/* Name (col 4, absolutely centered in row) */}
-                  <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: groupName === 'Ungrouped' ? '#fff' : TRAIL_COLOR, textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
-                    {groupName === 'Ungrouped'
-                      ? <>
-                          {groupPois.map(poi => he.decode(poi.title.rendered)).join(', ')}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
-                        </>
-                      : <>
-                          {he.decode(groupName)}<Box component="span" sx={{ color: '#fff' }}>{'\u00A0'}({groupPois.length})</Box>
-                        </>
-                    }
+                  <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: '#fff', textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
+                    {groupName}
                   </Box>
                 </SubwayStop>
               );
@@ -830,6 +1167,26 @@ export const NavView: React.FC<NavViewProps> = ({
           </Box>
         </Box>
       </SubwayList>
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <Typography variant="h6">Nav Split Debug</Typography>
+        <Typography variant="body2">Before Junction:</Typography>
+        <ul>
+          {navSplit.beforeJunction.map(stop => (
+            <li key={stop.id}>{stop.name}</li>
+          ))}
+        </ul>
+        {navSplit.junction && (
+          <>
+            <Typography variant="body2">Junction: {navSplit.junction.id}</Typography>
+            <Typography variant="body2">Branches:</Typography>
+            <ul>
+              {Object.entries(navSplit.branches).map(([branchId, stops]) => (
+                <li key={branchId}>{branchId}: {stops.map(s => s.name).join(', ')}</li>
+              ))}
+            </ul>
+          </>
+        )}
+      </Box>
     </Box>
   );
 };
