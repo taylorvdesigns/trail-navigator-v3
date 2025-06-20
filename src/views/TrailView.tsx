@@ -32,33 +32,23 @@ export const TrailView: React.FC = () => {
   
   const trail = TRAIL_ROUTES.find(route => route.routeId === trailId);
   
-  console.log('TrailView render:', { trailId, trail, currentLocation, poisCount: pois.length });
-
   const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
 
   useEffect(() => {
     const fetchTrailData = async () => {
       if (!trailId) {
-        console.log('No trailId provided');
         return;
       }
       
       try {
-        console.log('Fetching trail data for ID:', trailId);
         setLoading(true);
         const response = await axios.get<TrailData>(`${BASE_URL}/api/ridewithgps/${trailId}`);
-        console.log('Trail data response:', response.data);
         setTrailData(response.data);
         setError(null);
       } catch (err: any) {
-        console.error('Error fetching trail data:', err.message);
         if (err.response) {
-          console.error('Error response:', {
-            status: err.response.status,
-            data: err.response.data
-          });
+          setError('Failed to load trail data');
         }
-        setError('Failed to load trail data');
       } finally {
         setLoading(false);
       }
@@ -68,7 +58,6 @@ export const TrailView: React.FC = () => {
   }, [trailId]);
 
   if (!trail) {
-    console.log('Trail not found in config');
     return (
       <Box sx={{ p: 3 }}>
         <Typography variant="h5">Trail not found</Typography>
@@ -77,7 +66,6 @@ export const TrailView: React.FC = () => {
   }
 
   if (loading || poisLoading) {
-    console.log('Loading trail data or POIs...');
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <CircularProgress />
@@ -86,7 +74,6 @@ export const TrailView: React.FC = () => {
   }
 
   if (error || poisError) {
-    console.log('Error state:', error || poisError);
     return (
       <Box sx={{ p: 3 }}>
         <Typography color="error">{error || poisError}</Typography>
@@ -100,16 +87,6 @@ export const TrailView: React.FC = () => {
     coordinates: trailData?.route?.track_points?.map(point => [point.y, point.x] as [number, number]) || 
                 trailData?.route?.path || []
   };
-  
-  console.log('Rendering trail with coordinates:', {
-    routeId: trail.routeId,
-    coordinateCount: trailWithCoordinates.coordinates.length,
-    hasTrackPoints: !!trailData?.route?.track_points,
-    hasPath: !!trailData?.route?.path,
-    sampleCoordinate: trailWithCoordinates.coordinates[0],
-    firstFiveCoordinates: trailWithCoordinates.coordinates.slice(0, 5),
-    sampleTrackPoint: trailData?.route?.track_points?.[0]
-  });
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>

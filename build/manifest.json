@@ -1,6 +1,6 @@
 {
   "short_name": "Trail Navigator",
-  "name": "Trail Navigator - Swamp Rabbit Trail Guide",
+  "name": "Trail Navigator",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,8 +8,12 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#242424"
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "permissions": [],
+  "prefer_related_applications": false
 }

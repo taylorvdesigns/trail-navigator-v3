@@ -1,4 +1,6 @@
 import { POI } from '../types/index';
+import { TrailPoint } from '../types/index';
+import { findNearestTrailPoint } from './trail';
 
 /**
  * Extracts unique, cleaned-up categories from an array of POIs
@@ -10,7 +12,7 @@ export const extractUniqueCategories = (pois: POI[]): string[] => {
   
   pois.forEach(poi => {
     if (poi.post_category && Array.isArray(poi.post_category)) {
-      poi.post_category.forEach(category => {
+      poi.post_category.forEach((category: any) => {
         if (category.name) {
           // Clean up: take text after dash, trim whitespace
           const cleanName = category.name.split('-').pop()?.trim() || category.name;
@@ -21,4 +23,91 @@ export const extractUniqueCategories = (pois: POI[]): string[] => {
   });
 
   return Array.from(categories).sort();
-}; 
+};
+
+interface TrailData {
+  id: string;
+  points: TrailPoint[];
+}
+
+/**
+ * Assign POIs to trails based on proximity
+ * @param pois Array of POIs to assign
+ * @param trails Array of trail data with points
+ * @param proximityThreshold Distance threshold in meters (default: 100m)
+ * @returns Map of trail ID to array of POIs assigned to that trail
+ */
+export function assignPOIsToTrails(
+  pois: POI[],
+  trails: TrailData[],
+  proximityThreshold: number = 100
+): Map<string, POI[]> {
+  const trailAssignments = new Map<string, POI[]>();
+  
+  // Initialize empty arrays for each trail
+  trails.forEach(trail => {
+    trailAssignments.set(trail.id, []);
+  });
+  
+  pois.forEach(poi => {
+    if (!poi.coordinates) return;
+    
+    const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]]; // [lat, lng]
+    
+    // Check each trail to see if POI is close enough
+    trails.forEach(trail => {
+      if (trail.points.length === 0) return;
+      
+      // Find nearest point on this trail
+      const nearestPoint = findNearestTrailPoint(poiCoords, trail.points);
+      
+      if (nearestPoint && nearestPoint.distance <= proximityThreshold) {
+        // POI is close enough to this trail, assign it
+        const trailPOIs = trailAssignments.get(trail.id) || [];
+        trailPOIs.push(poi);
+        trailAssignments.set(trail.id, trailPOIs);
+      }
+    });
+  });
+  
+  return trailAssignments;
+}
+
+/**
+ * Get POIs assigned to a specific trail
+ * @param pois Array of all POIs
+ * @param trails Array of trail data
+ * @param targetTrailId The trail ID to get POIs for
+ * @param proximityThreshold Distance threshold in meters (default: 100m)
+ * @returns Array of POIs assigned to the specified trail
+ */
+export function getPOIsForTrail(
+  pois: POI[],
+  trails: TrailData[],
+  targetTrailId: string,
+  proximityThreshold: number = 100
+): POI[] {
+  const assignments = assignPOIsToTrails(pois, trails, proximityThreshold);
+  return assignments.get(targetTrailId) || [];
+}
+
+/**
+ * Check if a POI belongs to a specific trail
+ * @param poi The POI to check
+ * @param trail The trail data
+ * @param proximityThreshold Distance threshold in meters (default: 100m)
+ * @returns True if POI is assigned to the trail
+ */
+export function isPOIOnTrail(
+  poi: POI,
+  trail: TrailData,
+  proximityThreshold: number = 100
+): boolean {
+  if (!poi.coordinates || !trail.points) return false;
+  
+  const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]]; // [lat, lng]
+  
+  const nearestPoint = findNearestTrailPoint(poiCoords, trail.points);
+  
+  return nearestPoint ? nearestPoint.distance <= proximityThreshold : false;
+} 

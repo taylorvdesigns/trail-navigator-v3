@@ -12,5 +12,5 @@ export const calculateETA = (
   mode: LocomotionMode
 ): number => {
   const speedMps = SPEEDS[mode];
-  return distanceInMeters / speedMps; // Returns seconds
+  return (distanceInMeters / speedMps) / 60; // Convert seconds to minutes
 };

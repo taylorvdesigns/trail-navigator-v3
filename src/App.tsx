@@ -1,6 +1,6 @@
 import React from 'react';
 import { CssBaseline } from '@mui/material';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { LocationProvider } from './contexts/LocationContext';
 import { UserProvider } from './contexts/UserContext';
@@ -25,7 +25,7 @@ const queryClient = new QueryClient({
 export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ThemeProvider>
           <LocationProvider>
             <UserProvider>

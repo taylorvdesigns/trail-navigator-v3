@@ -75,24 +75,42 @@ export interface TrailData {
 }
 
 // Define stop types for navigation view
-export interface POIStop {
+export interface StopMetadata {
+  coordinates: [number, number];
+  distance?: number;
+  comparable_distance?: number;
+  description?: string;
+  post_tags?: { name: string }[];
+  trails?: string[];
+  amenities?: string[];
+  groupName?: string;
+  groupCount?: number;
+  eta?: number;  // Estimated time of arrival in minutes
+}
+
+export interface BaseStop {
   id: string;
   name: string;
   trailId: string;
-  position: number;
+  metadata: StopMetadata;
+  distanceMeters?: number;
+  trailPosition?: number;
+}
+
+export interface POIStop extends BaseStop {
   type: 'poi';
-  etaSeconds?: number;
-  distanceMeters?: number;
 }
-export interface JunctionStop {
-  id: string;
-  name: string;
-  trailId: string;
-  position: number;
+
+export interface JunctionStop extends BaseStop {
   type: 'junction';
-  branchTrails: string[];
-  color: string;
-  distanceMeters?: number;
-  etaSeconds?: number;
 }
-export type Stop = POIStop | JunctionStop; 
+
+export interface EndpointStop extends BaseStop {
+  type: 'endpoint';
+}
+
+export interface UserStop extends BaseStop {
+  type: 'user';
+}
+
+export type Stop = POIStop | JunctionStop | EndpointStop | UserStop; 

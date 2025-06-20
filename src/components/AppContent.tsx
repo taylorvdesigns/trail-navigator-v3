@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { AppLayout } from './Layout/AppLayout';
 import { MapView } from './MapView/MapView';
-import { NavView } from './NavView/NavView';
+import { NavViewV2 } from './NavViewV2';
 import { ListView } from './ListView/ListView';
 import { TrailView } from '../views/TrailView';
 import { NotFoundView } from '../views/NotFoundView';
@@ -16,9 +16,10 @@ import { EntryPointModal } from './EntryPointModal/EntryPointModal';
 import { useWordPressConfig } from '../hooks/useWordPressConfig';
 import { useTrailsData } from '../hooks/useTrailsData';
 import { useTrailJunctions } from '../hooks/useTrailJunctions';
+import DebugTrailStructure from '../pages/debug-trail-structure';
 
 // Convert WordPress trail config to TrailConfig
-const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
+export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
   return {
     ...wpTrail,
     id: wpTrail.routeId,
@@ -36,15 +37,22 @@ export const AppContent: React.FC = () => {
   const { currentLocation, entryPoint } = useGeoLocation();
   const { isDevMode } = useDevMode();
 
-  // Get trail data from RideWithGPS
-  const { data: trailData, isLoading: trailDataLoading } = useTrailsData(
-    wpConfig?.trails?.map(t => convertToTrailConfig(t)) || []
+  // Memoize the trails configuration
+  const trailConfigs = useMemo(() => 
+    wpConfig?.trails?.map(t => convertToTrailConfig(t)) || [],
+    [wpConfig?.trails]
   );
 
+  // Get trail data from RideWithGPS
+  const { data: trailData, isLoading: trailDataLoading } = useTrailsData(trailConfigs);
+
   // Convert WordPress trails to TrailConfig with endpoints
-  const trails = wpConfig?.trails?.map((wpTrail, index) => 
-    convertToTrailConfig(wpTrail, trailData?.[index])
-  ) || [];
+  const trails = useMemo(() => 
+    wpConfig?.trails?.map((wpTrail, index) => 
+      convertToTrailConfig(wpTrail, trailData?.[index])
+    ) || [],
+    [wpConfig?.trails, trailData]
+  );
 
   // Get real junctions from trail data
   const junctions = useTrailJunctions(trailData || []);
@@ -146,9 +154,19 @@ export const AppContent: React.FC = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/map" replace />} />
             <Route path="/map" element={<MapView trails={trails} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} />} />
-            <Route path="/nav" element={<NavView trailConfig={trails[0]} junctions={junctions} onLocomotionChange={setLocomotionMode} locomotionMode={locomotionMode} onChangeEntryPoint={() => setEntryModalOpen(true)} />} />
+            <Route path="/nav" element={
+              <NavViewV2 
+                trailConfig={trails[0]} 
+                junctions={junctions} 
+                pois={pois} 
+                locomotionMode={locomotionMode}
+                onLocomotionChange={setLocomotionMode}
+                onChangeEntryPoint={() => setEntryModalOpen(true)}
+              />
+            } />
             <Route path="/list" element={<ListView pois={pois} onPoiClick={() => {}} currentLocation={currentLocation || undefined} />} />
             <Route path="/trail/:id" element={<TrailView />} />
+            <Route path="/debug-trail-structure" element={<DebugTrailStructure />} />
             <Route path="*" element={<NotFoundView />} />
           </Routes>
         )}
