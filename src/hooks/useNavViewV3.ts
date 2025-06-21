@@ -5,6 +5,7 @@ import { Junction } from '../utils/navViewSplit';
 import { useTrailsData } from './useTrailsData';
 import { findNearestTrailPoint } from '../utils/trail';
 import { getPOIsForTrail } from '../utils/poi';
+import { calculateDistance } from '../utils/distance';
 
 interface UseNavViewV3Props {
   allTrails: TrailConfig[];
@@ -138,58 +139,18 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
   const { stops, userStop } = useMemo(() => {
     if (!allTrailData) return { stops: [], userStop: null };
     
-    let allStops: Stop[] = [];
+    const allStops: Stop[] = [];
 
-    allTrailData.forEach(trailData => {
-      const trail = allTrails.find(t => t.id === trailData.id);
-      if (!trail || !trailData.points) return;
-
-      const trailPoints = trailData.points;
-      
-      if (trailData.endpoints) {
-        const { start, end } = trailData.endpoints;
-        allStops.push({
-          id: `endpoint-${trail.id}-start`, type: 'endpoint', name: `${trail.name} Start`, trailId: trail.id,
-          metadata: { coordinates: [start[1], start[0]], distance: 0 }
-        });
-        const trailLength = trailPoints[trailPoints.length - 1]?.distance || 0;
-        allStops.push({
-          id: `endpoint-${trail.id}-end`, type: 'endpoint', name: `${trail.name} End`, trailId: trail.id,
-          metadata: { coordinates: [end[1], end[0]], distance: trailLength }
-        });
-      }
-      
-      const trailPOIs = getPOIsForTrail(pois, [{ id: trail.id, points: trailPoints }], trail.id, 100);
-      const poiStops = groupPOIsByTag(trailPOIs, trail.id);
-      poiStops.forEach(stop => {
-        const poiPoint = findNearestTrailPoint(stop.metadata.coordinates, trailPoints);
-        if (poiPoint?.point) {
-          stop.metadata.distance = poiPoint.point.distance || 0;
-        }
-        allStops.push(stop);
-      });
-    });
-    
+    // --- Step 1: Process all junctions first to create their stops ---
     junctions.forEach(junction => {
-      if (!junction.trails || junction.trails.length < 1) return;
       junction.trails.forEach(trailId => {
         const trailData = allTrailData.find(td => td.id === trailId);
         const trailConfig = allTrails.find(tc => tc.id === trailId);
         if (trailData && trailData.points && trailConfig) {
-          // Junction coordinates are [longitude, latitude], but findNearestTrailPoint expects [latitude, longitude]
           const junctionCoords: [number, number] = [junction.location[1], junction.location[0]];
           const nearestPoint = findNearestTrailPoint(junctionCoords, trailData.points);
+          
           if (nearestPoint) {
-            console.log(`[DEBUG] Junction: ${junction.id} on Trail: ${trailId}`, JSON.stringify({
-              junctionLocation: junction.location,
-              nearestTrailPointCoords: [nearestPoint.point.latitude, nearestPoint.point.longitude],
-              calculatedDistance: nearestPoint.point.distance,
-              trailPointsCount: trailData.points.length,
-              firstTrailPoint: trailData.points[0],
-              lastTrailPoint: trailData.points[trailData.points.length - 1],
-              firstFewTrailPoints: trailData.points.slice(0, 3).map(p => ({ lat: p.latitude, lng: p.longitude, dist: p.distance }))
-            }, null, 2));
-
             const otherTrailId = junction.trails.find(id => id !== trailId);
             const otherTrail = allTrails.find(t => t.id === otherTrailId || t.routeId === otherTrailId);
             const junctionName = otherTrail ? `${otherTrail.name} Junction` : `Junction ${junction.id}`;
@@ -207,6 +168,49 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
             });
           }
         }
+      });
+    });
+
+    // --- Step 2: Process POIs and non-junction endpoints for all trails ---
+    allTrailData.forEach(trailData => {
+      const trail = allTrails.find(t => t.id === trailData.id);
+      if (!trail || !trailData.points) return;
+
+      const trailPoints = trailData.points;
+      
+      // Add endpoints, but ONLY if they aren't located at a known junction
+      if (trailData.endpoints) {
+        const { start, end } = trailData.endpoints;
+        
+        // An endpoint is a junction if it's within 25 meters of any junction's location.
+        // This tolerance accounts for discrepancies between calculated junction points and configured endpoints.
+        const startIsJunction = junctions.some(j => calculateDistance(start[1], start[0], j.location[1], j.location[0]) < 25);
+        const endIsJunction = junctions.some(j => calculateDistance(end[1], end[0], j.location[1], j.location[0]) < 25);
+
+        if (!startIsJunction) {
+          allStops.push({
+            id: `endpoint-${trail.id}-start`, type: 'endpoint', name: `${trail.name} Start`, trailId: trail.id,
+            metadata: { coordinates: [start[1], start[0]], distance: 0 }
+          });
+        }
+        
+        const trailLength = trailPoints[trailPoints.length - 1]?.distance || 0;
+        if (!endIsJunction) {
+          allStops.push({
+            id: `endpoint-${trail.id}-end`, type: 'endpoint', name: `${trail.name} End`, trailId: trail.id,
+            metadata: { coordinates: [end[1], end[0]], distance: trailLength }
+          });
+        }
+      }
+      
+      const trailPOIs = getPOIsForTrail(pois, [{ id: trail.id, points: trailPoints }], trail.id, 100);
+      const poiStops = groupPOIsByTag(trailPOIs, trail.id);
+      poiStops.forEach(stop => {
+        const poiPoint = findNearestTrailPoint(stop.metadata.coordinates, trailPoints);
+        if (poiPoint?.point) {
+          stop.metadata.distance = poiPoint.point.distance || 0;
+        }
+        allStops.push(stop);
       });
     });
 

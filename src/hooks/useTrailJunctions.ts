@@ -40,22 +40,7 @@ export function useTrailJunctions(trails: Trail[], threshold = 20): Junction[] {
       mainTrailId: mainTrail?.id
     });
 
-    // 1. Spur endpoints as junctions
-    const spurJunctions: Junction[] = trails
-      .filter(trail => trail.type === 'spur' && trail.endpoint1)
-      .map((trail, idx) => {
-        const position = getClosestTrailPointDistance(trail.endpoint1 as [number, number], mainTrailPoints);
-        return {
-          id: `junction-spur-${idx}`,
-          position,
-          location: trail.endpoint1 as [number, number],
-          trails: [trail.id]
-        };
-      });
-
-    console.log('Spur Junctions:', spurJunctions);
-
-    // 2. Overlap detection for all trails
+    // Overlap detection for all trails
     const overlapJunctionsRaw = findJunctions(trails, threshold);
     const overlapJunctions: Junction[] = overlapJunctionsRaw.map((j, idx) => {
       const position = getClosestTrailPointDistance(j.location, mainTrailPoints);
@@ -69,14 +54,11 @@ export function useTrailJunctions(trails: Trail[], threshold = 20): Junction[] {
 
     console.log('Overlap Junctions:', overlapJunctions);
 
-    // 3. Merge spur endpoint junctions and overlap junctions, preferring spur endpoints if close
-    const allJunctions = [...spurJunctions, ...overlapJunctions];
-    // Gather all endpoints for consolidation
-    const endpoints: [number, number][] = spurJunctions.map(j => j.location);
-    const consolidated = consolidateJunctions(allJunctions, 100, endpoints);
+    // Merge overlap junctions
+    const consolidated = consolidateJunctions(overlapJunctions, 100);
     const finalJunctions = consolidated.map((j, idx) => {
       // Get all trail IDs from junctions that were consolidated into this one
-      const nearbyJunctions = allJunctions.filter(aj => 
+      const nearbyJunctions = overlapJunctions.filter(aj => 
         calculateDistance(
           aj.location[1], // latitude
           aj.location[0], // longitude
@@ -103,6 +85,7 @@ export function useTrailJunctions(trails: Trail[], threshold = 20): Junction[] {
       position: j.position
     })));
 
-    return finalJunctions;
+    // A junction is only a true junction if it connects two or more trails.
+    return finalJunctions.filter(j => j.trails.length > 1);
   }, [trails, threshold]);
 } 

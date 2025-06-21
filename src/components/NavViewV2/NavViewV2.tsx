@@ -10,7 +10,9 @@ import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 
 // Styled components
-const SubwayLine = styled(Box)(({ theme }) => ({
+const SubwayLine = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'color',
+})<{ color?: string }>(({ theme, color }) => ({
   position: 'relative',
   '&::before': {
     content: '""',
@@ -19,11 +21,13 @@ const SubwayLine = styled(Box)(({ theme }) => ({
     top: 0,
     bottom: 0,
     width: 2,
-    backgroundColor: '#39FF14'
-  }
+    backgroundColor: color || '#39FF14',
+  },
 }));
 
-const StopMarker = styled(Box)(({ theme }) => ({
+const StopMarker = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'color',
+})<{ color?: string }>(({ theme, color }) => ({
   position: 'relative',
   paddingLeft: 48,
   marginBottom: theme.spacing(1),
@@ -37,7 +41,7 @@ const StopMarker = styled(Box)(({ theme }) => ({
     width: 10,
     height: 10,
     borderRadius: '50%',
-    backgroundColor: '#39FF14'
+    backgroundColor: color || '#39FF14',
   },
   '&:focus-within': {
     outline: `2px solid ${theme.palette.primary.main}`,
@@ -147,15 +151,10 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     pois,
   });
 
-  console.log('[NavViewV3] Raw Stops:', JSON.stringify(stops.map(s => ({ id: s.id, name: s.name, trailId: s.trailId, dist: s.metadata.distance })), null, 2));
-  console.log('[NavViewV3] User Stop:', JSON.stringify(userStop, null, 2));
-
   // Calculate split view data with memoization
   const { aheadStops, behindStops, aheadSplitData, behindSplitData } = useMemo(() => {
     // Find user stop by type instead of by index
     const userStopIndex = stops.findIndex(stop => stop.type === 'user');
-    console.log('[DEBUG] User stop index:', userStopIndex);
-    console.log('[DEBUG] Total stops:', stops.length);
     
     if (userStopIndex === -1) return { 
       aheadStops: [] as Stop[], 
@@ -167,11 +166,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     const ahead = stops.slice(userStopIndex + 1);
     const behind = stops.slice(0, userStopIndex).reverse();
     
-    console.log('[DEBUG] Ahead stops count:', ahead.length);
-    console.log('[DEBUG] Behind stops count:', behind.length);
-    console.log('[DEBUG] Ahead stops:', ahead.map(s => ({ name: s.name, trailId: s.trailId, dist: s.metadata.distance })));
-    console.log('[DEBUG] Behind stops:', behind.map(s => ({ name: s.name, trailId: s.trailId, dist: s.metadata.distance })));
-
     // Get split view data for ahead section
     const aheadSplit = getNavViewSplitData(
       trailConfig.id,
@@ -225,47 +219,16 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     );
   }
 
-  const renderStop = (stop: Stop) => {
+  const renderStop = (stop: Stop, color?: string) => {
     return (
-      <StopMarker key={stop.id} role="listitem" tabIndex={0} aria-label={`${stop.name} stop`}>
+      <StopMarker key={stop.id} color={color} role="listitem" tabIndex={0} aria-label={`${stop.name} stop`}>
         <StopInfo>
           <StopDetails>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: color || 'text.primary' }}>
               {stop.type === 'junction' ? 'Junction' : stop.name}
-              {stop.metadata.groupCount && (
-                <Typography component="span" variant="body2" color="text.secondary" sx={{ ml: 1 }} aria-label={`Contains ${stop.metadata.groupCount} stops`}>
-                  ({stop.metadata.groupCount} stops)
-                </Typography>
-              )}
+              {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
             </Typography>
-            {stop.metadata.description && (
-              <Typography variant="body2" color="text.secondary" aria-label="Stop description">
-                {stop.metadata.description}
-              </Typography>
-            )}
-            {stop.metadata.amenities && stop.metadata.amenities.length > 0 && (
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 0.5 }} role="list" aria-label="Available amenities">
-                {stop.metadata.amenities.map((amenity, index) => (
-                  <AmenityIcon key={`${stop.id}-${amenity}-${index}`}>
-                    {amenity === 'food' && <Restaurant sx={{ fontSize: 16 }} />}
-                    {amenity === 'cafe' && <LocalCafe sx={{ fontSize: 16 }} />}
-                    {amenity === 'store' && <Store sx={{ fontSize: 16 }} />}
-                    {amenity === 'restroom' && <Wc sx={{ fontSize: 16 }} />}
-                  </AmenityIcon>
-                ))}
-              </Box>
-            )}
           </StopDetails>
-          <StopMetrics>
-            <Typography variant="body2" color="text.secondary">
-              {metersToMiles(stop.metadata.distance || 0).toFixed(1)} mi
-            </Typography>
-            {stop.metadata.eta !== undefined && (
-              <Typography variant="body2" color="text.secondary">
-                {Math.round(stop.metadata.eta)} min
-              </Typography>
-            )}
-          </StopMetrics>
         </StopInfo>
       </StopMarker>
     );
@@ -285,8 +248,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
                   Continue on {trailConfig.name}
                 </Typography>
-                <SubwayLine>
-                  {aheadSplitData.afterJunction.reverse().map(renderStop)}
+                <SubwayLine color={trailConfig.color}>
+                  {aheadSplitData.afterJunction.reverse().map((stop: Stop) => renderStop(stop, trailConfig.color))}
                 </SubwayLine>
               </Box>
               {Object.entries(aheadSplitData.branches).map(([trailId, branchData]) => (
@@ -295,19 +258,19 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     {branchData.name}
                   </Typography>
                   <SubwayLine color={branchData.color}>
-                    {branchData.stops.map(renderStop)}
+                    {branchData.stops.slice().reverse().map((stop: Stop) => renderStop(stop, branchData.color))}
                   </SubwayLine>
                 </Box>
               ))}
             </Box>
-            {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop)}
-            <SubwayLine>
-              {aheadSplitData.beforeJunction.reverse().map(renderStop)}
+            {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, trailConfig.color)}
+            <SubwayLine color={trailConfig.color}>
+              {aheadSplitData.beforeJunction.reverse().map((stop: Stop) => renderStop(stop, trailConfig.color))}
             </SubwayLine>
           </>
         ) : (
-          <SubwayLine>
-            {aheadStops.map(renderStop)}
+          <SubwayLine color={trailConfig.color}>
+            {aheadStops.map((stop: Stop) => renderStop(stop, trailConfig.color))}
           </SubwayLine>
         )}
       </Box>
@@ -361,17 +324,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
         </Typography>
         {behindSplitData.junction ? (
           <>
-            <SubwayLine>
-              {behindSplitData.beforeJunction.map(renderStop)}
+            <SubwayLine color={trailConfig.color}>
+              {behindSplitData.beforeJunction.map((stop: Stop) => renderStop(stop, trailConfig.color))}
             </SubwayLine>
-            {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop)}
+            {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, trailConfig.color)}
             <Box sx={{ display: 'flex', gap: 2, my: 2 }}>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
                   Main Trail
                 </Typography>
-                <SubwayLine>
-                  {behindSplitData.afterJunction.map(renderStop)}
+                <SubwayLine color={trailConfig.color}>
+                  {behindSplitData.afterJunction.map((stop: Stop) => renderStop(stop, trailConfig.color))}
                 </SubwayLine>
               </Box>
               {Object.entries(behindSplitData.branches).map(([trailId, branchData]) => (
@@ -380,15 +343,15 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     {branchData.name}
                   </Typography>
                   <SubwayLine color={branchData.color}>
-                    {branchData.stops.map(renderStop)}
+                    {branchData.stops.slice().reverse().map((stop: Stop) => renderStop(stop, branchData.color))}
                   </SubwayLine>
                 </Box>
               ))}
             </Box>
           </>
         ) : (
-          <SubwayLine>
-            {behindStops.map(renderStop)}
+          <SubwayLine color={trailConfig.color}>
+            {behindStops.map((stop: Stop) => renderStop(stop, trailConfig.color))}
           </SubwayLine>
         )}
       </Box>
