@@ -1,4 +1,4 @@
-import { Stop } from '../types/index';
+import { Stop, TrailConfig } from '../types/index';
 
 export interface Junction {
   id: string;
@@ -7,11 +7,17 @@ export interface Junction {
   trails: string[]; // branch trail IDs
 }
 
+export interface BranchData {
+  stops: Stop[];
+  name: string;
+  color: string;
+}
+
 interface NavViewSplitData {
   beforeJunction: Stop[];
   junctionStop: Stop | null;
   junction: Junction | null;
-  branches: { [trailId: string]: Stop[] };
+  branches: { [trailId: string]: BranchData };
   afterJunction: Stop[];
 }
 
@@ -19,6 +25,7 @@ export function getNavViewSplitData(
   currentTrailId: string,
   stopsSubset: Stop[],
   allStops: Stop[],
+  allTrails: TrailConfig[],
   junctions: Junction[],
   maxStopsAhead = 2,
   junctionId?: string
@@ -60,7 +67,7 @@ export function getNavViewSplitData(
   // 2. Split stops
   let beforeJunction: Stop[] = [];
   let afterJunction: Stop[] = [];
-  let branches: { [trailId: string]: Stop[] } = {};
+  let branches: { [trailId: string]: BranchData } = {};
 
   if (junctionIndex >= 0 && foundJunction) {
     // All stops before the junction
@@ -70,7 +77,12 @@ export function getNavViewSplitData(
     // This is especially important for the 'behind' section, where we want to see the entire branch.
     foundJunction.trails.forEach(trailId => {
       if (trailId !== currentTrailId) {
-        branches[trailId] = allStops.filter(s => s.trailId === trailId);
+        const branchTrailConfig = allTrails.find(t => t.id === trailId);
+        branches[trailId] = {
+          stops: allStops.filter(s => s.trailId === trailId),
+          name: branchTrailConfig?.name || 'Unknown Trail',
+          color: branchTrailConfig?.color || '#808080'
+        };
       }
     });
 

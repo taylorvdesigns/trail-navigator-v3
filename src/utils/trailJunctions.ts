@@ -64,6 +64,22 @@ export function findJunctions(
 
       // If the trails are close enough, create a junction
       if (minDistance <= threshold && closestPoint1 && closestPoint2) {
+        // Check if the closest points are endpoints of their respective trails.
+        const isPoint1Endpoint = 
+          (closestPoint1.latitude === trail1.points[0].latitude && closestPoint1.longitude === trail1.points[0].longitude) ||
+          (closestPoint1.latitude === trail1.points[trail1.points.length - 1].latitude && closestPoint1.longitude === trail1.points[trail1.points.length - 1].longitude);
+
+        const isPoint2Endpoint = 
+          (closestPoint2.latitude === trail2.points[0].latitude && closestPoint2.longitude === trail2.points[0].longitude) ||
+          (closestPoint2.latitude === trail2.points[trail2.points.length - 1].latitude && closestPoint2.longitude === trail2.points[trail2.points.length - 1].longitude);
+
+        // Only create a junction if at least one of the points is NOT an endpoint.
+        // This prevents creating junctions for trails that simply start/end at the same location.
+        if (isPoint1Endpoint && isPoint2Endpoint) {
+          // Both are endpoints, so we skip creating a junction here.
+          continue; 
+        }
+
         // Check if we already have a junction nearby
         const existingJunction = junctions.find(junction => 
           calculateDistance(junction.location, [closestPoint1!.longitude, closestPoint1!.latitude]) <= threshold * 2

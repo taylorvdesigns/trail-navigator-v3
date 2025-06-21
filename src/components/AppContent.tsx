@@ -156,7 +156,8 @@ export const AppContent: React.FC = () => {
             <Route path="/map" element={<MapView trails={trails} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} />} />
             <Route path="/nav" element={
               <NavViewV2 
-                trailConfig={trails[0]} 
+                trailConfig={trails[0]}
+                allTrails={trails}
                 junctions={junctions} 
                 pois={pois} 
                 locomotionMode={locomotionMode}
