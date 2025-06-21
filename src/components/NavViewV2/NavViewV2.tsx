@@ -10,43 +10,87 @@ import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 
 // Styled components
+const SectionHeader = styled(Box)(({ theme }) => ({
+  display: 'inline-block',
+  margin: '0 auto',
+  padding: theme.spacing(0.5, 2),
+  borderRadius: 20,
+  backgroundColor: theme.palette.grey[300],
+  color: theme.palette.text.primary,
+  textAlign: 'center',
+  textTransform: 'uppercase',
+  fontWeight: 'bold',
+  letterSpacing: 1,
+  fontSize: '0.75rem',
+  marginBottom: theme.spacing(1)
+}));
+
 const SubwayLine = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color?: string }>(({ theme, color }) => ({
-  position: 'relative',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    left: 24,
-    top: 0,
-    bottom: 0,
-    width: 2,
-    backgroundColor: color || '#39FF14',
-  },
+  position: 'absolute',
+  left: 60, // Adjust position to make space for metrics
+  top: 0,
+  bottom: 0,
+  width: 4,
+  backgroundColor: color || theme.palette.primary.main
 }));
+
+const StopContainer = styled(Box)({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  padding: '8px 0',
+  minHeight: 52,
+});
 
 const StopMarker = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color?: string }>(({ theme, color }) => ({
-  position: 'relative',
-  paddingLeft: 48,
-  marginBottom: theme.spacing(1),
-  minHeight: 44,
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    left: 20,
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: 10,
-    height: 10,
-    borderRadius: '50%',
-    backgroundColor: color || '#39FF14',
-  },
-  '&:focus-within': {
-    outline: `2px solid ${theme.palette.primary.main}`,
-    outlineOffset: 2
-  }
+  position: 'absolute',
+  left: 54, // Centered on the SubwayLine
+  top: '50%',
+  transform: 'translateY(-50%)',
+  width: 16,
+  height: 16,
+  borderRadius: '50%',
+  backgroundColor: color || theme.palette.primary.main,
+  border: `2px solid ${theme.palette.background.default}`
+}));
+
+const StopMetrics = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-end',
+  width: 50, // Fixed width for alignment
+  marginRight: 20 // Space between metrics and line
+});
+
+const StopDetails = styled(Box)({
+  paddingLeft: 80 // Space for metrics and line
+});
+
+const TrailEndCard = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'color'
+})<{ color?: string }>(({ theme, color }) => ({
+  backgroundColor: color || theme.palette.primary.main,
+  color: theme.palette.getContrastText(color || theme.palette.primary.main),
+  padding: theme.spacing(0.5, 2),
+  borderRadius: 50,
+  textAlign: 'left',
+  fontWeight: 'bold',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1.5),
+}));
+
+const TrailEndMarker = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'color'
+})<{ color?: string }>(({ theme, color }) => ({
+  width: 16,
+  height: 16,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.getContrastText(color || theme.palette.primary.main),
 }));
 
 const StopInfo = styled(Box)(({ theme }) => ({
@@ -54,17 +98,6 @@ const StopInfo = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%'
-}));
-
-const StopDetails = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column'
-}));
-
-const StopMetrics = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end'
 }));
 
 const ContextCard = styled(Paper)(({ theme }) => ({
@@ -219,28 +252,58 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     );
   }
 
-  const renderStop = (stop: Stop, color?: string) => {
-    return (
-      <StopMarker key={stop.id} color={color} role="listitem" tabIndex={0} aria-label={`${stop.name} stop`}>
-        <StopInfo>
-          <StopDetails>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: color || 'text.primary' }}>
-              {stop.type === 'junction' ? 'Junction' : stop.name}
-              {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
+  const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
+    const stopColor = color || trailConfig.color;
+
+    if (stop.type === 'endpoint') {
+      return (
+        <Box key={stop.id} sx={{ position: 'relative', pt: 1, pb: 1 }}>
+          <TrailEndCard color={stopColor}>
+            <TrailEndMarker color={stopColor} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              TRAIL END {stop.name && `(${stop.name})`}
             </Typography>
-          </StopDetails>
-        </StopInfo>
-      </StopMarker>
+          </TrailEndCard>
+        </Box>
+      );
+    }
+    
+    return (
+      <StopContainer key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333`}}>
+        <SubwayLine color={stopColor} />
+        <StopMarker color={stopColor} />
+        <StopMetrics>
+          <Typography variant="caption" color="text.secondary">
+            {metersToMiles(stop.metadata.distance || 0).toFixed(2)} mi
+          </Typography>
+          {stop.metadata.eta !== undefined && (
+            <Typography variant="caption" color="text.secondary">
+              {Math.round(stop.metadata.eta)} min
+            </Typography>
+          )}
+        </StopMetrics>
+        <StopDetails>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: stopColor }}>
+            {stop.type === 'junction' ? 'Junction' : stop.name}
+            {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
+          </Typography>
+        </StopDetails>
+      </StopContainer>
     );
   };
 
+  const renderStopList = (stops: Stop[], color?: string) => {
+    const listColor = color || trailConfig.color;
+    return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
+  };
+  
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       {/* Ahead Section */}
-      <Box sx={{ flex: 1, overflow: 'auto', px: 2 }}>
-        <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, color: 'text.secondary', textAlign: 'center' }}>
+      <Box sx={{ flex: 1, overflow: 'auto', px: 2, textAlign: 'center' }}>
+        <SectionHeader>
           Destinations Ahead
-        </Typography>
+        </SectionHeader>
         {aheadSplitData.junction ? (
           <>
             <Box sx={{ display: 'flex', gap: 2, my: 2 }}>
@@ -248,30 +311,22 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
                   Continue on {trailConfig.name}
                 </Typography>
-                <SubwayLine color={trailConfig.color}>
-                  {aheadSplitData.afterJunction.reverse().map((stop: Stop) => renderStop(stop, trailConfig.color))}
-                </SubwayLine>
+                {renderStopList(aheadSplitData.afterJunction.reverse(), trailConfig.color)}
               </Box>
               {Object.entries(aheadSplitData.branches).map(([trailId, branchData]) => (
                 <Box key={trailId} sx={{ flex: 1 }}>
                   <Typography variant="subtitle2" sx={{ mb: 1, color: branchData.color }}>
                     {branchData.name}
                   </Typography>
-                  <SubwayLine color={branchData.color}>
-                    {branchData.stops.slice().reverse().map((stop: Stop) => renderStop(stop, branchData.color))}
-                  </SubwayLine>
+                  {renderStopList(branchData.stops.slice().reverse(), branchData.color)}
                 </Box>
               ))}
             </Box>
             {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, trailConfig.color)}
-            <SubwayLine color={trailConfig.color}>
-              {aheadSplitData.beforeJunction.reverse().map((stop: Stop) => renderStop(stop, trailConfig.color))}
-            </SubwayLine>
+            {renderStopList(aheadSplitData.beforeJunction.reverse(), trailConfig.color)}
           </>
         ) : (
-          <SubwayLine color={trailConfig.color}>
-            {aheadStops.map((stop: Stop) => renderStop(stop, trailConfig.color))}
-          </SubwayLine>
+          renderStopList(aheadStops, trailConfig.color)
         )}
       </Box>
 
@@ -318,41 +373,33 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       </Box>
 
       {/* Behind Section */}
-      <Box sx={{ flex: 1, overflow: 'auto', px: 2 }}>
-        <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary', textAlign: 'center' }}>
+      <Box sx={{ flex: 1, overflow: 'auto', px: 2, textAlign: 'center' }}>
+        <SectionHeader>
           Behind You
-        </Typography>
+        </SectionHeader>
         {behindSplitData.junction ? (
           <>
-            <SubwayLine color={trailConfig.color}>
-              {behindSplitData.beforeJunction.map((stop: Stop) => renderStop(stop, trailConfig.color))}
-            </SubwayLine>
+            {renderStopList(behindSplitData.beforeJunction, trailConfig.color)}
             {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, trailConfig.color)}
             <Box sx={{ display: 'flex', gap: 2, my: 2 }}>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
                   Main Trail
                 </Typography>
-                <SubwayLine color={trailConfig.color}>
-                  {behindSplitData.afterJunction.map((stop: Stop) => renderStop(stop, trailConfig.color))}
-                </SubwayLine>
+                {renderStopList(behindSplitData.afterJunction, trailConfig.color)}
               </Box>
               {Object.entries(behindSplitData.branches).map(([trailId, branchData]) => (
                 <Box key={trailId} sx={{ flex: 1 }}>
                   <Typography variant="subtitle2" sx={{ mb: 1, color: branchData.color }}>
                     {branchData.name}
                   </Typography>
-                  <SubwayLine color={branchData.color}>
-                    {branchData.stops.slice().reverse().map((stop: Stop) => renderStop(stop, branchData.color))}
-                  </SubwayLine>
+                  {renderStopList(branchData.stops.slice().reverse(), branchData.color)}
                 </Box>
               ))}
             </Box>
           </>
         ) : (
-          <SubwayLine color={trailConfig.color}>
-            {behindStops.map((stop: Stop) => renderStop(stop, trailConfig.color))}
-          </SubwayLine>
+          renderStopList(behindStops, trailConfig.color)
         )}
       </Box>
     </Box>
