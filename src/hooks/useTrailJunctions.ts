@@ -34,12 +34,6 @@ export function useTrailJunctions(trails: Trail[], threshold = 20): Junction[] {
     const mainTrail = trails[0];
     const mainTrailPoints = mainTrail?.points || [];
 
-    console.log('useTrailJunctions Debug:', {
-      trailsCount: trails.length,
-      trailIds: trails.map(t => t.id),
-      mainTrailId: mainTrail?.id
-    });
-
     // Overlap detection for all trails
     const overlapJunctionsRaw = findJunctions(trails, threshold);
     const overlapJunctions: Junction[] = overlapJunctionsRaw.map((j, idx) => {
@@ -51,8 +45,6 @@ export function useTrailJunctions(trails: Trail[], threshold = 20): Junction[] {
         trails: j.trails
       };
     });
-
-    console.log('Overlap Junctions:', overlapJunctions);
 
     // Merge overlap junctions
     const consolidated = consolidateJunctions(overlapJunctions, 100);
@@ -77,13 +69,6 @@ export function useTrailJunctions(trails: Trail[], threshold = 20): Junction[] {
         trails: allTrailIds
       };
     });
-
-    console.log('Final Junctions:', finalJunctions.map(j => ({
-      id: j.id,
-      trails: j.trails,
-      location: j.location,
-      position: j.position
-    })));
 
     // A junction is only a true junction if it connects two or more trails.
     return finalJunctions.filter(j => j.trails.length > 1);
