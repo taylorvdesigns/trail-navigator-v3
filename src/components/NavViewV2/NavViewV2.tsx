@@ -261,7 +261,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           <TrailEndCard color={stopColor}>
             <TrailEndMarker color={stopColor} />
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              TRAIL END {stop.name && `(${stop.name})`}
+              TRAIL END ({stop.name})
             </Typography>
           </TrailEndCard>
         </Box>
@@ -301,23 +301,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       {/* Ahead Section */}
       <Box sx={{ flex: 1, overflow: 'auto', px: 2, textAlign: 'center' }}>
-        <SectionHeader>
-          Destinations Ahead
-        </SectionHeader>
         {aheadSplitData.junction ? (
           <>
-            <Box sx={{ display: 'flex', gap: 2, my: 2 }}>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
               <Box sx={{ flex: 1 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
-                  Continue on {trailConfig.name}
-                </Typography>
                 {renderStopList(aheadSplitData.afterJunction.reverse(), trailConfig.color)}
               </Box>
               {Object.entries(aheadSplitData.branches).map(([trailId, branchData]) => (
                 <Box key={trailId} sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 1, color: branchData.color }}>
-                    {branchData.name}
-                  </Typography>
                   {renderStopList(branchData.stops.slice().reverse(), branchData.color)}
                 </Box>
               ))}
@@ -381,18 +372,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           <>
             {renderStopList(behindSplitData.beforeJunction, trailConfig.color)}
             {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, trailConfig.color)}
-            <Box sx={{ display: 'flex', gap: 2, my: 2 }}>
+            <Box sx={{ display: 'flex', gap: 2 }}>
               <Box sx={{ flex: 1 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
-                  Main Trail
-                </Typography>
                 {renderStopList(behindSplitData.afterJunction, trailConfig.color)}
               </Box>
               {Object.entries(behindSplitData.branches).map(([trailId, branchData]) => (
                 <Box key={trailId} sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 1, color: branchData.color }}>
-                    {branchData.name}
-                  </Typography>
                   {renderStopList(branchData.stops.slice().reverse(), branchData.color)}
                 </Box>
               ))}

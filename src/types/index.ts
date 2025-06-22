@@ -7,8 +7,13 @@ export interface WordPressTrailConfig {
 
 export interface TrailConfig extends WordPressTrailConfig {
   id: string;
-  endpoint1: [number, number];  // First endpoint of the trail
-  endpoint2: [number, number];  // Second endpoint of the trail
+  routeId: string;
+  name: string;
+  color: string;
+  type: 'main' | 'spur';
+  endpointNames?: [string, string];
+  endpoint1?: [number, number];
+  endpoint2?: [number, number];
   coordinates?: [number, number][];
   description?: string;
 }
@@ -86,6 +91,7 @@ export interface StopMetadata {
   groupName?: string;
   groupCount?: number;
   eta?: number;  // Estimated time of arrival in minutes
+  branchTrailIds?: string[];
 }
 
 export interface BaseStop {

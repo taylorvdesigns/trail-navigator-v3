@@ -30,6 +30,7 @@ export const TRAIL_ROUTES: TrailConfig[] = [
     name: 'Main Trail',
     color: '#43D633',
     type: 'main',
+    endpointNames: ['Greenville', 'Furman University'],
     endpoint1: [34.8526, -82.3940], // Greenville, SC
     endpoint2: [34.9266, -82.4432]  // Furman University
   },
@@ -39,6 +40,7 @@ export const TRAIL_ROUTES: TrailConfig[] = [
     name: 'Spur Trail',
     color: '#6995E8',
     type: 'spur',
+    endpointNames: ['Downtown Greenville', 'Unity Park'],
     endpoint1: [34.8526, -82.3940], // Downtown Greenville
     endpoint2: [34.8630, -82.4210]  // Unity Park
   },
@@ -48,6 +50,7 @@ export const TRAIL_ROUTES: TrailConfig[] = [
     name: 'Orange Spur',
     color: '#FFB134',
     type: 'main',
+    endpointNames: ['Unity Park', 'Furman University'],
     endpoint1: [34.8630, -82.4210], // Unity Park
     endpoint2: [34.9266, -82.4432]  // Furman University
   }

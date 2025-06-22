@@ -6,6 +6,8 @@ export interface WordPressTrailConfig {
   name: string;
   color: string;
   type: 'main' | 'spur';
+  endpoint1_name: string;
+  endpoint2_name: string;
 }
 
 export interface WordPressConfig {

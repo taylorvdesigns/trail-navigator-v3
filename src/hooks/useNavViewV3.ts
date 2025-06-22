@@ -163,7 +163,8 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
               metadata: {
                 coordinates: [junction.location[1], junction.location[0]],
                 distance: nearestPoint.point.distance,
-                trails: junction.trails
+                trails: junction.trails,
+                branchTrailIds: junction.trails.filter(id => id !== trailId)
               }
             });
           }
@@ -189,7 +190,7 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
 
         if (!startIsJunction) {
           allStops.push({
-            id: `endpoint-${trail.id}-start`, type: 'endpoint', name: `${trail.name} Start`, trailId: trail.id,
+            id: `endpoint-${trail.id}-start`, type: 'endpoint', name: trail.endpointNames?.[0] || `${trail.name} Start`, trailId: trail.id,
             metadata: { coordinates: [start[1], start[0]], distance: 0 }
           });
         }
@@ -197,7 +198,7 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
         const trailLength = trailPoints[trailPoints.length - 1]?.distance || 0;
         if (!endIsJunction) {
           allStops.push({
-            id: `endpoint-${trail.id}-end`, type: 'endpoint', name: `${trail.name} End`, trailId: trail.id,
+            id: `endpoint-${trail.id}-end`, type: 'endpoint', name: trail.endpointNames?.[1] || `${trail.name} End`, trailId: trail.id,
             metadata: { coordinates: [end[1], end[0]], distance: trailLength }
           });
         }
