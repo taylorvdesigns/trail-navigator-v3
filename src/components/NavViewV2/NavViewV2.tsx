@@ -185,15 +185,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   });
 
   // Calculate split view data with memoization
-  const { aheadStops, behindStops, aheadSplitData, behindSplitData } = useMemo(() => {
+  const { aheadStops, behindStops, aheadSplitData, behindSplitData, activeTrail } = useMemo(() => {
     // Find user stop by type instead of by index
     const userStopIndex = stops.findIndex(stop => stop.type === 'user');
+    const activeTrail = allTrails.find(t => t.id === activeTrailId) || allTrails[0];
     
     if (userStopIndex === -1) return { 
       aheadStops: [] as Stop[], 
       behindStops: [] as Stop[], 
       aheadSplitData: {} as NavViewSplitData, 
-      behindSplitData: {} as NavViewSplitData 
+      behindSplitData: {} as NavViewSplitData,
+      activeTrail: activeTrail
     };
 
     const ahead = stops.slice(userStopIndex + 1);
@@ -201,7 +203,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     
     // Get split view data for ahead section
     const aheadSplit = getNavViewSplitData(
-      trailConfig.id,
+      activeTrailId,
       ahead,
       stops,
       allTrails,
@@ -211,7 +213,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
     // Get split view data for behind section
     const behindSplit = getNavViewSplitData(
-      trailConfig.id,
+      activeTrailId,
       behind,
       stops,
       allTrails,
@@ -223,9 +225,10 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       aheadStops: ahead.reverse(), // Reverse ahead stops so closest appear at bottom
       behindStops: behind,
       aheadSplitData: aheadSplit,
-      behindSplitData: behindSplit
+      behindSplitData: behindSplit,
+      activeTrail: activeTrail
     };
-  }, [stops, trailConfig.id, junctions, allTrails]);
+  }, [stops, activeTrailId, junctions, allTrails]);
 
   if (loading) {
     return (
@@ -253,7 +256,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   }
 
   const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
-    const stopColor = color || trailConfig.color;
+    const stopColor = color || activeTrail.color;
 
     if (stop.type === 'endpoint') {
       return (
@@ -293,7 +296,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   };
 
   const renderStopList = (stops: Stop[], color?: string) => {
-    const listColor = color || trailConfig.color;
+    const listColor = color || activeTrail.color;
     return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
   };
   
@@ -305,7 +308,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           <>
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
               <Box sx={{ flex: 1 }}>
-                {renderStopList(aheadSplitData.afterJunction.reverse(), trailConfig.color)}
+                {renderStopList(aheadSplitData.afterJunction.reverse(), activeTrail.color)}
               </Box>
               {Object.entries(aheadSplitData.branches).map(([trailId, branchData]) => (
                 <Box key={trailId} sx={{ flex: 1 }}>
@@ -313,11 +316,11 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 </Box>
               ))}
             </Box>
-            {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, trailConfig.color)}
-            {renderStopList(aheadSplitData.beforeJunction.reverse(), trailConfig.color)}
+            {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
+            {renderStopList(aheadSplitData.beforeJunction.reverse(), activeTrail.color)}
           </>
         ) : (
-          renderStopList(aheadStops, trailConfig.color)
+          renderStopList(aheadStops, activeTrail.color)
         )}
       </Box>
 
@@ -370,11 +373,11 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
         </SectionHeader>
         {behindSplitData.junction ? (
           <>
-            {renderStopList(behindSplitData.beforeJunction, trailConfig.color)}
-            {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, trailConfig.color)}
+            {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
+            {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Box sx={{ flex: 1 }}>
-                {renderStopList(behindSplitData.afterJunction, trailConfig.color)}
+                {renderStopList(behindSplitData.afterJunction, activeTrail.color)}
               </Box>
               {Object.entries(behindSplitData.branches).map(([trailId, branchData]) => (
                 <Box key={trailId} sx={{ flex: 1 }}>
@@ -384,7 +387,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             </Box>
           </>
         ) : (
-          renderStopList(behindStops, trailConfig.color)
+          renderStopList(behindStops, activeTrail.color)
         )}
       </Box>
     </Box>
