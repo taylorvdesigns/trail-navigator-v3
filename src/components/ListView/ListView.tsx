@@ -19,15 +19,18 @@ import {
   Close as CloseIcon,
   DirectionsWalk as WalkIcon
 } from '@mui/icons-material';
-import { POI } from '../../types/index';
+import { POI, TrailPoint } from '../../types/index';
 import { useNavigate } from 'react-router-dom';
 import { calculateDistance } from '../../utils/distance';
+import { getPOIsForTrail } from '../../utils/poi';
 
 interface ListViewProps {
   pois: POI[];
   selectedGroup?: string;
   onPoiClick: (poi: POI) => void;
   currentLocation?: [number, number] | null;
+  activeTrailId: string | null;
+  allTrailData: { id: string, points: TrailPoint[] }[] | null;
 }
 
 interface GroupedPOIs {
@@ -44,14 +47,23 @@ export const ListView: React.FC<ListViewProps> = ({
   pois, 
   selectedGroup, 
   onPoiClick,
-  currentLocation 
+  currentLocation,
+  activeTrailId,
+  allTrailData
 }) => {
   const navigate = useNavigate();
   const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+  const trailPois = React.useMemo(() => {
+    if (!activeTrailId || !allTrailData) {
+      return pois;
+    }
+    return getPOIsForTrail(pois, allTrailData, activeTrailId, 100);
+  }, [pois, allTrailData, activeTrailId]);
+
   const groupedPois = React.useMemo(() => {
-    return pois.reduce((acc: GroupedPOIs, poi) => {
+    return trailPois.reduce((acc: GroupedPOIs, poi) => {
       const groupName = poi.post_tags[0]?.name || 'Ungrouped';
       if (!acc[groupName]) {
         acc[groupName] = [];
@@ -59,17 +71,17 @@ export const ListView: React.FC<ListViewProps> = ({
       acc[groupName].push(poi);
       return acc;
     }, {});
-  }, [pois]);
+  }, [trailPois]);
 
   const uniqueTags = React.useMemo(() => {
     const tags = new Set<string>();
-    pois.forEach(poi => {
+    trailPois.forEach(poi => {
       poi.post_tags.forEach(tag => {
         tags.add(tag.name);
       });
     });
     return Array.from(tags);
-  }, [pois]);
+  }, [trailPois]);
 
   const getDistance = (poi: POI): number | null => {
     if (!currentLocation || !poi.coordinates) return null;

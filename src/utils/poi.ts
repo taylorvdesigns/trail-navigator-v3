@@ -52,22 +52,32 @@ export function assignPOIsToTrails(
   pois.forEach(poi => {
     if (!poi.coordinates) return;
     
-    const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]]; // [lat, lng]
+    const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
+    let closestTrailInfo = {
+      trailId: '',
+      distance: Infinity
+    };
     
-    // Check each trail to see if POI is close enough
+    // Find the single closest trail for this POI
     trails.forEach(trail => {
       if (trail.points.length === 0) return;
       
-      // Find nearest point on this trail
       const nearestPoint = findNearestTrailPoint(poiCoords, trail.points);
       
-      if (nearestPoint && nearestPoint.distance <= proximityThreshold) {
-        // POI is close enough to this trail, assign it
-        const trailPOIs = trailAssignments.get(trail.id) || [];
-        trailPOIs.push(poi);
-        trailAssignments.set(trail.id, trailPOIs);
+      if (nearestPoint && nearestPoint.distance < closestTrailInfo.distance) {
+        closestTrailInfo = {
+          trailId: trail.id,
+          distance: nearestPoint.distance
+        };
       }
     });
+    
+    // Assign the POI only to the closest trail, if it's within the threshold
+    if (closestTrailInfo.trailId && closestTrailInfo.distance <= proximityThreshold) {
+      const trailPOIs = trailAssignments.get(closestTrailInfo.trailId) || [];
+      trailPOIs.push(poi);
+      trailAssignments.set(closestTrailInfo.trailId, trailPOIs);
+    }
   });
   
   return trailAssignments;

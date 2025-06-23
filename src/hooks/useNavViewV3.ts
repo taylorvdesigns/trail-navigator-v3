@@ -20,6 +20,7 @@ interface UseNavViewV3Result {
   loading: boolean;
   error: Error | null;
   currentLocation: [number, number] | null;
+  allTrailData: { id: string, points: TrailPoint[], endpoints: { start: [number, number], end: [number, number] } }[] | null;
 }
 
 // Helper to group POIs by their primary tag
@@ -202,7 +203,7 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
       });
     });
 
-    // --- Step 2: Create the user's stop ---
+    // --- Step 3: Create the user's stop ---
     let finalUserStop: Stop | null = null;
     if (currentLocation && userPointOnTrail) {
       finalUserStop = {
@@ -217,28 +218,35 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
       };
     }
     
-    // --- Step 3: Filter stops to only those relevant to the active trail ---
-    const upcomingJunction = allStops.find(stop => 
-      stop.trailId === activeTrailId && 
-      stop.type === 'junction' &&
-      (stop.metadata.distance || 0) > (finalUserStop?.metadata.distance || 0)
-    );
+    // --- Step 4: Filter stops to only those relevant to the active trail ---
+    const userDist = finalUserStop?.metadata.distance || 0;
 
-    let relevantTrailIds = [activeTrailId];
-    if (upcomingJunction) {
-      // If a junction is ahead, we also need the stops from the trails it connects to.
-      const combinedIds = new Set([...relevantTrailIds, ...(upcomingJunction.metadata.trails || [])]);
-      relevantTrailIds = Array.from(combinedIds);
+    // Find the closest junction ahead of the user on the active trail
+    const closestJunctionAhead = allStops
+      .filter(s => s.trailId === activeTrailId && s.type === 'junction' && (s.metadata.distance || 0) > userDist)
+      .sort((a, b) => (a.metadata.distance || 0) - (b.metadata.distance || 0))[0];
+
+    // Find the closest junction behind the user on the active trail
+    const closestJunctionBehind = allStops
+      .filter(s => s.trailId === activeTrailId && s.type === 'junction' && (s.metadata.distance || 0) < userDist)
+      .sort((a, b) => (b.metadata.distance || 0) - (a.metadata.distance || 0))[0];
+
+    const relevantTrailIds = new Set([activeTrailId]);
+    if (closestJunctionAhead) {
+      (closestJunctionAhead.metadata.trails || []).forEach(id => relevantTrailIds.add(id));
+    }
+    if (closestJunctionBehind) {
+      (closestJunctionBehind.metadata.trails || []).forEach(id => relevantTrailIds.add(id));
     }
 
-    const relevantStops = allStops.filter(stop => relevantTrailIds.includes(stop.trailId));
+    const relevantStops = allStops.filter(stop => relevantTrailIds.has(stop.trailId));
     
     // Add the user stop to the relevant list
     if(finalUserStop) {
       relevantStops.push(finalUserStop);
     }
     
-    // --- Step 4: Sort the final, relevant list of stops ---
+    // --- Step 5: Sort the final, relevant list of stops ---
     const sortedStops = relevantStops.sort((a, b) => {
       // Sort primarily by whether the stop is on the active trail or not
       const aIsActive = a.trailId === activeTrailId;
@@ -261,5 +269,6 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
     loading: isLoading,
     error: isError ? new Error('Error loading trail data') : null,
     currentLocation,
+    allTrailData,
   };
 } 
