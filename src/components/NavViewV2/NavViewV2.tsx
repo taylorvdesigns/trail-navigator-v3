@@ -247,6 +247,24 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     simDirection
   ), [activeTrailId, behindStops, stops, allTrails, junctions, currentLocation, allTrailData, simDirection]);
 
+  // Determine the correct endpoint name for the heading
+  const userDistance = userStop ? userStop.metadata.distance || 0 : 0;
+  let endpointName = 'Unknown';
+  if (activeTrail && allTrailData) {
+    const trailData = allTrailData.find(t => t.id === activeTrail.id);
+    if (trailData && activeTrail.endpointNames) {
+      const startDist = 0;
+      const endDist = trailData.points[trailData.points.length - 1]?.distance || 0;
+      if (simDirection === 'top') {
+        // Heading toward the end
+        endpointName = userDistance < endDist / 2 ? activeTrail.endpointNames[1] : activeTrail.endpointNames[0];
+      } else {
+        // Heading toward the start
+        endpointName = userDistance < endDist / 2 ? activeTrail.endpointNames[0] : activeTrail.endpointNames[1];
+      }
+    }
+  }
+
   if (loading) {
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
@@ -350,7 +368,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       {/* Middle Section - Current Location */}
       <Box sx={{ my: 4 }}>
         <NavContextCard
-          destination={aheadSplitData.afterJunction.length > 0 ? aheadSplitData.afterJunction[aheadSplitData.afterJunction.length - 1].name : 'Unknown'}
+          destination={endpointName}
           trail={activeTrail.name}
           distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
           description={"Slight decline in elevation to Unity Park"}
@@ -358,6 +376,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           amenities={['food', 'water', 'restroom', 'cafe', 'store', 'accessible']}
           onLocomotionChange={onLocomotionChange}
           onChangeEntryPoint={onChangeEntryPoint}
+          borderColor={activeTrail.color}
+          highlightColor={activeTrail.color}
         />
       </Box>
 

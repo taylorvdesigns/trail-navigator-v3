@@ -17,6 +17,7 @@ interface NavContextCardProps {
   entryPointDistanceMiles?: number | null;
   onChangeEntryPoint?: () => void;
   borderColor?: string;
+  highlightColor?: string;
 }
 
 const modeIconMap = {
@@ -58,6 +59,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
   entryPointDistanceMiles,
   onChangeEntryPoint,
   borderColor = '#39FF14',
+  highlightColor = '#39FF14',
 }) => {
   const theme = useTheme();
   return (
@@ -83,11 +85,17 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
         <Typography variant="subtitle2" sx={{ textAlign: 'center', fontWeight: 700, letterSpacing: 1, fontSize: '0.8rem', color: '#888', whiteSpace: 'nowrap', mb: 0, textTransform: 'uppercase' }}>
           HEADING TOWARDS
         </Typography>
-        <Typography variant="subtitle2" sx={{ textAlign: 'center', fontWeight: 700, letterSpacing: 1, fontSize: '0.8rem', whiteSpace: 'nowrap', mt: 0, textTransform: 'uppercase' }}>
-          <span style={{ color: '#39FF14', fontWeight: 900 }}>{destination.toUpperCase()}</span>
-          <span style={{ color: '#888', fontWeight: 700 }}> ON THE </span>
-          <span style={{ color: '#39FF14', fontWeight: 700 }}>{trail.toUpperCase()} TRAIL</span>
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 0.5, gap: 1 }}>
+          <Box sx={{ bgcolor: highlightColor, color: '#fff', px: 2, py: 0.5, borderRadius: 99, fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block' }}>
+            {destination}
+          </Box>
+          <Typography component="span" sx={{ color: '#222', fontWeight: 700, fontSize: '1rem', mx: 1, textTransform: 'uppercase', letterSpacing: 1 }}>
+            ON THE
+          </Typography>
+          <Box sx={{ bgcolor: highlightColor, color: '#fff', px: 2, py: 0.5, borderRadius: 99, fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block' }}>
+            {trail}
+          </Box>
+        </Box>
       </Box>
 
       {/* 3-column grid for main content */}
@@ -134,11 +142,12 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
             justifyContent: 'center',
             position: 'relative',
             mx: 'auto',
+            border: `4px solid ${highlightColor}`,
           }}
         >
           {/* Up arrow */}
           <Box sx={{ position: 'absolute', top: 18, left: '50%', transform: 'translateX(-50%)' }}>
-            <FontAwesomeIcon icon={faArrowUp} style={{ fontSize: 38, color: '#39FF14' }} />
+            <FontAwesomeIcon icon={faArrowUp} style={{ fontSize: 38, color: highlightColor }} />
           </Box>
           {/* Locomotion icons: active in center, inactive on sides */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', mt: 6 }}>
@@ -162,7 +171,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
                       icon={faPersonWalking}
                       style={{
                         fontSize: isActive ? 38 : 19,
-                        color: isActive ? '#39FF14' : '#6B7280',
+                        color: isActive ? highlightColor : '#6B7280',
                         transition: 'color 0.2s, font-size 0.2s',
                       }}
                     />
@@ -172,7 +181,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
                       icon={faPersonRunning}
                       style={{
                         fontSize: isActive ? 38 : 19,
-                        color: isActive ? '#39FF14' : '#6B7280',
+                        color: isActive ? highlightColor : '#6B7280',
                         transition: 'color 0.2s, font-size 0.2s',
                       }}
                     />
@@ -182,7 +191,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
                       icon={faPersonBiking}
                       style={{
                         fontSize: isActive ? 38 : 19,
-                        color: isActive ? '#39FF14' : '#6B7280',
+                        color: isActive ? highlightColor : '#6B7280',
                         transition: 'color 0.2s, font-size 0.2s',
                       }}
                     />
