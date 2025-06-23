@@ -9,6 +9,7 @@ import { useNavViewV3 } from '../../hooks/useNavViewV3';
 import { LocationContext } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
+import { NavContextCard } from '../NavView/NavContextCard';
 
 // Styled components
 const SectionHeader = styled(Box)(({ theme }) => ({
@@ -348,44 +349,16 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
       {/* Middle Section - Current Location */}
       <Box sx={{ my: 4 }}>
-        <ContextCard>
-          <CircularMode>
-            <Box sx={{ position: 'absolute', top: 18, left: '50%', transform: 'translateX(-50%)' }}>
-              <FontAwesomeIcon icon={faArrowUp} style={{ fontSize: 38, color: '#39FF14' }} />
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 6 }}>
-              {(['walking', 'running', 'biking'] as const).map((mode) => (
-                <Box
-                  key={mode}
-                  onClick={() => onLocomotionChange(mode)}
-                  sx={{
-                    cursor: 'pointer',
-                    opacity: mode === locomotionMode ? 1 : 0.3,
-                    transition: 'opacity 0.2s'
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={
-                      mode === 'walking'
-                        ? faPersonWalking
-                        : mode === 'running'
-                        ? faPersonRunning
-                        : faPersonBiking
-                    }
-                    style={{ fontSize: mode === locomotionMode ? 35 : 28, color: '#39FF14' }}
-                  />
-                </Box>
-              ))}
-            </Box>
-          </CircularMode>
-          <Box sx={{ display: 'flex', gap: 3, mt: 2 }}>
-            {CATEGORIES.map((category) => (
-              <Box key={category.slug} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <FontAwesomeIcon icon={category.icon} style={{ fontSize: 18 }} />
-              </Box>
-            ))}
-          </Box>
-        </ContextCard>
+        <NavContextCard
+          destination={aheadSplitData.afterJunction.length > 0 ? aheadSplitData.afterJunction[aheadSplitData.afterJunction.length - 1].name : 'Unknown'}
+          trail={activeTrail.name}
+          distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
+          description={"Slight decline in elevation to Unity Park"}
+          mode={locomotionMode}
+          amenities={['food', 'water', 'restroom', 'cafe', 'store', 'accessible']}
+          onLocomotionChange={onLocomotionChange}
+          onChangeEntryPoint={onChangeEntryPoint}
+        />
       </Box>
 
       {/* Behind Section */}
