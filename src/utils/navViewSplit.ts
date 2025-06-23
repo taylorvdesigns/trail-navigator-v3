@@ -43,7 +43,8 @@ export function getNavViewSplitData(
   userLocation: [number, number] | null,
   allTrailData: { id: string, points: TrailPoint[] }[] | null,
   maxStopsAhead = 2,
-  junctionId?: string
+  junctionId?: string,
+  simDirection?: 'top' | 'bottom'
 ): NavViewSplitData {
   // STEP 1: Find the junction either by ID or by searching nearby stops
   let junctionIndex = -1;
@@ -118,7 +119,7 @@ export function getNavViewSplitData(
         const otherTrailStops = allStops.filter(s => s.trailId === otherTrailId);
         
         // Use directional logic to determine which stops are left vs right
-        const { left, right } = getDirectionalStops(otherTrailStops, junctionStop, userLocation);
+        const { left, right } = getDirectionalStops(otherTrailStops, junctionStop, userLocation, simDirection);
 
         if (left.length > 0) {
           leftBranch = {

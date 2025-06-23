@@ -17,17 +17,21 @@ function crossProduct(v1: {x: number, y: number}, v2: {x: number, y: number}): n
 /**
  * Takes a list of stops for a main trail and splits them into "left" and "right" paths
  * relative to a user approaching a junction from a branch trail.
+ * 
+ * When in simulation mode, the simDirection parameter can be used to simulate
+ * the user traveling in the opposite direction, which will flip the left/right
+ * determination.
  */
 export function getDirectionalStops(
   mainTrailStops: Stop[],
   junctionStop: Stop, // This is the junction stop from the *branch* trail
   userLocation: [number, number], // [latitude, longitude]
+  simDirection?: 'top' | 'bottom'
 ): DirectionalStops {
   // The ID is structured like `junction-${rawJunctionId}-${trailId}`.
   // We need to find the corresponding junction stop on the main trail.
   const junctionIdParts = junctionStop.id.split('-');
   if (junctionIdParts[0] !== 'junction' || junctionIdParts.length < 3) {
-    console.error("Invalid junction stop ID format", junctionStop.id);
     return { left: [], right: [] };
   }
   const rawJunctionId = junctionIdParts[1];
@@ -36,7 +40,6 @@ export function getDirectionalStops(
   const mainTrailJunctionStop = mainTrailStops.find(s => s.type === 'junction' && s.id.startsWith(`junction-${rawJunctionId}-`));
 
   if (!mainTrailJunctionStop) {
-    console.error("Could not find corresponding junction on the main trail for raw ID:", rawJunctionId);
     return { left: [], right: [] };
   }
 
@@ -67,6 +70,13 @@ export function getDirectionalStops(
     x: junctionCoords[1] - userLocation[1], // lon
     y: junctionCoords[0] - userLocation[0], // lat
   };
+
+  // If in simulation mode and traveling in the opposite direction, flip the approach vector
+  // This simulates the user approaching the junction from the opposite direction
+  if (simDirection === 'bottom') {
+    approachVector.x = -approachVector.x;
+    approachVector.y = -approachVector.y;
+  }
 
   // Determine the vector for the first path away from the junction.
   const path1StartCoords = path1[0].metadata.coordinates;

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { LocomotionMode, Stop, TrailConfig, POI } from '../../types';
 import { Junction, getNavViewSplitData, NavViewSplitData } from '../../utils/navViewSplit';
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching } from '@fortawesome/free-solid-svg-icons';
 import { Restaurant, LocalCafe, Store, Wc } from '@mui/icons-material';
 import { useNavViewV3 } from '../../hooks/useNavViewV3';
+import { LocationContext } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 
@@ -170,11 +171,13 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   onLocomotionChange,
   onChangeEntryPoint
 }) => {
-  const { stops, userStop, activeTrailId, loading, error, currentLocation } = useNavViewV3({
+  const { stops, userStop, activeTrailId, loading, error, currentLocation, allTrailData } = useNavViewV3({
     allTrails,
     junctions,
     pois,
   });
+
+  const { simDirection } = useContext(LocationContext) || { simDirection: 'top' };
 
   const activeTrail = useMemo(() => {
     return allTrails.find(t => t.id === activeTrailId) || allTrails[0];
@@ -183,14 +186,36 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   // Correctly filter for stops ahead on the active trail
   const aheadStops = useMemo(() => {
     if (!userStop) return [];
-    return stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > (userStop.metadata.distance || 0));
-  }, [stops, userStop, activeTrailId]);
+    const userDistance = userStop.metadata.distance || 0;
+    
+    if (simDirection === 'bottom') {
+      // When traveling "backwards", stops with smaller distance are ahead.
+      // We need to reverse the list to sort them from closest to farthest.
+      const stopsBehind = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) < userDistance);
+      return stopsBehind.slice().reverse();
+    } else {
+      // Default "forwards" direction. Stops with greater distance are ahead.
+      // The list is already sorted closest to farthest.
+      return stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > userDistance);
+    }
+  }, [stops, userStop, activeTrailId, simDirection]);
 
   // Correctly filter for stops behind on the active trail
   const behindStops = useMemo(() => {
     if (!userStop) return [];
-    return stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) < (userStop.metadata.distance || 0));
-  }, [stops, userStop, activeTrailId]);
+    const userDistance = userStop.metadata.distance || 0;
+    
+    if (simDirection === 'bottom') {
+      // When traveling "backwards", stops with greater distance are behind.
+      // The list is already sorted closest to farthest.
+      return stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > userDistance);
+    } else {
+      // Default "forwards" direction. Stops with smaller distance are behind.
+      // We need to reverse the list to sort them from closest to farthest.
+      const stopsBehind = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) < userDistance);
+      return stopsBehind.slice().reverse();
+    }
+  }, [stops, userStop, activeTrailId, simDirection]);
   
   // Get split view data for ahead section
   const aheadSplitData = useMemo(() => getNavViewSplitData(
@@ -200,19 +225,26 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     allTrails,
     junctions,
     currentLocation,
-    2 // Look 2 stops ahead
-  ), [activeTrailId, aheadStops, stops, allTrails, junctions, currentLocation]);
+    allTrailData,
+    2,
+    undefined,
+    simDirection
+  ), [activeTrailId, aheadStops, stops, allTrails, junctions, currentLocation, allTrailData, simDirection]);
 
   // Get split view data for behind section
+  // The behindStops list is now always correctly sorted (closest to farthest), so we no longer need to reverse it here.
   const behindSplitData = useMemo(() => getNavViewSplitData(
     activeTrailId,
-    behindStops.slice().reverse(),
+    behindStops,
     stops,
     allTrails,
     junctions,
     currentLocation,
-    2 // Look 2 stops behind
-  ), [activeTrailId, behindStops, stops, allTrails, junctions, currentLocation]);
+    allTrailData,
+    2,
+    undefined,
+    simDirection
+  ), [activeTrailId, behindStops, stops, allTrails, junctions, currentLocation, allTrailData, simDirection]);
 
   if (loading) {
     return (
