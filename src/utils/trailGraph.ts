@@ -307,7 +307,7 @@ export function getNodesBehind(
  * Returns an object with the path (array of node IDs) and total distance, or null if no path exists.
  */
 export function findShortestPath(
-  graph: TrailGraph,
+  graph: Graph,
   startId: string,
   endId: string
 ): { path: string[]; distance: number } | null {
@@ -332,26 +332,15 @@ export function findShortestPath(
     visited.add(currentId);
     if (currentId === endId) break;
 
-    // For each neighbor
-    for (const edge of graph.edges) {
-      if (edge.from === currentId) {
-        const neighborId = edge.to;
-        const alt = distances[currentId] + edge.distance;
-        if (alt < distances[neighborId]) {
-          distances[neighborId] = alt;
-          previous[neighborId] = currentId;
-          queue.push({ id: neighborId, dist: alt });
-        }
-      }
-      // If the graph is undirected, also check edge.to === currentId
-      if (edge.to === currentId) {
-        const neighborId = edge.from;
-        const alt = distances[currentId] + edge.distance;
-        if (alt < distances[neighborId]) {
-          distances[neighborId] = alt;
-          previous[neighborId] = currentId;
-          queue.push({ id: neighborId, dist: alt });
-        }
+    // For each neighbor (iterate over all edges from currentId)
+    const edges = graph.edges[currentId] || [];
+    for (const edge of edges) {
+      const neighborId = edge.to;
+      const alt = distances[currentId] + edge.distance;
+      if (alt < distances[neighborId]) {
+        distances[neighborId] = alt;
+        previous[neighborId] = currentId;
+        queue.push({ id: neighborId, dist: alt });
       }
     }
   }
@@ -366,6 +355,7 @@ export function findShortestPath(
     }
     return { path, distance: distances[endId] };
   }
+  
   return null;
 }
 
@@ -557,4 +547,107 @@ export function buildSingleTrailGraph(trail: TrailConfig, pois: POI[]): Graph {
   }
 
   return { nodes, edges: edges as unknown as Record<string, GraphEdge[]> } as unknown as Graph;
+}
+
+/**
+ * Given a point and a graph, find the nearest edge (segment between two nodes),
+ * project the point onto it, and return the edge's node IDs, the projection point,
+ * and the distance from the start node to the projection (along the segment).
+ */
+export function projectPointOntoGraphEdge(
+  graph: Graph,
+  point: [number, number]
+): {
+  from: string;
+  to: string;
+  projection: [number, number];
+  distanceFromStart: number;
+  edgeLength: number;
+} | null {
+  let minDist = Infinity;
+  let result: {
+    from: string;
+    to: string;
+    projection: [number, number];
+    distanceFromStart: number;
+    edgeLength: number;
+  } | null = null;
+
+  for (const edgeList of Object.values(graph.edges)) {
+    for (const edge of edgeList) {
+      const fromNode = graph.nodes[edge.from];
+      const toNode = graph.nodes[edge.to];
+      if (!fromNode || !toNode) continue;
+      const start = fromNode.position;
+      const end = toNode.position;
+      const dx = end[0] - start[0];
+      const dy = end[1] - start[1];
+      const lengthSq = dx * dx + dy * dy;
+      if (lengthSq === 0) continue;
+      const t = Math.max(0, Math.min(1, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / lengthSq));
+      const proj: [number, number] = [start[0] + t * dx, start[1] + t * dy];
+      const distFromStart = haversine(start, proj);
+      const distToPoint = haversine(proj, point);
+      const edgeLen = haversine(start, end);
+      if (distToPoint < minDist) {
+        minDist = distToPoint;
+        result = {
+          from: edge.from,
+          to: edge.to,
+          projection: proj,
+          distanceFromStart: distFromStart,
+          edgeLength: edgeLen
+        };
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * Calculates the true network distance between two arbitrary points along the trail graph,
+ * using projection onto the nearest edges and Dijkstra for the path in between.
+ */
+export function calculatePreciseNetworkDistance(
+  graph: Graph,
+  startPoint: [number, number],
+  endPoint: [number, number]
+): number | null {
+  const startProj = projectPointOntoGraphEdge(graph, startPoint);
+  const endProj = projectPointOntoGraphEdge(graph, endPoint);
+  
+  if (!startProj || !endProj) {
+    return null;
+  }
+
+  // If both points project onto the same edge (regardless of direction)
+  if (
+    (startProj.from === endProj.from && startProj.to === endProj.to) ||
+    (startProj.from === endProj.to && startProj.to === endProj.from)
+  ) {
+    const distance = Math.abs(startProj.distanceFromStart - endProj.distanceFromStart);
+    return distance;
+  }
+
+  // Otherwise, calculate the full network distance:
+  const startToFrom = startProj.distanceFromStart;
+  const startToTo = startProj.edgeLength - startProj.distanceFromStart;
+  const startNearestNode = startToFrom < startToTo ? startProj.from : startProj.to;
+  const startPartial = Math.min(startToFrom, startToTo);
+
+  const endToFrom = endProj.distanceFromStart;
+  const endToTo = endProj.edgeLength - endProj.distanceFromStart;
+  const endNearestNode = endToFrom < endToTo ? endProj.from : endProj.to;
+  const endPartial = Math.min(endToFrom, endToTo);
+
+  // Use the existing findShortestPath (returns { path, distance })
+  const pathResult = findShortestPath(graph, startNearestNode, endNearestNode);
+  
+  const pathDistance = pathResult && typeof pathResult.distance === 'number' ? pathResult.distance : null;
+  if (pathDistance === null) {
+    return null;
+  }
+
+  const totalDistance = startPartial + pathDistance + endPartial;
+  return totalDistance;
 } 

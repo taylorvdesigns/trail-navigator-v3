@@ -86,7 +86,6 @@ export const AppContent: React.FC = () => {
 
   // Show distance tracking modal if user is on trail but no distance tracking entry point is set
   useEffect(() => {
-    console.log('[DistanceTrackingModal Effect]', { entryPoint, distanceTrackingModalOpen, hasConfirmedEntryPointThisSession });
     if (entryPoint && hasConfirmedEntryPointThisSession) {
       setDistanceTrackingModalOpen(false);
       return;
@@ -103,7 +102,6 @@ export const AppContent: React.FC = () => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'r' && event.ctrlKey) {
         sessionStorage.removeItem('hasShownDistanceTracking');
-        console.log('Distance tracking modal reset for testing');
       }
     };
     window.addEventListener('keydown', handleKeyPress);

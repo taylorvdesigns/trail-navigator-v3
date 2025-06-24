@@ -15,6 +15,7 @@ interface NavContextCardProps {
   amenities: Array<'food' | 'water' | 'restroom' | 'cafe' | 'store' | 'accessible'>;
   onLocomotionChange?: (mode: LocomotionMode) => void;
   entryPointDistanceMiles?: number | null;
+  preciseNetworkDistanceMiles?: number | null;
   onChangeEntryPoint?: () => void;
   borderColor?: string;
   highlightColor?: string;
@@ -57,6 +58,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
   amenities,
   onLocomotionChange,
   entryPointDistanceMiles,
+  preciseNetworkDistanceMiles,
   onChangeEntryPoint,
   borderColor = '#39FF14',
   highlightColor = '#39FF14',
@@ -102,7 +104,32 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', width: '100%', alignItems: 'center', flex: 1 }}>
         {/* Left: Entry Point Distance and Change Button */}
         <Box sx={{ textAlign: 'left', maxWidth: 140, justifySelf: 'start', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          {typeof entryPointDistanceMiles === 'number' ? (
+          {typeof preciseNetworkDistanceMiles === 'number' ? (
+            <>
+              <Typography variant="body2" sx={{ color: '#222', fontWeight: 500, mb: 0.5 }}>
+                You are {preciseNetworkDistanceMiles.toFixed(2)} miles from where you started on the trail.
+              </Typography>
+              {onChangeEntryPoint && (
+                <Box sx={{ mt: 0.5 }}>
+                  <button
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#e91e63',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      fontSize: 13,
+                      padding: 0,
+                      fontWeight: 500
+                    }}
+                    onClick={onChangeEntryPoint}
+                  >
+                    Change starting location?
+                  </button>
+                </Box>
+              )}
+            </>
+          ) : typeof entryPointDistanceMiles === 'number' ? (
             <>
               <Typography variant="body2" sx={{ color: '#222', fontWeight: 500, mb: 0.5 }}>
                 You are {entryPointDistanceMiles.toFixed(2)} miles from where you started on the trail.

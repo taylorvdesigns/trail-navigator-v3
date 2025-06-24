@@ -11,6 +11,8 @@ import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 import { NavContextCard } from '../NavView/NavContextCard';
 import { findNearestTrailPoint } from '../../utils/trail';
+import { useTrailGraph } from '../../hooks/useTrailGraph';
+import { calculatePreciseNetworkDistance } from '../../utils/trailGraph';
 
 // Styled components
 const SectionHeader = styled(Box)(({ theme }) => ({
@@ -190,6 +192,28 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     junctions,
     pois,
   });
+  const { graph } = useTrailGraph();
+  const { entryPoint } = useContext(LocationContext) || {};
+
+  // Debug: Log precise network distance from entry point to user location
+  React.useEffect(() => {
+    if (graph && entryPoint && userStop && userStop.metadata?.coordinates) {
+      const preciseDistance = calculatePreciseNetworkDistance(
+        graph,
+        [entryPoint[1], entryPoint[0]], // [lng, lat]
+        [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]] // [lng, lat]
+      );
+      // Store the precise distance for display
+      if (preciseDistance !== null) {
+        setPreciseNetworkDistance(preciseDistance);
+      }
+    }
+  }, [graph, entryPoint, userStop]);
+
+  const [preciseNetworkDistance, setPreciseNetworkDistance] = React.useState<number | null>(null);
+
+  // Convert precise network distance from meters to miles
+  const preciseNetworkDistanceMiles = preciseNetworkDistance ? preciseNetworkDistance / 1609.34 : null;
 
   const { simDirection } = useContext(LocationContext) || { simDirection: 'top' };
 
@@ -287,8 +311,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   if (activeTrail && allTrailData) {
     const trailData = allTrailData.find(t => t.id === activeTrail.id);
     if (trailData && trailData.points) {
-      // Log a sample of trail points for elevation
-      console.log('[Elevation Debug] Sample trail points:', trailData.points.slice(0, 5));
       // Find nearest trail point to user
       if (userStop) {
         const nearestUserPoint = trailData.points.reduce((closest, pt) => {
@@ -296,7 +318,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           return d < Math.abs((closest.distance || 0) - (userStop.metadata.distance || 0)) ? pt : closest;
         }, trailData.points[0]);
         userElevation = nearestUserPoint.elevation;
-        console.log('[Elevation Debug] User nearest point:', nearestUserPoint);
       }
       // Find nearest trail point to next stop
       if (nextStop) {
@@ -305,7 +326,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           return d < Math.abs((closest.distance || 0) - (nextStop.metadata.distance || 0)) ? pt : closest;
         }, trailData.points[0]);
         nextStopElevation = nearestNextPoint.elevation;
-        console.log('[Elevation Debug] Next stop nearest point:', nearestNextPoint);
       }
     }
   }
@@ -316,7 +336,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   // Calculate distance from entry point to current location
   let entryPointDistanceMiles: number | null = null;
-  const entryPoint = useContext(LocationContext)?.entryPoint;
   if (entryPoint && userStop && activeTrail && allTrailData) {
     const trailData = allTrailData.find(t => t.id === activeTrail.id);
     if (trailData && trailData.points) {
@@ -443,6 +462,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           onLocomotionChange={onLocomotionChange}
           onChangeEntryPoint={onChangeEntryPoint}
           entryPointDistanceMiles={entryPointDistanceMiles}
+          preciseNetworkDistanceMiles={preciseNetworkDistanceMiles}
           borderColor={activeTrail.color}
           highlightColor={activeTrail.color}
         />
