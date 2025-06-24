@@ -83,18 +83,25 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
       }}
     >
       {/* Heading - two lines */}
-      <Box sx={{ width: '100%', mb: 1, mt: 0 }}>
-        <Typography variant="subtitle2" sx={{ textAlign: 'center', fontWeight: 700, letterSpacing: 1, fontSize: '0.8rem', color: '#888', whiteSpace: 'nowrap', mb: 0, textTransform: 'uppercase' }}>
-          HEADING TOWARDS
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 0.5, gap: 1 }}>
-          <Box sx={{ bgcolor: highlightColor, color: '#fff', px: 2, py: 0.5, borderRadius: 99, fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block' }}>
+      <Typography variant="subtitle2" sx={{ textAlign: 'center', fontWeight: 700, letterSpacing: 1, fontSize: '0.8rem', color: '#888', whiteSpace: 'nowrap', mb: 0, textTransform: 'uppercase', width: '100%' }}>
+        HEADING TOWARDS
+      </Typography>
+      <Box sx={{ width: '100%', mb: 1, mt: 0, display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', justifyItems: 'center' }}>
+        <Box sx={{ justifySelf: 'end', pr: 1 }}>
+          <Box sx={{ bgcolor: highlightColor, color: '#fff', px: 2, py: 0.5, borderRadius: 99, fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block', whiteSpace: 'nowrap' }}>
             {destination}
           </Box>
-          <Typography component="span" sx={{ color: '#222', fontWeight: 700, fontSize: '1rem', mx: 1, textTransform: 'uppercase', letterSpacing: 1 }}>
-            ON THE
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Typography component="span" sx={{ color: '#888', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center', lineHeight: 1 }}>
+            ON
           </Typography>
-          <Box sx={{ bgcolor: highlightColor, color: '#fff', px: 2, py: 0.5, borderRadius: 99, fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block' }}>
+          <Typography component="span" sx={{ color: '#888', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center', lineHeight: 1 }}>
+            THE
+          </Typography>
+        </Box>
+        <Box sx={{ justifySelf: 'start', pl: 1 }}>
+          <Box sx={{ bgcolor: highlightColor, color: '#fff', px: 2, py: 0.5, borderRadius: 99, fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block', whiteSpace: 'nowrap' }}>
             {trail}
           </Box>
         </Box>

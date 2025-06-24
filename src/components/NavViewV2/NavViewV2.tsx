@@ -13,6 +13,7 @@ import { NavContextCard } from '../NavView/NavContextCard';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { calculatePreciseNetworkDistance } from '../../utils/trailGraph';
+import { Textfit } from 'react-textfit';
 
 // Styled components
 const SectionHeader = styled(Box)(({ theme }) => ({
@@ -459,9 +460,11 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
         <Box key={stop.id} sx={{ position: 'relative', pt: 1, pb: 1 }}>
           <TrailEndCard color={stopColor}>
             <TrailEndMarker color={stopColor} />
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              TRAIL END ({stop.name})
-            </Typography>
+            <Box sx={{ width: 180, flex: 1, minWidth: 0 }}>
+              <Textfit mode="single" min={10} max={13} style={{ width: '100%' }}>
+                TRAIL END ({stop.name})
+              </Textfit>
+            </Box>
           </TrailEndCard>
         </Box>
       );
@@ -517,7 +520,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
         </StopCol>
         {/* POI Name (rightmost, flexes) */}
         <StopCol sx={{ flex: 1, justifyContent: 'flex-start', pl: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: stopColor }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, color: stopColor, fontSize: '0.8rem' }}>
             {stop.type === 'junction' ? 'Junction' : stop.name}
             {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
           </Typography>
