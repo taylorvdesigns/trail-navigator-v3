@@ -14,6 +14,7 @@ import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
+import { assignPOIsToTrails } from '../../utils/poi';
 
 interface TrailData {
   id: string;
@@ -397,6 +398,21 @@ export const MapView: React.FC<MapViewProps> = ({
     return () => { map.off('moveend', onMove); };
   }, [focusedGroup, lastBounds]);
 
+  // Map POI id to assigned trail color
+  const poiTrailColorMap = useMemo(() => {
+    if (!pois || !trailsData) return {};
+    const assignments = assignPOIsToTrails(pois, trailsData, 100);
+    const colorMap: Record<string, string> = {};
+    for (const [trailId, poisForTrail] of Array.from(assignments.entries())) {
+      const trail = trailsData.find(t => t.id === trailId);
+      const color = trail?.color || '#43D633'; // default to green
+      for (const poi of poisForTrail) {
+        colorMap[poi.id] = color;
+      }
+    }
+    return colorMap;
+  }, [pois, trailsData]);
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
@@ -441,6 +457,7 @@ export const MapView: React.FC<MapViewProps> = ({
         {/* Draw convex hull polygons for each POI group */}
         {Object.entries(groupedPOIs).map(([groupName, groupPOIs], idx) => {
           if (groupPOIs.length < 3) return null;
+          if (!groupName || groupName === 'Ungrouped') return null;
           // All calculations in [lng, lat]
           const pointsLngLat = groupPOIs.map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
           const hullLngLat = mapUtils.convexHull(pointsLngLat);
@@ -579,7 +596,14 @@ export const MapView: React.FC<MapViewProps> = ({
 
         {pois?.map((poi, index) => {
           const isHighlighted = highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1];
-          let markerIcon = poiIcon;
+          // Use trail color for marker
+          const markerColor = poiTrailColorMap[poi.id] || '#43D633';
+          let markerIcon = L.divIcon({
+            className: 'poi-marker',
+            iconSize: [12, 12],
+            iconAnchor: [6, 6],
+            html: `<div style='width:12px;height:12px;background:${markerColor};border-radius:50%;border:2px solid #fff;'></div>`
+          });
           if (isHighlighted) {
             markerIcon = new L.DivIcon({
               className: 'highlight-poi-marker',
