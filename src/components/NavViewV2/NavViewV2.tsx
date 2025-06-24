@@ -10,6 +10,7 @@ import { LocationContext } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 import { NavContextCard } from '../NavView/NavContextCard';
+import { findNearestTrailPoint } from '../../utils/trail';
 
 // Styled components
 const SectionHeader = styled(Box)(({ theme }) => ({
@@ -163,6 +164,18 @@ const CATEGORIES = [
   { slug: 'playground', icon: faChildReaching, title: 'Playground' }
 ];
 
+// Utility to classify elevation difference
+function getElevationDescription(delta: number, nextStopName: string): string {
+  if (isNaN(delta)) return 'Elevation data unavailable.';
+  if (delta <= -20) return `Steep descent to ${nextStopName}`;
+  if (delta <= -8) return `Steady descent to ${nextStopName}`;
+  if (delta <= -2) return `Gentle decline to ${nextStopName}`;
+  if (delta < 2) return `Flat to ${nextStopName}`;
+  if (delta < 8) return `Gentle incline to ${nextStopName}`;
+  if (delta < 20) return `Steady climb to ${nextStopName}`;
+  return `Steep climb to ${nextStopName}`;
+}
+
 export const NavViewV2: React.FC<NavViewV2Props> = ({
   trailConfig,
   allTrails,
@@ -261,6 +274,59 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       } else {
         // Heading toward the start
         endpointName = userDistance < endDist / 2 ? activeTrail.endpointNames[0] : activeTrail.endpointNames[1];
+      }
+    }
+  }
+
+  // Find the next stop ahead (first in aheadStops)
+  const nextStop = aheadStops.length > 0 ? aheadStops[0] : null;
+
+  // Find user and next stop elevations
+  let userElevation: number | undefined = undefined;
+  let nextStopElevation: number | undefined = undefined;
+  if (activeTrail && allTrailData) {
+    const trailData = allTrailData.find(t => t.id === activeTrail.id);
+    if (trailData && trailData.points) {
+      // Log a sample of trail points for elevation
+      console.log('[Elevation Debug] Sample trail points:', trailData.points.slice(0, 5));
+      // Find nearest trail point to user
+      if (userStop) {
+        const nearestUserPoint = trailData.points.reduce((closest, pt) => {
+          const d = Math.abs((userStop.metadata.distance || 0) - (pt.distance || 0));
+          return d < Math.abs((closest.distance || 0) - (userStop.metadata.distance || 0)) ? pt : closest;
+        }, trailData.points[0]);
+        userElevation = nearestUserPoint.elevation;
+        console.log('[Elevation Debug] User nearest point:', nearestUserPoint);
+      }
+      // Find nearest trail point to next stop
+      if (nextStop) {
+        const nearestNextPoint = trailData.points.reduce((closest, pt) => {
+          const d = Math.abs((nextStop.metadata.distance || 0) - (pt.distance || 0));
+          return d < Math.abs((closest.distance || 0) - (nextStop.metadata.distance || 0)) ? pt : closest;
+        }, trailData.points[0]);
+        nextStopElevation = nearestNextPoint.elevation;
+        console.log('[Elevation Debug] Next stop nearest point:', nearestNextPoint);
+      }
+    }
+  }
+  let elevationDescription = 'Elevation data unavailable.';
+  if (typeof userElevation === 'number' && typeof nextStopElevation === 'number' && nextStop) {
+    elevationDescription = getElevationDescription(nextStopElevation - userElevation, nextStop.name);
+  }
+
+  // Calculate distance from entry point to current location
+  let entryPointDistanceMiles: number | null = null;
+  const entryPoint = useContext(LocationContext)?.entryPoint;
+  if (entryPoint && userStop && activeTrail && allTrailData) {
+    const trailData = allTrailData.find(t => t.id === activeTrail.id);
+    if (trailData && trailData.points) {
+      const entryCoords = [entryPoint[0], entryPoint[1]] as [number, number];
+      const userCoords = userStop.metadata.coordinates as [number, number];
+      const entryTrailPoint = findNearestTrailPoint(entryCoords, trailData.points);
+      const userTrailPoint = findNearestTrailPoint(userCoords, trailData.points);
+      if (entryTrailPoint && userTrailPoint) {
+        const distMeters = Math.abs((userTrailPoint.point?.distance ?? 0) - (entryTrailPoint.point?.distance ?? 0));
+        entryPointDistanceMiles = metersToMiles(distMeters);
       }
     }
   }
@@ -371,11 +437,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           destination={endpointName}
           trail={activeTrail.name}
           distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
-          description={"Slight decline in elevation to Unity Park"}
+          description={elevationDescription}
           mode={locomotionMode}
           amenities={['food', 'water', 'restroom', 'cafe', 'store', 'accessible']}
           onLocomotionChange={onLocomotionChange}
           onChangeEntryPoint={onChangeEntryPoint}
+          entryPointDistanceMiles={entryPointDistanceMiles}
           borderColor={activeTrail.color}
           highlightColor={activeTrail.color}
         />

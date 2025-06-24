@@ -70,6 +70,10 @@ export const AppContent: React.FC = () => {
 
   // Entry point modal state
   const [entryModalOpen, setEntryModalOpen] = useState(false);
+  const [distanceTrackingModalOpen, setDistanceTrackingModalOpen] = useState(false);
+
+  // Track if the user has confirmed their entry point this session
+  const [hasConfirmedEntryPointThisSession, setHasConfirmedEntryPointThisSession] = useState(false);
 
   // Show entry point modal if no entry point is set and not in dev mode
   useEffect(() => {
@@ -79,6 +83,32 @@ export const AppContent: React.FC = () => {
       setEntryModalOpen(false);
     }
   }, [entryPoint, isDevMode]);
+
+  // Show distance tracking modal if user is on trail but no distance tracking entry point is set
+  useEffect(() => {
+    console.log('[DistanceTrackingModal Effect]', { entryPoint, distanceTrackingModalOpen, hasConfirmedEntryPointThisSession });
+    if (entryPoint && hasConfirmedEntryPointThisSession) {
+      setDistanceTrackingModalOpen(false);
+      return;
+    }
+    if ((isDevMode || location.pathname === '/nav') && !hasConfirmedEntryPointThisSession) {
+      setDistanceTrackingModalOpen(true);
+    } else {
+      setDistanceTrackingModalOpen(false);
+    }
+  }, [currentLocation, entryPoint, isDevMode, location.pathname, hasConfirmedEntryPointThisSession]);
+
+  // For testing: allow resetting the distance tracking modal
+  React.useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'r' && event.ctrlKey) {
+        sessionStorage.removeItem('hasShownDistanceTracking');
+        console.log('Distance tracking modal reset for testing');
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   // Determine current view
   let currentView: ViewMode;
@@ -156,6 +186,14 @@ export const AppContent: React.FC = () => {
     <AppLayout currentView={currentView} onViewChange={handleViewChange}>
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <EntryPointModal open={entryModalOpen} onClose={() => setEntryModalOpen(false)} />
+        <EntryPointModal 
+          open={distanceTrackingModalOpen} 
+          onClose={() => setDistanceTrackingModalOpen(false)} 
+          showDistanceTracking={true}
+          pois={pois}
+          trails={trails}
+          onConfirmEntryPoint={() => setHasConfirmedEntryPointThisSession(true)}
+        />
         {currentView === 'dev' ? (
           <DevPanel />
         ) : (
@@ -170,7 +208,10 @@ export const AppContent: React.FC = () => {
                 pois={pois} 
                 locomotionMode={locomotionMode}
                 onLocomotionChange={setLocomotionMode}
-                onChangeEntryPoint={() => setEntryModalOpen(true)}
+                onChangeEntryPoint={() => {
+                  setHasConfirmedEntryPointThisSession(false);
+                  setDistanceTrackingModalOpen(true);
+                }}
               />
             } />
             <Route path="/list" element={

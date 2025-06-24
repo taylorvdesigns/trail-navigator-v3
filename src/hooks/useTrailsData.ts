@@ -36,6 +36,7 @@ export const useTrailsData = (trails: TrailConfig[]) => {
           const points = data.route.track_points.map((point: any) => ({
             latitude: point.y,
             longitude: point.x,
+            elevation: point.e,
             distance: point.d || 0
           }));
 

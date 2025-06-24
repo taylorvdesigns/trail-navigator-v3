@@ -13,15 +13,15 @@ export const useTrailData = (routeId: string | undefined) => {
         throw new Error('Failed to fetch trail data');
       }
       const data = await response.json();
-      if (!data.route || !data.route.track_points) {
-        throw new Error('Invalid trail data format');
-      }
       return {
-        points: data.route.track_points.map((point: any) => ({
-          latitude: point.y,
-          longitude: point.x,
-          distance: point.d || 0
-        })),
+        points: data.route.track_points.map((point: any) => {
+          return {
+            latitude: point.y,
+            longitude: point.x,
+            elevation: point.e,
+            distance: point.d || 0
+          };
+        }),
         color: data.route.color || undefined
       } as TrailData;
     },
