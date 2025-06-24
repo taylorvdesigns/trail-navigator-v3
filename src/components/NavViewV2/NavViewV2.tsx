@@ -34,10 +34,11 @@ const SubwayLine = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color?: string }>(({ theme, color }) => ({
   position: 'absolute',
-  left: 60, // Adjust position to make space for metrics
+  left: '50%',
   top: 0,
   bottom: 0,
   width: 4,
+  transform: 'translateX(-50%)',
   backgroundColor: color || theme.palette.primary.main
 }));
 
@@ -53,14 +54,15 @@ const StopMarker = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color?: string }>(({ theme, color }) => ({
   position: 'absolute',
-  left: 54, // Centered on the SubwayLine
+  left: 62, // Fine-tuned for 4px line at 60px
   top: '50%',
-  transform: 'translateY(-50%)',
+  transform: 'translate(-50%, -50%)',
   width: 16,
   height: 16,
   borderRadius: '50%',
   backgroundColor: color || theme.palette.primary.main,
-  border: `2px solid ${theme.palette.background.default}`
+  border: `2px solid ${theme.palette.background.default}`,
+  zIndex: 1,
 }));
 
 const StopMetrics = styled(Box)({
@@ -148,6 +150,33 @@ const AmenityIcon = styled(Box)(({ theme }) => ({
   fontSize: '0.75rem'
 }));
 
+const StopTime = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  width: 50, // Fixed width for alignment
+  marginLeft: 20 // Space between line and time
+});
+
+// Add a new styled component for the 4-column layout
+const StopRow = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'stretch',
+  minHeight: 52,
+  width: '100%',
+  position: 'relative',
+});
+
+const StopCol = styled(Box)<{ width?: number | string; direction?: 'row' | 'column' }>(({ width, direction }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: width || 'auto',
+  position: 'relative',
+  flexDirection: direction || 'row',
+}));
+
 interface NavViewV2Props {
   trailConfig: TrailConfig;
   allTrails: TrailConfig[];
@@ -176,6 +205,16 @@ function getElevationDescription(delta: number, nextStopName: string): string {
   if (delta < 8) return `Gentle incline to ${nextStopName}`;
   if (delta < 20) return `Steady climb to ${nextStopName}`;
   return `Steep climb to ${nextStopName}`;
+}
+
+// Add this helper function near the top of the file
+function formatETA(minutes: number | null): string {
+  if (minutes === null || isNaN(minutes)) return '--';
+  const min = Math.round(minutes);
+  if (min < 60) return `${min} min`;
+  const hr = Math.floor(min / 60);
+  const rem = min % 60;
+  return rem === 0 ? `${hr} hr` : `${hr} hr ${rem} min`;
 }
 
 export const NavViewV2: React.FC<NavViewV2Props> = ({
@@ -350,6 +389,41 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     }
   }
 
+  // Helper to get network distance and ETA for a stop
+  const getStopMetrics = (stop: Stop): { distanceMiles: number | null, etaMinutes: number | null } => {
+    if (!graph || !userStop || !userStop.metadata?.coordinates || !stop.metadata?.coordinates) return { distanceMiles: null, etaMinutes: null };
+    const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
+    const stopCoords: [number, number] = [stop.metadata.coordinates[1], stop.metadata.coordinates[0]];
+    const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, stopCoords);
+    if (networkDistance === null) return { distanceMiles: null, etaMinutes: null };
+    const distanceMiles = metersToMiles(networkDistance);
+    const etaMinutes = calculateETA(networkDistance, locomotionMode);
+    return { distanceMiles, etaMinutes };
+  };
+
+  // Memoize metrics for all stops for performance
+  const stopMetricsMap = useMemo(() => {
+    if (!graph || !userStop || !userStop.metadata?.coordinates) return {};
+    const metrics: Record<string, { distanceMiles: number | null, etaMinutes: number | null }> = {};
+    // Gather all stops from ahead, behind, and all split branches
+    const allStops: Stop[] = [
+      ...aheadStops,
+      ...behindStops,
+      ...(aheadSplitData.leftBranch?.stops || []),
+      ...(aheadSplitData.rightBranch?.stops || []),
+      ...(behindSplitData.leftBranch?.stops || []),
+      ...(behindSplitData.rightBranch?.stops || []),
+      ...(aheadSplitData.afterJunction || []),
+      ...(aheadSplitData.beforeJunction || []),
+      ...(behindSplitData.afterJunction || []),
+      ...(behindSplitData.beforeJunction || []),
+    ];
+    allStops.forEach(stop => {
+      metrics[stop.id] = getStopMetrics(stop);
+    });
+    return metrics;
+  }, [graph, userStop, locomotionMode, aheadStops, behindStops, aheadSplitData, behindSplitData]);
+
   if (loading) {
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
@@ -375,8 +449,10 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     );
   }
 
+  // In renderStop, use the 4-column layout
   const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
     const stopColor = color || activeTrail.color;
+    const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
 
     if (stop.type === 'endpoint') {
       return (
@@ -390,28 +466,63 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
         </Box>
       );
     }
-    
+
     return (
-      <StopContainer key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333`}}>
-        <SubwayLine color={stopColor} />
-        <StopMarker color={stopColor} />
-        <StopMetrics>
-          <Typography variant="caption" color="text.secondary">
-            {metersToMiles(stop.metadata.distance || 0).toFixed(2)} mi
+      <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333` }}>
+        {/* Distance (left) */}
+        <StopCol width={36} direction="column">
+          <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+            {metrics.distanceMiles !== null ? metrics.distanceMiles.toFixed(1) : '--'}
           </Typography>
-          {stop.metadata.eta !== undefined && (
-            <Typography variant="caption" color="text.secondary">
-              {Math.round(stop.metadata.eta)} min
-            </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em' }}>
+            mi
+          </Typography>
+        </StopCol>
+        {/* Subway line & dot (center) */}
+        <StopCol width={36} sx={{ position: 'relative', minHeight: 52 }}>
+          <SubwayLine color={stopColor} />
+          <StopMarker color={stopColor} sx={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' }} />
+        </StopCol>
+        {/* ETA (right of line) */}
+        <StopCol width={36} direction="column">
+          {metrics.etaMinutes !== null && metrics.etaMinutes >= 60 ? (
+            <>
+              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  {Math.floor(Math.round(metrics.etaMinutes) / 60)}
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                  hr
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  {Math.round(metrics.etaMinutes) % 60}
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                  min
+                </Typography>
+              </Box>
+            </>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+              <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                {metrics.etaMinutes !== null ? Math.round(metrics.etaMinutes) : '--'}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                min
+              </Typography>
+            </Box>
           )}
-        </StopMetrics>
-        <StopDetails>
+        </StopCol>
+        {/* POI Name (rightmost, flexes) */}
+        <StopCol sx={{ flex: 1, justifyContent: 'flex-start', pl: 1 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, color: stopColor }}>
             {stop.type === 'junction' ? 'Junction' : stop.name}
             {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
           </Typography>
-        </StopDetails>
-      </StopContainer>
+        </StopCol>
+      </StopRow>
     );
   };
 
