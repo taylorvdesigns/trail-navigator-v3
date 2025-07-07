@@ -1,6 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import { Box, Paper, Typography, styled } from '@mui/material';
-import { LocomotionMode, Stop, TrailConfig, POI } from '../../types';
+import { LocomotionMode, Stop, TrailConfig, POI, TrailPoint } from '../../types';
 import { Junction, getNavViewSplitData, NavViewSplitData } from '../../utils/navViewSplit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching } from '@fortawesome/free-solid-svg-icons';
@@ -181,6 +181,7 @@ const StopCol = styled(Box)<{ width?: number | string; direction?: 'row' | 'colu
 interface NavViewV2Props {
   trailConfig: TrailConfig;
   allTrails: TrailConfig[];
+  allTrailData: { id: string, points: TrailPoint[], endpoints: { start: [number, number], end: [number, number] } }[] | null;
   junctions: Junction[];
   pois: POI[];
   locomotionMode: LocomotionMode;
@@ -221,14 +222,16 @@ function formatETA(minutes: number | null): string {
 export const NavViewV2: React.FC<NavViewV2Props> = ({
   trailConfig,
   allTrails,
+  allTrailData,
   junctions,
   pois,
   locomotionMode,
   onLocomotionChange,
   onChangeEntryPoint
 }) => {
-  const { stops, userStop, activeTrailId, loading, error, currentLocation, allTrailData } = useNavViewV3({
+  const { stops, userStop, activeTrailId, loading, error, currentLocation } = useNavViewV3({
     allTrails,
+    allTrailData,
     junctions,
     pois,
   });

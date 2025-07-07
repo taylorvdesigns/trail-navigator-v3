@@ -1,5 +1,6 @@
 import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { TrailConfig, TrailPoint } from '../types/index';
+import { API_CONFIG } from '../config/api';
 
 interface TrailData {
   id: string;
@@ -11,15 +12,15 @@ interface TrailData {
   };
 }
 
-const BASE_URL = ''; // Empty string means it will use the same origin (localhost:3000)
-
 export const useTrailsData = (trails: TrailConfig[]) => {
+  console.log('[useTrailsData] called with trails:', trails);
   const results = useQueries({
     queries: trails.map((trail) => ({
       queryKey: ['trail', trail.routeId],
       queryFn: async () => {
         try {
-          const url = `${BASE_URL}/api/ridewithgps.js?id=${trail.routeId}`;
+          console.log('[useTrailsData] fetching trail', trail.routeId);
+          const url = `${API_CONFIG.baseURL}/api/ridewithgps/${trail.routeId}`;
           const response = await fetch(url);
           
           if (!response.ok) {
@@ -28,12 +29,14 @@ export const useTrailsData = (trails: TrailConfig[]) => {
           }
 
           const data = await response.json();
+          console.log('[useTrailsData] data for', trail.routeId, data);
           
-          if (!data.route || !data.route.track_points) {
-            throw new Error('Invalid trail data format');
+          // Check for track_points directly on the data object (not nested under 'route')
+          if (!data.track_points) {
+            throw new Error('Invalid trail data format - missing track_points');
           }
 
-          const points = data.route.track_points.map((point: any) => ({
+          const points = data.track_points.map((point: any) => ({
             latitude: point.y,
             longitude: point.x,
             elevation: point.e,
@@ -56,6 +59,7 @@ export const useTrailsData = (trails: TrailConfig[]) => {
 
           return trailData;
         } catch (error) {
+          console.error('[useTrailsData] error for', trail.routeId, error);
           throw error;
         }
       },

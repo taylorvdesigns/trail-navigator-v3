@@ -9,6 +9,7 @@ import { calculateDistance } from '../utils/distance';
 
 interface UseNavViewV3Props {
   allTrails: TrailConfig[];
+  allTrailData: { id: string, points: TrailPoint[], endpoints: { start: [number, number], end: [number, number] } }[] | null;
   junctions: Junction[];
   pois: POI[];
 }
@@ -92,9 +93,8 @@ function groupPOIsByTag(pois: POI[], trailId: string): Stop[] {
   return stops;
 }
 
-export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props): UseNavViewV3Result {
+export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNavViewV3Props): UseNavViewV3Result {
   const { currentLocation } = useLocation();
-  const { data: allTrailData, isLoading, isError } = useTrailsData(allTrails);
 
   const { activeTrailId, userPointOnTrail } = useMemo(() => {
     if (!currentLocation || !allTrailData) {
@@ -266,8 +266,8 @@ export function useNavViewV3({ allTrails, junctions, pois }: UseNavViewV3Props):
     stops,
     userStop,
     activeTrailId,
-    loading: isLoading,
-    error: isError ? new Error('Error loading trail data') : null,
+    loading: false,
+    error: null,
     currentLocation,
     allTrailData,
   };

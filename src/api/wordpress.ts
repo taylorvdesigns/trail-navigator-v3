@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { POI } from '../types/index';
-
-const BASE_URL = '';
+import { API_CONFIG } from '../config/api';
 
 export const getPOIs = async (): Promise<POI[]> => {
   try {
-    const response = await axios.get(`/api/pois`, {
+    const response = await axios.get(`${API_CONFIG.baseURL}/api/pois`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

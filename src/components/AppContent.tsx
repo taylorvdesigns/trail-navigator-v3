@@ -63,7 +63,7 @@ export const AppContent: React.FC = () => {
   const {
     activeTrailId,
     allTrailData: navViewTrailData // Rename to avoid conflict
-  } = useNavViewV3({ allTrails: trails, junctions, pois });
+  } = useNavViewV3({ allTrails: trails, allTrailData: trailData, junctions, pois });
 
   // Only use devTab to force DevPanel view when route is /dev
   const [devTab, setDevTab] = useState<boolean>(false);
@@ -202,6 +202,7 @@ export const AppContent: React.FC = () => {
               <NavViewV2 
                 trailConfig={trails[0]}
                 allTrails={trails}
+                allTrailData={trailData}
                 junctions={junctions} 
                 pois={pois} 
                 locomotionMode={locomotionMode}

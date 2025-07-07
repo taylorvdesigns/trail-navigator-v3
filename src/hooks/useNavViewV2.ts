@@ -109,7 +109,7 @@ export function useNavViewV2({ trailConfig, junctions, pois, locomotionMode }: U
   const uniqueTrailIds = Array.from(new Set([trailConfig.id, ...overlappingTrails]));
   
   // Get trail data for all relevant trails
-  const allTrailConfigs = uniqueTrailIds.map(id => ({ 
+  const allTrailConfigs = useMemo(() => uniqueTrailIds.map(id => ({ 
     id, 
     routeId: id,
     name: id === trailConfig.id ? trailConfig.name : `Trail ${id}`,
@@ -117,7 +117,7 @@ export function useNavViewV2({ trailConfig, junctions, pois, locomotionMode }: U
     type: id === trailConfig.id ? trailConfig.type : 'spur',
     endpoint1: [0, 0] as [number, number],
     endpoint2: [0, 0] as [number, number]
-  }));
+  })), [uniqueTrailIds, trailConfig.id, trailConfig.name, trailConfig.color, trailConfig.type]);
   const { data: allTrailData, isLoading: mainTrailLoading } = useTrailsData(allTrailConfigs);
   
   // Get points from all trails
