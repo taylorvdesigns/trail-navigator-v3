@@ -263,9 +263,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showZoomOut, setShowZoomOut] = useState(false);
   const [lastBounds, setLastBounds] = useState<[number, number][]>([]);
 
-  console.log('[MapView] render', { trails, pois });
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
-  console.log('[MapView] useTrailsData', { trailsData, isLoading, isError });
 
   // Find trail junctions with a higher threshold (20 meters)
   const junctions = useTrailJunctions(
@@ -415,7 +413,6 @@ export const MapView: React.FC<MapViewProps> = ({
   }, [pois, trailsData]);
 
   if (isLoading) {
-    console.log('[MapView] Loading spinner shown');
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         <CircularProgress />
@@ -424,7 +421,6 @@ export const MapView: React.FC<MapViewProps> = ({
   }
 
   if (isError) {
-    console.log('[MapView] Error message shown');
     return (
       <Box sx={{ p: 3 }}>
         <Typography color="error">Error loading trail data</Typography>

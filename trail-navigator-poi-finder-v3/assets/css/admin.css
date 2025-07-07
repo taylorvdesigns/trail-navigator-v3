@@ -1,0 +1,179 @@
+/* Trail Navigator POI Finder v3 Admin Styles */
+
+.tnpoi-dashboard,
+.tnpoi-poi-manager,
+.tnpoi-sync,
+.tnpoi-map-preview,
+.tnpoi-settings {
+    margin: 20px 0;
+}
+
+.tnpoi-dashboard h1,
+.tnpoi-poi-manager h1,
+.tnpoi-sync h1,
+.tnpoi-map-preview h1,
+.tnpoi-settings h1 {
+    color: #23282d;
+    font-size: 23px;
+    font-weight: 400;
+    margin: 0 0 1rem 0;
+    padding: 9px 0 4px 0;
+    line-height: 1.3;
+}
+
+.tnpoi-dashboard h2,
+.tnpoi-dashboard h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tnpoi-dashboard ul {
+    margin-left: 1.5rem;
+}
+
+.tnpoi-dashboard li {
+    margin-bottom: 0.25rem;
+}
+
+/* Settings page styles */
+.tnpoi-settings .form-table th {
+    width: 200px;
+}
+
+.tnpoi-settings .form-table td {
+    padding: 15px 10px;
+}
+
+/* Place types field */
+.tnpoi-settings .place-types-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #fff;
+}
+
+.tnpoi-settings .place-types-container label {
+    display: block;
+    margin-bottom: 5px;
+    padding: 2px 0;
+}
+
+.tnpoi-settings .place-types-container input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Category mapping table */
+.tnpoi-settings .category-mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tnpoi-settings .category-mapping-table th,
+.tnpoi-settings .category-mapping-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tnpoi-settings .category-mapping-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+
+/* Export fields container */
+.tnpoi-settings .export-fields-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #fff;
+}
+
+.tnpoi-settings .export-fields-container label {
+    display: block;
+    margin-bottom: 5px;
+    padding: 2px 0;
+}
+
+.tnpoi-settings .export-fields-container input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Responsive design */
+@media screen and (max-width: 782px) {
+    .tnpoi-settings .form-table th {
+        width: auto;
+        display: block;
+        padding-bottom: 0;
+    }
+    
+    .tnpoi-settings .form-table td {
+        display: block;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .tnpoi-settings .category-mapping-table {
+        font-size: 12px;
+    }
+    
+    .tnpoi-settings .category-mapping-table th,
+    .tnpoi-settings .category-mapping-table td {
+        padding: 4px;
+    }
+}
+
+/* Loading states */
+.tnpoi-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.tnpoi-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Success/Error messages */
+.tnpoi-notice {
+    padding: 12px;
+    margin: 15px 0;
+    border-left: 4px solid;
+    background: #fff;
+}
+
+.tnpoi-notice.success {
+    border-color: #46b450;
+    background-color: #ecf7ed;
+}
+
+.tnpoi-notice.error {
+    border-color: #dc3232;
+    background-color: #fbeaea;
+}
+
+.tnpoi-notice.warning {
+    border-color: #ffb900;
+    background-color: #fff8e5;
+}
+
+.tnpoi-notice.info {
+    border-color: #00a0d2;
+    background-color: #e5f5fa;
+} 

@@ -27,6 +27,8 @@ const TRAIL_ROUTES = [
   }
 ];
 
+import axios from 'axios';
+
 // Haversine distance in meters
 function haversine(a, b) {
   const toRad = x => (x * Math.PI) / 180;
@@ -137,6 +139,7 @@ function buildTrailGraphFromPoints(trailsWithPoints) {
 }
 
 export default async function handler(req, res) {
+  console.log('[DEBUG] /api/trail-graph.js endpoint hit');
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -145,11 +148,15 @@ export default async function handler(req, res) {
     const trailsWithPoints = [];
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     for (const trail of TRAIL_ROUTES) {
-      const resp = await fetch(`${baseUrl}/api/ridewithgps.js?id=${trail.routeId}`);
-      if (!resp.ok) {
-        throw new Error(`Failed to fetch trail data for ${trail.id}: ${resp.status} ${resp.statusText}`);
-      }
-      const data = await resp.json();
+      const apiUrl = `https://ridewithgps.com/routes/${trail.routeId}.json`;
+      const params = {
+        version: 2,
+        apikey: process.env.RIDEWITHGPS_API_KEY,
+        auth_token: process.env.RIDEWITHGPS_AUTH_TOKEN
+      };
+      console.log('Fetching RideWithGPS API:', apiUrl, params);
+      const response = await axios.get(apiUrl, { params, timeout: 10000 });
+      const data = response.data;
       if (!data.route || !data.route.track_points) {
         throw new Error(`Invalid trail data format for ${trail.id}`);
       }
@@ -162,9 +169,9 @@ export default async function handler(req, res) {
       trailsWithPoints.push({ ...trail, points });
     }
     const graph = buildTrailGraphFromPoints(trailsWithPoints);
-    res.status(200).json(graph);
+    return res.status(200).json(graph);
   } catch (error) {
     console.error('Error building trail graph:', error);
-    res.status(500).json({ error: 'Failed to build trail graph', details: error.message, stack: error.stack });
+    return res.status(500).json({ error: 'Failed to build trail graph', details: error.message, stack: error.stack });
   }
-} 
+}

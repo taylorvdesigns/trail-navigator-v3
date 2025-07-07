@@ -1,0 +1,123 @@
+POI Manager Feature Merge Plan: V2 → V3
+📋 Current State Assessment
+V2 Strengths (What We Want to Keep)
+
+Editorial workflow focus - POIs are prepared for export
+Category mapping - Inline editing with warnings for unmapped types
+Status management - Active/Inactive/New status per POI
+Export controls - Include/Ignore toggle per POI
+Visual cues - Warnings for unmapped categories
+Trail association - Clear trail name display and filtering
+V3 Strengths (What We Want to Keep)
+Modern AJAX UI - Smooth, responsive interface
+Trail position sorting - Just implemented distance-based ordering
+Dynamic filtering - Real-time search and filtering
+Bulk operations - Efficient multi-POI management
+Modal editing - Clean edit interface
+
+🎯 Priority Implementation Plan
+
+Phase 1: Core Editorial Features (High Priority)
+Status Management
+Add Active/Inactive/New status per POI
+Status filter dropdown
+Status badges in table
+Bulk status changes
+Export Controls
+Include/Ignore toggle per POI
+Export status filter
+Visual indicators for export readiness
+Bulk export status changes
+Category Mapping
+Inline category editing per POI
+GeoDirectory category display
+Mapping warnings for unmapped types
+Category coverage indicators
+
+Phase 2: Enhanced Filtering & Display (Medium Priority)
+Trail Integration
+Trail name column (already implemented)
+Trail filtering (already implemented)
+Trail-based bulk operations
+Address Search
+Extend search to include addresses
+Better address formatting
+Sync Date Column
+Show when POI was last synced
+Sync date filtering
+
+Phase 3: Advanced Features (Low Priority)
+Generic Type Handling
+Hide or de-emphasize generic types (establishment, point_of_interest)
+Filter out generic-only POIs
+Smart type prioritization
+Enhanced Warnings
+More sophisticated unmapped POI detection
+Quality indicators
+Export readiness scoring
+🔄 Implementation Strategy
+Approach 1: Incremental Enhancement (Recommended)
+Keep V3's modern UI as the foundation
+Add V2 features one by one to V3
+Maintain AJAX functionality throughout
+Preserve trail position sorting we just implemented
+Approach 2: Hybrid UI
+Combine best of both interfaces
+Use V3's AJAX for smooth interactions
+Add V2's editorial features to V3's table
+Approach 3: Feature Parity
+Implement all V2 features in V3
+Maintain V3's advantages (AJAX, trail sorting)
+Add V2's editorial workflow capabilities
+�� Feature Comparison Matrix
+Feature	V2 Status	V3 Status	Priority	Implementation
+Status Management	✅ Active/Inactive/New	❌ Missing	High	Add to V3
+Export Toggle	✅ Include/Ignore	❌ Missing	High	Add to V3
+Category Mapping	✅ Inline editing	❌ Settings only	High	Add to V3
+Trail Filtering	✅ Available	✅ Available	-	Already done
+Trail Position	❌ Missing	✅ Available	-	Already done
+Address Search	✅ Available	⚠️ Name only	Medium	Extend V3
+Sync Date	✅ Available	❌ Missing	Medium	Add to V3
+Bulk Actions	✅ Status/Export	✅ Delete only	High	Extend V3
+Mapping Warnings	✅ Available	❌ Missing	High	Add to V3
+🎨 UI/UX Considerations
+Table Layout Options
+Expand current table - Add status, export, categories columns
+Collapsible sections - Hide/show detailed info
+Modal for details - Keep table clean, details in modal
+Tabbed interface - Separate views for different workflows
+Editorial Workflow Integration
+Status badges - Color-coded status indicators
+Export readiness - Visual cues for export preparation
+Category warnings - Highlight unmapped POIs
+Bulk operations - Efficient multi-POI management
+🔧 Technical Considerations
+Database Changes Needed
+Status column - Active/Inactive/New
+Export toggle - Include/Ignore flag
+Category mapping - Per-POI category storage
+Sync date - Last sync timestamp
+AJAX Endpoints Needed
+Status updates - Individual and bulk
+Export toggle - Individual and bulk
+Category mapping - Inline editing
+Enhanced filtering - Status, export, sync date
+UI Components Needed
+Status dropdown - Per-POI status selection
+Export toggle - Include/Ignore switch
+Category editor - Inline category selection
+Warning indicators - Visual cues for issues
+📝 Next Steps
+Immediate (Phase 1)
+Add status management to V3
+Add export controls to V3
+Add category mapping to V3
+Add mapping warnings to V3
+Short-term (Phase 2)
+Extend search functionality
+Add sync date column
+Enhance bulk operations
+Long-term (Phase 3)
+Improve generic type handling
+Add advanced warnings
+Optimize performance

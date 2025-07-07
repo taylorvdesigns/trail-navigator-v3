@@ -1,0 +1,3 @@
+ID,post_title,post_content,post_status,post_author,post_type,post_date,post_modified,post_tags,post_category,default_category,featured,street,street2,city,region,country,zip,latitude,longitude,google_places_id,post_images
+148,"Inspire Coffee House",,publish,1,gd_place,"2025-06-21 20:17:53","2025-06-21 20:17:53",,",6,",6,0,"1433 Cleveland St",,Greenville,"South Carolina","United States",29607,34.8225337," -82.3728422",,
+149,"Orange Test POI","here's where we'd write something about the orange POI",publish,1,gd_place,"2025-06-21 20:42:59","2025-06-27 04:44:19",,",40,",40,0,"1402 Hampton Ave Ext",,"City View","South Carolina","United States",29601,34.86613798085013," -82.41802559956913",GOOGLEPLACEID123,

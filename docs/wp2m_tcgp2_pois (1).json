@@ -1,0 +1,9 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"srtadmin_wp194"},
+{"type":"table","name":"wp2m_tcgp2_pois","database":"srtadmin_wp194","data":
+[
+{"id":"22","place_id":"ChIJMzXT1DIwWIgRinWw9mlKGyc","name":"Halls Chophouse Greenville","latitude":"34.8457252","longitude":"-82.4018966","formatted_address":"550 S Main St, Greenville, SC 29601, USA","street":"550 South Main Street","street2":"","city":"Greenville","region":"SC","country":"United States","zip":"29601","types":"[\"restaurant\",\"bar\",\"food\",\"point_of_interest\",\"establishment\"]","category_ids":"[\"restaurants\"]","tag_ids":"[]","status":"new","raw_data":"{\"address_components\":[{\"long_name\":\"550\",\"short_name\":\"550\",\"types\":[\"street_number\"]},{\"long_name\":\"South Main Street\",\"short_name\":\"S Main St\",\"types\":[\"route\"]},{\"long_name\":\"Greenville\",\"short_name\":\"Greenville\",\"types\":[\"locality\",\"political\"]},{\"long_name\":\"Greenville County\",\"short_name\":\"Greenville County\",\"types\":[\"administrative_area_level_2\",\"political\"]},{\"long_name\":\"South Carolina\",\"short_name\":\"SC\",\"types\":[\"administrative_area_level_1\",\"political\"]},{\"long_name\":\"United States\",\"short_name\":\"US\",\"types\":[\"country\",\"political\"]},{\"long_name\":\"29601\",\"short_name\":\"29601\",\"types\":[\"postal_code\"]}],\"formatted_address\":\"550 S Main St, Greenville, SC 29601, USA\",\"geometry\":{\"location\":{\"lat\":34.8457252,\"lng\":-82.4018966},\"viewport\":{\"northeast\":{\"lat\":34.84700573029149,\"lng\":-82.40043221970849},\"southwest\":{\"lat\":34.8443077697085,\"lng\":-82.4031301802915}}},\"name\":\"Halls Chophouse Greenville\",\"types\":[\"restaurant\",\"bar\",\"food\",\"point_of_interest\",\"establishment\"]}","date_synced":"2025-07-01 02:04:39"}
+]
+}
+]

@@ -1,0 +1,856 @@
+
+text/plain debug.log ( ASCII text, with very long lines )
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: AJAX received trail_id: 51203084
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: AJAX received search_radius: 500
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: AJAX received coordinate_interval: 160
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: AJAX received enable_adaptive raw: false
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: AJAX received enable_adaptive processed: true
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Getting sync preview data for trail_id: 51203084
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: No trail data found, fetching coordinates for trail_id: 51203084
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Fetching RideWithGPS JSON from: https://ridewithgps.com/routes/51203084.json?apikey=K3M5gsY93/0ydM7u7+5+e3V4N0Ftak1jN0pIUkk3NFF0THdJSkE9PQ==
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: RideWithGPS JSON response (first 500 chars): {"type":"route","route":{"id":51203084,"highlighted_photo_id":0,"highlighted_photo_checksum":null,"distance":12424.0,"elevation_gain":145.223,"elevation_loss":138.272,"track_id":"6849dd3558217acb29632316","user_id":8021142,"pavement_type":null,"pavement_type_id":null,"recreation_type_ids":[],"visibility":0,"created_at":1749671221,"updated_at":1749671272,"name":"Swamp Rabbit Trail - Blue Line","description":"","first_lng":-82.34925583312398,"first_lat":34.769970533971886,"last_lat":34.84541789877
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Fetched 708 track points from RideWithGPS
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Parsed 708 coordinates from RideWithGPS JSON for routeId 51203084
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Added 708 track points to trail 51203084
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Found trail with 708 track points
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Adaptive sampling enabled: true
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Using adaptive sampling based on POI density
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Starting two-pass adaptive POI discovery
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Discovery pass generated 20 points (limited to 20)
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Discovery pass complete. Found 20 initial points
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.76997, -82.349255
+[03-Jul-2025 05:39:23 UTC] TNPOI Map Preview: Querying OSM at (34.76997, -82.349255) with radius 750m
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: OSM zone query returned 5143 elements
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 0, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 0, Amenities: 1, Natural: 6, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Calculated importance score: 0.49
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Identified POI cluster at 34.76997, -82.349255 with 6 POIs
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.76927, -82.350309
+[03-Jul-2025 05:39:26 UTC] TNPOI Map Preview: Querying OSM at (34.76927, -82.350309) with radius 750m
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: OSM zone query returned 5190 elements
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 0, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 0, Amenities: 1, Natural: 7, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Calculated importance score: 0.54
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Identified POI cluster at 34.76927, -82.350309 with 7 POIs
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.76964, -82.351429
+[03-Jul-2025 05:39:28 UTC] TNPOI Map Preview: Querying OSM at (34.76964, -82.351429) with radius 750m
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: OSM zone query returned 5244 elements
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 0, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 0, Amenities: 1, Natural: 8, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Calculated importance score: 0.59
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Identified POI cluster at 34.76964, -82.351429 with 9 POIs
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77098, -82.35155
+[03-Jul-2025 05:39:30 UTC] TNPOI Map Preview: Querying OSM at (34.77098, -82.35155) with radius 750m
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: OSM zone query returned 6245 elements
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 1, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 0, Amenities: 1, Natural: 11, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Calculated importance score: 0.74
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Identified POI cluster at 34.77098, -82.35155 with 20 POIs
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77202, -82.35158
+[03-Jul-2025 05:39:32 UTC] TNPOI Map Preview: Querying OSM at (34.77202, -82.35158) with radius 750m
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: OSM zone query returned 6263 elements
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 1, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 0, Amenities: 1, Natural: 12, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Calculated importance score: 0.79
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Identified POI cluster at 34.77202, -82.35158 with 17 POIs
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77274, -82.351609
+[03-Jul-2025 05:39:37 UTC] TNPOI Map Preview: Querying OSM at (34.77274, -82.351609) with radius 750m
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: OSM zone query returned 6351 elements
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 1, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 2, Amenities: 1, Natural: 13, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Calculated importance score: 0.88
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Identified POI cluster at 34.77274, -82.351609 with 19 POIs
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.773829, -82.35189
+[03-Jul-2025 05:39:43 UTC] TNPOI Map Preview: Querying OSM at (34.773829, -82.35189) with radius 750m
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: OSM zone query returned 6626 elements
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 2, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 2, Amenities: 1, Natural: 28, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Identified POI cluster at 34.773829, -82.35189 with 15 POIs
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77473, -82.35192
+[03-Jul-2025 05:39:46 UTC] TNPOI Map Preview: Querying OSM at (34.77473, -82.35192) with radius 750m
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: OSM zone query returned 6982 elements
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Large Dog Park (way ID: 305305375)
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 4.2, Shopping: 2, Services: 1
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 1, Natural: 40, Commercial: 2, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Identified POI cluster at 34.77473, -82.35192 with 19 POIs
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77507, -82.35308
+[03-Jul-2025 05:39:48 UTC] TNPOI Map Preview: Querying OSM at (34.77507, -82.35308) with radius 750m
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: OSM zone query returned 6995 elements
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Large Dog Park (way ID: 305305375)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Small Dog Park (way ID: 305305376)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 6.2, Shopping: 1, Services: 1
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 41, Commercial: 1, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Identified POI cluster at 34.77507, -82.35308 with 17 POIs
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77561, -82.3543
+[03-Jul-2025 05:39:52 UTC] TNPOI Map Preview: Querying OSM at (34.77561, -82.3543) with radius 750m
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: OSM zone query returned 6972 elements
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Large Dog Park (way ID: 305305375)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Small Dog Park (way ID: 305305376)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Palisades at the Park (relation ID: 6144416)
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 7.2, Shopping: 0, Services: 0
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 2, Natural: 40, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Identified POI cluster at 34.77561, -82.3543 with 19 POIs
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77451, -82.35521
+[03-Jul-2025 05:39:54 UTC] TNPOI Map Preview: Querying OSM at (34.77451, -82.35521) with radius 750m
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: OSM zone query returned 6649 elements
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 3.5, Shopping: 1, Services: 1
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 25, Commercial: 1, Transport: 0, Cultural: 0
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Identified POI cluster at 34.77451, -82.35521 with 19 POIs
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77447, -82.3563
+[03-Jul-2025 05:39:56 UTC] TNPOI Map Preview: Querying OSM at (34.77447, -82.3563) with radius 750m
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: OSM zone query returned 1716 elements
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 3, Shopping: 0, Services: 1
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 2, Natural: 20, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Identified POI cluster at 34.77447, -82.3563 with 16 POIs
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77431, -82.35776
+[03-Jul-2025 05:40:01 UTC] TNPOI Map Preview: Querying OSM at (34.77431, -82.35776) with radius 750m
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: OSM zone query returned 1531 elements
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 4, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 3, Amenities: 3, Natural: 13, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Calculated importance score: 0.83
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Identified POI cluster at 34.77431, -82.35776 with 11 POIs
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77493, -82.3588
+[03-Jul-2025 05:40:05 UTC] TNPOI Map Preview: Querying OSM at (34.77493, -82.3588) with radius 750m
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: OSM zone query returned 1477 elements
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 3, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 3, Amenities: 3, Natural: 10, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Calculated importance score: 0.68
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Identified POI cluster at 34.77493, -82.3588 with 8 POIs
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77527, -82.35945
+[03-Jul-2025 05:40:07 UTC] TNPOI Map Preview: Querying OSM at (34.77527, -82.35945) with radius 750m
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: OSM zone query returned 1477 elements
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 3, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 3, Amenities: 3, Natural: 10, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Calculated importance score: 0.68
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Identified POI cluster at 34.77527, -82.35945 with 12 POIs
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77629, -82.35973
+[03-Jul-2025 05:40:10 UTC] TNPOI Map Preview: Querying OSM at (34.77629, -82.35973) with radius 750m
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: OSM zone query returned 1490 elements
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 4, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 11, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Calculated importance score: 0.75
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Identified POI cluster at 34.77629, -82.35973 with 12 POIs
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77754, -82.359219
+[03-Jul-2025 05:40:14 UTC] TNPOI Map Preview: Querying OSM at (34.77754, -82.359219) with radius 750m
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: OSM zone query returned 1810 elements
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 4.5, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 24, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Identified POI cluster at 34.77754, -82.359219 with 20 POIs
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.7781, -82.3599
+[03-Jul-2025 05:40:19 UTC] TNPOI Map Preview: Querying OSM at (34.7781, -82.3599) with radius 750m
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: OSM zone query returned 1695 elements
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 4.5, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 21, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Identified POI cluster at 34.7781, -82.3599 with 20 POIs
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77846, -82.360339
+[03-Jul-2025 05:40:21 UTC] TNPOI Map Preview: Querying OSM at (34.77846, -82.360339) with radius 750m
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: OSM zone query returned 1525 elements
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 4.5, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 16, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Calculated importance score: 1
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Identified POI cluster at 34.77846, -82.360339 with 15 POIs
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Analyzing trail area importance at 34.77854, -82.36192
+[03-Jul-2025 05:40:27 UTC] TNPOI Map Preview: Querying OSM at (34.77854, -82.36192) with radius 750m
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: OSM zone query returned 1281 elements
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 2, Shopping: 0, Services: 0
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: OSM Analysis - Trail ways: 4, Amenities: 3, Natural: 8, Commercial: 0, Transport: 0, Cultural: 0
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Calculated importance score: 0.6
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Identified POI cluster at 34.77854, -82.36192 with 6 POIs
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added first optimized point (density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 3 (distance: 36m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 5 (distance: 46m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 7 (distance: 46m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 10 (distance: 63m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 13 (distance: 49m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 15 (distance: 102m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 17 (distance: 48m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 20 (distance: 53m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 23 (distance: 64m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 26 (distance: 52m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 30 (distance: 44m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 32 (distance: 39m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 34 (distance: 49m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 36 (distance: 43m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 38 (distance: 66m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 41 (distance: 45m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 43 (distance: 56m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 47 (distance: 66m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 49 (distance: 68m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 51 (distance: 61m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 53 (distance: 47m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 56 (distance: 48m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 58 (distance: 70m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 61 (distance: 40m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 64 (distance: 49m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 68 (distance: 60m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 70 (distance: 75m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 72 (distance: 75m, density: 0.93, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 75 (distance: 63m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 78 (distance: 36m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 83 (distance: 31m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 87 (distance: 51m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 89 (distance: 55m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 91 (distance: 88m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 93 (distance: 60m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 96 (distance: 53m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 99 (distance: 38m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 103 (distance: 28m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 106 (distance: 40m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 109 (distance: 89m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 110 (distance: 66m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 115 (distance: 90m, density: 1, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 117 (distance: 103m, density: 0.96, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 119 (distance: 72m, density: 0.88, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 122 (distance: 75m, density: 0.79, radius: 250m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 124 (distance: 80m, density: 0.7, radius: 350m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 126 (distance: 59m, density: 0.62, radius: 350m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 130 (distance: 57m, density: 0.55, radius: 350m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 133 (distance: 57m, density: 0.47, radius: 350m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 136 (distance: 76m, density: 0.43, radius: 350m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 139 (distance: 71m, density: 0.39, radius: 500m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 141 (distance: 143m, density: 0.3, radius: 500m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 146 (distance: 32m, density: 0.26, radius: 500m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 155 (distance: 31m, density: 0.22, radius: 500m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 162 (distance: 67m, density: 0.17, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 169 (distance: 49m, density: 0.12, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 176 (distance: 48m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 183 (distance: 83m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 188 (distance: 105m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 194 (distance: 53m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 200 (distance: 60m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 206 (distance: 58m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 212 (distance: 53m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 217 (distance: 65m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 224 (distance: 55m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 232 (distance: 44m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 239 (distance: 54m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 248 (distance: 60m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 253 (distance: 74m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 261 (distance: 74m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 269 (distance: 69m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 276 (distance: 61m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 282 (distance: 89m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 286 (distance: 95m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 293 (distance: 65m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 298 (distance: 91m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 304 (distance: 94m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 312 (distance: 65m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 321 (distance: 54m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 327 (distance: 47m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 333 (distance: 43m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 341 (distance: 46m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 349 (distance: 51m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 357 (distance: 47m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 365 (distance: 55m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 370 (distance: 61m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 380 (distance: 53m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 386 (distance: 70m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 390 (distance: 96m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 400 (distance: 73m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 404 (distance: 121m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 409 (distance: 68m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 415 (distance: 74m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 418 (distance: 156m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 421 (distance: 88m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 425 (distance: 84m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 429 (distance: 95m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 433 (distance: 102m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 439 (distance: 69m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 444 (distance: 77m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 448 (distance: 132m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 451 (distance: 146m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 454 (distance: 161m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 457 (distance: 168m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 459 (distance: 195m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 464 (distance: 75m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 467 (distance: 256m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 469 (distance: 272m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 471 (distance: 203m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 474 (distance: 183m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 480 (distance: 177m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 484 (distance: 97m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 487 (distance: 168m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 490 (distance: 155m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 493 (distance: 162m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 497 (distance: 156m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 500 (distance: 149m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 503 (distance: 105m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 506 (distance: 134m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 511 (distance: 143m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 517 (distance: 94m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 520 (distance: 97m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 528 (distance: 39m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 535 (distance: 89m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 540 (distance: 91m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 545 (distance: 77m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 550 (distance: 78m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 559 (distance: 100m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 564 (distance: 73m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 570 (distance: 52m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 573 (distance: 91m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 579 (distance: 62m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 587 (distance: 62m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 592 (distance: 85m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 598 (distance: 74m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 604 (distance: 56m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 609 (distance: 62m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 614 (distance: 72m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 621 (distance: 53m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 626 (distance: 85m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 629 (distance: 107m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 636 (distance: 58m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 642 (distance: 78m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 647 (distance: 122m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 655 (distance: 67m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 663 (distance: 48m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 666 (distance: 100m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 672 (distance: 48m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 677 (distance: 106m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 683 (distance: 52m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 693 (distance: 39m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 698 (distance: 78m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Added optimized point at index 707 (distance: 30m, density: 0.1, radius: 700m)
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Optimization pass complete. Generated 154 optimized points
+[03-Jul-2025 05:40:38 UTC] TNPOI Map Preview: Generated sync preview with 154 sampled points, interval: 160m, radius: 500m
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: ajax_discover_zones called. POST: Array
+(
+    [action] => tnpoi_discover_zones
+    [nonce] => 672009375a
+    [trail_id] => 51203084
+    [food_dining_weight] => 0
+    [parks_recreation_weight] => 10
+    [shopping_weight] => 0
+    [services_weight] => 0
+    [hot_threshold] => 25
+    [warm_threshold] => 10
+)
+
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Current user: admin (ID: 1)
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Received nonce: 672009375a
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Nonce valid? YES
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Fetching RideWithGPS JSON from: https://ridewithgps.com/routes/51203084.json?apikey=K3M5gsY93/0ydM7u7+5+e3V4N0Ftak1jN0pIUkk3NFF0THdJSkE9PQ==
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: RideWithGPS JSON response (first 500 chars): {"type":"route","route":{"id":51203084,"highlighted_photo_id":0,"highlighted_photo_checksum":null,"distance":12424.0,"elevation_gain":145.223,"elevation_loss":138.272,"track_id":"6849dd3558217acb29632316","user_id":8021142,"pavement_type":null,"pavement_type_id":null,"recreation_type_ids":[],"visibility":0,"created_at":1749671221,"updated_at":1749671272,"name":"Swamp Rabbit Trail - Blue Line","description":"","first_lng":-82.34925583312398,"first_lat":34.769970533971886,"last_lat":34.84541789877
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Fetched 708 track points from RideWithGPS
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Parsed 708 coordinates from RideWithGPS JSON for routeId 51203084
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Added 708 track points to trail 51203084
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Starting zone discovery with weights: Array
+(
+    [food_dining] => 0
+    [parks_recreation] => 10
+    [shopping] => 0
+    [services] => 0
+)
+
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Thresholds - Hot: 25, Warm: 10
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Sample interval: 500m, Discovery radius: 1000m
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Total track points: 708, Total distance: 12410.1m, Expected zones: 25
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Analyzing zone at point 0 (34.76997, -82.349255)
+[03-Jul-2025 05:40:49 UTC] TNPOI Map Preview: Querying OSM at (34.76997, -82.349255) with radius 1000m
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: OSM zone query returned 6341 elements
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 1, Shopping: 2, Services: 1
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 5 (score: 50), Shopping: 2 (score: 0), Services: 1 (score: 0), Total Score: 50
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Zone 0 - Score: 50, Type: hot, OSM elements: 6341
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Analyzing zone at point 23 (34.77202, -82.35158)
+[03-Jul-2025 05:40:52 UTC] TNPOI Map Preview: Querying OSM at (34.77202, -82.35158) with radius 1000m
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: OSM zone query returned 7077 elements
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 3.5, Shopping: 2, Services: 1
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 10.5 (score: 105), Shopping: 2 (score: 0), Services: 1 (score: 0), Total Score: 105
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Zone 23 - Score: 105, Type: hot, OSM elements: 7077
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Analyzing zone at point 48 (34.77538, -82.35337)
+[03-Jul-2025 05:40:55 UTC] TNPOI Map Preview: Querying OSM at (34.77538, -82.35337) with radius 1000m
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: OSM zone query returned 7235 elements
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Large Dog Park (way ID: 305305375)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Small Dog Park (way ID: 305305376)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Palisades at the Park (relation ID: 6144416)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 7.2, Shopping: 2, Services: 1
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 14.2 (score: 142), Shopping: 2 (score: 0), Services: 1 (score: 0), Total Score: 142
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Zone 48 - Score: 142, Type: hot, OSM elements: 7235
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Analyzing zone at point 71 (34.77444, -82.35831)
+[03-Jul-2025 05:40:57 UTC] TNPOI Map Preview: Querying OSM at (34.77444, -82.35831) with radius 1000m
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: OSM zone query returned 7020 elements
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.7683979, -82.3524145)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found shop: sports at (34.7685466, -82.3500543)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found service: office at (34.7689919, -82.3515432)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 5.2, Shopping: 2, Services: 1
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 15.2 (score: 152), Shopping: 2 (score: 0), Services: 1 (score: 0), Total Score: 152
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Zone 71 - Score: 152, Type: hot, OSM elements: 7020
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Analyzing zone at point 98 (34.77809, -82.35978)
+[03-Jul-2025 05:41:00 UTC] TNPOI Map Preview: Querying OSM at (34.77809, -82.35978) with radius 1000m
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: OSM zone query returned 2330 elements
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Large Dog Park (way ID: 305305375)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Small Dog Park (way ID: 305305376)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Palisades at the Park (relation ID: 6144416)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 8.2, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 14.2 (score: 142), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 142
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Zone 98 - Score: 142, Type: hot, OSM elements: 2330
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Analyzing zone at point 119 (34.78091, -82.36215)
+[03-Jul-2025 05:41:03 UTC] TNPOI Map Preview: Querying OSM at (34.78091, -82.36215) with radius 1000m
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: OSM zone query returned 2045 elements
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Information at (34.7795178, -82.3527243)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found MEMORIAL: Korean War Memorial at (34.7814062, -82.3520876)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 135275419)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found playground: playground (way ID: 257333755)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Conestee Large Dog Park (way ID: 305305375)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Nature Park (way ID: 473747988)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 6.2, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 12.2 (score: 122), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 122
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Zone 119 - Score: 122, Type: hot, OSM elements: 2045
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Analyzing zone at point 140 (34.78358, -82.36497)
+[03-Jul-2025 05:41:06 UTC] TNPOI Map Preview: Querying OSM at (34.78358, -82.36497) with radius 1000m
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: OSM zone query returned 1140 elements
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Lake Conestee Park Office (way ID: 46041598)
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 1, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 6 (score: 60), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 60
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: Zone 140 - Score: 60, Type: hot, OSM elements: 1140
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: Analyzing zone at point 190 (34.78702, -82.36508)
+[03-Jul-2025 05:41:08 UTC] TNPOI Map Preview: Querying OSM at (34.78702, -82.36508) with radius 1000m
+[03-Jul-2025 05:41:13 UTC] TNPOI Map Preview: OSM zone query returned 1137 elements
+[03-Jul-2025 05:41:13 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 0, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:13 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 0 (score: 0), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 0
+[03-Jul-2025 05:41:13 UTC] TNPOI Map Preview: Zone 190 - Score: 0, Type: cold, OSM elements: 1137
+[03-Jul-2025 05:41:13 UTC] TNPOI Map Preview: Analyzing zone at point 249 (34.79057, -82.36573)
+[03-Jul-2025 05:41:13 UTC] TNPOI Map Preview: Querying OSM at (34.79057, -82.36573) with radius 1000m
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: OSM zone query returned 1538 elements
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.7910862, -82.3760099)
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 0, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 2 (score: 20), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 20
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: Zone 249 - Score: 20, Type: warm, OSM elements: 1538
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: Analyzing zone at point 291 (34.79483, -82.36644)
+[03-Jul-2025 05:41:16 UTC] TNPOI Map Preview: Querying OSM at (34.79483, -82.36644) with radius 1000m
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: OSM zone query returned 1794 elements
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.7910862, -82.3760099)
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 0, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 3 (score: 30), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 30
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: Zone 291 - Score: 30, Type: hot, OSM elements: 1794
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: Analyzing zone at point 341 (34.79769, -82.3643)
+[03-Jul-2025 05:41:18 UTC] TNPOI Map Preview: Querying OSM at (34.79769, -82.3643) with radius 1000m
+[03-Jul-2025 05:41:20 UTC] TNPOI Map Preview: OSM zone query returned 1879 elements
+[03-Jul-2025 05:41:20 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 0, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:20 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 3 (score: 30), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 30
+[03-Jul-2025 05:41:20 UTC] TNPOI Map Preview: Zone 341 - Score: 30, Type: hot, OSM elements: 1879
+[03-Jul-2025 05:41:20 UTC] TNPOI Map Preview: Analyzing zone at point 399 (34.802, -82.36409)
+[03-Jul-2025 05:41:20 UTC] TNPOI Map Preview: Querying OSM at (34.802, -82.36409) with radius 1000m
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: OSM zone query returned 2184 elements
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8088175, -82.3695133)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8087874, -82.369649)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Found shop: cash at (34.8057506, -82.3736112)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8058037, -82.3735389)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Found shop: garden_centre at (34.8056443, -82.3737558)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Found shop: mobile_phone at (34.8056974, -82.3736835)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Category breakdown - Food: 2, Parks: 0, Shopping: 4, Services: 0
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Zone score calculation - Food: 2 (score: 0), Parks: 8 (score: 80), Shopping: 4 (score: 0), Services: 0 (score: 0), Total Score: 80
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Zone 399 - Score: 80, Type: hot, OSM elements: 2184
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Analyzing zone at point 420 (34.80609, -82.36235)
+[03-Jul-2025 05:41:23 UTC] TNPOI Map Preview: Querying OSM at (34.80609, -82.36235) with radius 1000m
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: OSM zone query returned 2149 elements
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8088175, -82.3695133)
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8087874, -82.369649)
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775302)
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775303)
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Found playground: playground (way ID: 893763499)
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 1.5, Shopping: 1, Services: 0
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 11.5 (score: 115), Shopping: 1 (score: 0), Services: 0 (score: 0), Total Score: 115
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Zone 420 - Score: 115, Type: hot, OSM elements: 2149
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Analyzing zone at point 448 (34.81101, -82.36236)
+[03-Jul-2025 05:41:26 UTC] TNPOI Map Preview: Querying OSM at (34.81101, -82.36236) with radius 1000m
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: OSM zone query returned 1638 elements
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8088175, -82.3695133)
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8087874, -82.369649)
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775302)
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775303)
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Found playground: playground (way ID: 893763499)
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 1.5, Shopping: 1, Services: 0
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 12.5 (score: 125), Shopping: 1 (score: 0), Services: 0 (score: 0), Total Score: 125
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Zone 448 - Score: 125, Type: hot, OSM elements: 1638
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Analyzing zone at point 458 (34.81198, -82.36727)
+[03-Jul-2025 05:41:28 UTC] TNPOI Map Preview: Querying OSM at (34.81198, -82.36727) with radius 1000m
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: OSM zone query returned 1935 elements
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8088175, -82.3695133)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8087874, -82.369649)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found shop: cash at (34.8057506, -82.3736112)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8058037, -82.3735389)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found shop: garden_centre at (34.8056443, -82.3737558)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found shop: mobile_phone at (34.8056974, -82.3736835)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775302)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775303)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 479774632)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Found playground: playground (way ID: 893763499)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Category breakdown - Food: 2, Parks: 2.5, Shopping: 4, Services: 0
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Zone score calculation - Food: 2 (score: 0), Parks: 11.5 (score: 115), Shopping: 4 (score: 0), Services: 0 (score: 0), Total Score: 115
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Zone 458 - Score: 115, Type: hot, OSM elements: 1935
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Analyzing zone at point 469 (34.81721, -82.36848)
+[03-Jul-2025 05:41:30 UTC] TNPOI Map Preview: Querying OSM at (34.81721, -82.36848) with radius 1000m
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: OSM zone query returned 2247 elements
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found service: office at (34.8217662, -82.3698622)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8219919, -82.3698938)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found service: office at (34.8224316, -82.3697787)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8218739, -82.3698874)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8088175, -82.3695133)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8087874, -82.369649)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found service: dentist at (34.8234438, -82.3755686)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Professional Park (way ID: 361782173)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775302)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775303)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Found playground: playground (way ID: 893763499)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 2.5, Shopping: 3, Services: 3
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 8.5 (score: 85), Shopping: 3 (score: 0), Services: 3 (score: 0), Total Score: 85
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Zone 469 - Score: 85, Type: hot, OSM elements: 2247
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Analyzing zone at point 480 (34.82046, -82.37102)
+[03-Jul-2025 05:41:32 UTC] TNPOI Map Preview: Querying OSM at (34.82046, -82.37102) with radius 1000m
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: OSM zone query returned 2382 elements
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found service: office at (34.8217662, -82.3698622)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8219919, -82.3698938)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found service: office at (34.8224316, -82.3697787)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8218739, -82.3698874)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found service: dentist at (34.8239765, -82.3769716)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found service: dentist at (34.8239288, -82.3771225)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found service: dentist at (34.8234438, -82.3755686)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Professional Park (way ID: 361782173)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775302)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402775303)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found playground: playground (way ID: 893763499)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Found playground: playground (way ID: 914218353)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 3, Shopping: 2, Services: 5
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 9 (score: 90), Shopping: 2 (score: 0), Services: 5 (score: 0), Total Score: 90
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Zone 480 - Score: 90, Type: hot, OSM elements: 2382
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Analyzing zone at point 492 (34.82364, -82.37469)
+[03-Jul-2025 05:41:35 UTC] TNPOI Map Preview: Querying OSM at (34.82364, -82.37469) with radius 1000m
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: OSM zone query returned 2156 elements
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found service: office at (34.8217662, -82.3698622)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8219919, -82.3698938)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found service: office at (34.8224316, -82.3697787)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8218739, -82.3698874)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found service: dentist at (34.8239765, -82.3769716)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found service: dentist at (34.8239288, -82.3771225)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: variety_store at (34.8313788, -82.3711833)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: alcohol at (34.8315395, -82.3710747)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8315902, -82.3710452)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8316771, -82.3709795)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: money_lender at (34.8317652, -82.3709326)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: beauty at (34.8318246, -82.370895)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: mobile_phone at (34.831872, -82.3708628)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found shop: second_hand at (34.8319303, -82.3704591)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found service: dentist at (34.8234438, -82.3755686)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Professional Park (way ID: 361782173)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Found playground: playground (way ID: 914218353)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 1.5, Shopping: 9, Services: 5
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 5.5 (score: 55), Shopping: 9 (score: 0), Services: 5 (score: 0), Total Score: 55
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Zone 492 - Score: 55, Type: hot, OSM elements: 2156
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Analyzing zone at point 504 (34.82672, -82.37857)
+[03-Jul-2025 05:41:39 UTC] TNPOI Map Preview: Querying OSM at (34.82672, -82.37857) with radius 1000m
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: OSM zone query returned 2016 elements
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found service: office at (34.8217662, -82.3698622)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8219919, -82.3698938)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found service: office at (34.8224316, -82.3697787)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8218739, -82.3698874)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found service: dentist at (34.8239765, -82.3769716)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found service: dentist at (34.8239288, -82.3771225)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: variety_store at (34.8313788, -82.3711833)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: alcohol at (34.8315395, -82.3710747)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8315902, -82.3710452)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8316771, -82.3709795)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: money_lender at (34.8317652, -82.3709326)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: beauty at (34.8318246, -82.370895)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: mobile_phone at (34.831872, -82.3708628)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found shop: second_hand at (34.8319303, -82.3704591)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found service: dentist at (34.8234438, -82.3755686)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 56851140)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Professional Park (way ID: 361782173)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found playground: playground (way ID: 914218353)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Andover Park Apartments (relation ID: 15433123)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15840201)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 4.5, Shopping: 9, Services: 5
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 7.2 (score: 72), Shopping: 9 (score: 0), Services: 5 (score: 0), Total Score: 72
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Zone 504 - Score: 72, Type: hot, OSM elements: 2016
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Analyzing zone at point 531 (34.8307, -82.38084)
+[03-Jul-2025 05:41:42 UTC] TNPOI Map Preview: Querying OSM at (34.8307, -82.38084) with radius 1000m
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: OSM zone query returned 1388 elements
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found service: dentist at (34.8239765, -82.3769716)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found service: dentist at (34.8239288, -82.3771225)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: variety_store at (34.8313788, -82.3711833)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: alcohol at (34.8315395, -82.3710747)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8315902, -82.3710452)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8316771, -82.3709795)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: money_lender at (34.8317652, -82.3709326)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: beauty at (34.8318246, -82.370895)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: mobile_phone at (34.831872, -82.3708628)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found shop: second_hand at (34.8319303, -82.3704591)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found service: dentist at (34.8234438, -82.3755686)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found playground: playground at (34.8326782, -82.3901381)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 56851140)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found playground: playground (way ID: 300012099)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Professional Park (way ID: 361782173)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894380834)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894401802)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found playground: playground (way ID: 914218353)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Andover Park Apartments (relation ID: 15433123)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15433131)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15840201)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 8.5, Shopping: 7, Services: 3
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 9.2 (score: 92), Shopping: 7 (score: 0), Services: 3 (score: 0), Total Score: 92
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Zone 531 - Score: 92, Type: hot, OSM elements: 1388
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Analyzing zone at point 565 (34.83347, -82.37899)
+[03-Jul-2025 05:41:45 UTC] TNPOI Map Preview: Querying OSM at (34.83347, -82.37899) with radius 1000m
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: OSM zone query returned 1397 elements
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8320737, -82.3688125)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: variety_store at (34.8313788, -82.3711833)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: alcohol at (34.8315395, -82.3710747)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8315902, -82.3710452)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8316771, -82.3709795)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: money_lender at (34.8317652, -82.3709326)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: beauty at (34.8318246, -82.370895)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: mobile_phone at (34.831872, -82.3708628)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found shop: second_hand at (34.8319303, -82.3704591)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 56851140)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found playground: playground (way ID: 300012099)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found playground: playground (way ID: 402787770)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894380834)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894401802)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found playground: playground (way ID: 894402881)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894402885)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found playground: playground (way ID: 914218353)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Andover Park Apartments (relation ID: 15433123)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15433131)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15840201)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Category breakdown - Food: 2, Parks: 9, Shopping: 7, Services: 0
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Zone score calculation - Food: 2 (score: 0), Parks: 9.7 (score: 97), Shopping: 7 (score: 0), Services: 0 (score: 0), Total Score: 97
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Zone 565 - Score: 97, Type: hot, OSM elements: 1397
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Analyzing zone at point 607 (34.83645, -82.38262)
+[03-Jul-2025 05:41:47 UTC] TNPOI Map Preview: Querying OSM at (34.83645, -82.38262) with radius 1000m
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: OSM zone query returned 1389 elements
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found playground: playground at (34.8326782, -82.3901381)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found playground: playground (way ID: 56851135)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 56851140)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found playground: playground (way ID: 300012099)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Cleveland Park Animal Hospital (way ID: 316700512)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894380834)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894401802)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found playground: playground (way ID: 894402881)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894402885)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Woodland Park at Cleveland Forest (relation ID: 8030635)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Andover Park Apartments (relation ID: 15433123)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15433131)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15840201)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Category breakdown - Food: 0, Parks: 11, Shopping: 0, Services: 0
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Zone score calculation - Food: 0 (score: 0), Parks: 11.7 (score: 117), Shopping: 0 (score: 0), Services: 0 (score: 0), Total Score: 117
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Zone 607 - Score: 117, Type: hot, OSM elements: 1389
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Analyzing zone at point 643 (34.84008, -82.38493)
+[03-Jul-2025 05:41:51 UTC] TNPOI Map Preview: Querying OSM at (34.84008, -82.38493) with radius 1000m
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: OSM zone query returned 1743 elements
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found shop: gift at (34.846548, -82.3879931)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8465014, -82.3881462)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground at (34.8326782, -82.3901381)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found MEMORIAL: War Memorial (way ID: 37264684)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground (way ID: 56851135)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 56851140)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground (way ID: 56851162)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground (way ID: 65698499)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground (way ID: 65698542)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground (way ID: 65698564)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 66724369)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found MEMORIAL: Major Rudolf Anderson, Jr. Memorial (way ID: 218658749)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Cleveland Park Animal Hospital (way ID: 316700512)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 377169367)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894380834)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894401802)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found playground: playground (way ID: 894402881)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894402885)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Woodland Park at Cleveland Forest (relation ID: 8030635)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Andover Park Apartments (relation ID: 15433123)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15433131)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15840201)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Category breakdown - Food: 1, Parks: 15.9, Shopping: 1, Services: 0
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Zone score calculation - Food: 1 (score: 0), Parks: 29.6 (score: 296), Shopping: 1 (score: 0), Services: 0 (score: 0), Total Score: 296
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Zone 643 - Score: 296, Type: hot, OSM elements: 1743
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Analyzing zone at point 679 (34.844029, -82.3871)
+[03-Jul-2025 05:41:53 UTC] TNPOI Map Preview: Querying OSM at (34.844029, -82.3871) with radius 1000m
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: OSM zone query returned 2064 elements
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park at (34.8501177, -82.3898437)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8524038, -82.38968)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8481897, -82.3953411)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8477804, -82.3939467)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8478687, -82.3944302)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: supermarket at (34.8477405, -82.3951645)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: beauty at (34.8478415, -82.3927602)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8484954, -82.3929738)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8483932, -82.3925993)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8484227, -82.3923593)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8484889, -82.3923346)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8483732, -82.3921914)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8484, -82.3921861)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8484273, -82.3921757)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8483235, -82.3920226)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8483896, -82.391998)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8483624, -82.3920083)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: estate_agent at (34.8482638, -82.3918293)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: financial at (34.848267, -82.3915718)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: interior_designer at (34.84833, -82.3918047)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: electronics at (34.8483027, -82.391815)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8480296, -82.3910057)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8480957, -82.3909811)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8480685, -82.3909915)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8493415, -82.3949321)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Park Name Story at (34.848872, -82.3922405)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8492672, -82.3924306)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: advertising at (34.8491749, -82.3905595)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: dry_cleaning at (34.8476724, -82.3949723)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: dentist at (34.8481001, -82.3949593)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8482437, -82.3954256)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: gift at (34.846548, -82.3879931)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found food/dining: restaurant at (34.8465014, -82.3881462)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8484293, -82.3945267)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: beauty at (34.8478147, -82.3942057)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found shop: hairdresser at (34.8425273, -82.3968736)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found food/dining: bar at (34.8466192, -82.3962062)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8515828, -82.3913006)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found service: office at (34.8486841, -82.388855)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found MEMORIAL: War Memorial (way ID: 37264684)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 42336416)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 45091964)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found MEMORIAL: Memorial Patio (way ID: 45091979)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 45759451)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 56851135)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 56851162)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 65698499)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 65698542)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 65698564)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 66724369)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found MEMORIAL: Major Rudolf Anderson, Jr. Memorial (way ID: 218658749)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: East Park Baptist Church (way ID: 307062986)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Cleveland Park Animal Hospital (way ID: 316700512)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 377169367)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 396567000)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found playground: playground (way ID: 894402881)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (way ID: 894402885)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found REAL NAMED PARK: Woodland Park at Cleveland Forest (relation ID: 8030635)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Found TRUE CITY PARK (tag): park (relation ID: 15433131)
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Category breakdown - Food: 4, Parks: 17.6, Shopping: 12, Services: 21
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Zone score calculation - Food: 4 (score: 0), Parks: 44.2 (score: 442), Shopping: 12 (score: 0), Services: 21 (score: 0), Total Score: 442
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Zone 679 - Score: 442, Type: hot, OSM elements: 2064
+[03-Jul-2025 05:41:57 UTC] TNPOI Map Preview: Discovered 24 zones

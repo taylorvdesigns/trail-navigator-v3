@@ -13,13 +13,11 @@ interface TrailData {
 }
 
 export const useTrailsData = (trails: TrailConfig[]) => {
-  console.log('[useTrailsData] called with trails:', trails);
   const results = useQueries({
     queries: trails.map((trail) => ({
       queryKey: ['trail', trail.routeId],
       queryFn: async () => {
         try {
-          console.log('[useTrailsData] fetching trail', trail.routeId);
           const url = `${API_CONFIG.baseURL}/api/ridewithgps/${trail.routeId}`;
           const response = await fetch(url);
           
@@ -29,7 +27,6 @@ export const useTrailsData = (trails: TrailConfig[]) => {
           }
 
           const data = await response.json();
-          console.log('[useTrailsData] data for', trail.routeId, data);
           
           // Check for track_points directly on the data object (not nested under 'route')
           if (!data.track_points) {
@@ -59,7 +56,6 @@ export const useTrailsData = (trails: TrailConfig[]) => {
 
           return trailData;
         } catch (error) {
-          console.error('[useTrailsData] error for', trail.routeId, error);
           throw error;
         }
       },
