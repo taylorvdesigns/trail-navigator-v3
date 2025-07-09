@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
+const BASE_URL = '';
 
 export interface RideWithGPSRoute {
   route: {
@@ -16,7 +16,7 @@ export interface RideWithGPSRoute {
 }
 
 export async function getRoute(routeId: string): Promise<RideWithGPSRoute> {
-  const response = await axios.get(`/api/ridewithgps/route.js`, {
+  const response = await axios.get(`/api/ridewithgps.js`, {
     params: { id: routeId }
   });
   return response.data;

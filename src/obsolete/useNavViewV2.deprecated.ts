@@ -1,15 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useTrailGraph } from './useTrailGraph';
-import { useLocation } from './useLocation';
-import { POI, Stop, TrailConfig, LocomotionMode, TrailPoint } from '../types';
-import { Junction } from '../utils/navViewSplit';
-import { haversine, metersToMiles } from '../utils/distance';
-import { getNavViewSplitData } from '../utils/navViewSplit';
-import { useTrailsData } from './useTrailsData';
-import { findNearestTrailPoint } from '../utils/trail';
-import { getPOIsForTrail } from '../utils/poi';
-import { calculateETA } from '../utils/eta';
+// DEPRECATED FILE - DO NOT USE
+// This file is kept for reference only and is not part of the active codebase
+// All code commented out to prevent TypeScript compilation errors
 
+// Empty export to make this a module
+export {};
+
+/*
 interface UseNavViewV2Props {
   trailConfig: TrailConfig;
   junctions: Junction[];
@@ -366,4 +362,5 @@ export function useNavViewV2({ trailConfig, junctions, pois, locomotionMode }: U
     loading: graphLoading || mainTrailLoading,
     error: graphError
   };
-} 
+}
+*/ 

@@ -262,15 +262,6 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
 
   }, [allTrailData, allTrails, pois, junctions, currentLocation, userPointOnTrail, activeTrailId]);
 
-  console.log('[DEBUG] useNavViewV3 stops:', stops.map(s => ({
-    id: s.id,
-    name: s.name,
-    type: s.type,
-    distance: s.metadata?.distance,
-    coordinates: s.metadata?.coordinates
-  })));
-  console.log('[DEBUG] useNavViewV3 currentLocation:', currentLocation);
-  console.log('[DEBUG] useNavViewV3 activeTrailId:', activeTrailId);
   return {
     stops,
     userStop,

@@ -32,7 +32,7 @@ export const TrailView: React.FC = () => {
   
   const trail = TRAIL_ROUTES.find(route => route.routeId === trailId);
   
-  const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '';
+  const BASE_URL = '';
 
   useEffect(() => {
     const fetchTrailData = async () => {
@@ -42,7 +42,9 @@ export const TrailView: React.FC = () => {
       
       try {
         setLoading(true);
-        const response = await axios.get<TrailData>(`${BASE_URL}/api/ridewithgps/${trailId}`);
+        const response = await axios.get<TrailData>(`${BASE_URL}/api/ridewithgps.js`, {
+          params: { id: trailId }
+        });
         setTrailData(response.data);
         setError(null);
       } catch (err: any) {

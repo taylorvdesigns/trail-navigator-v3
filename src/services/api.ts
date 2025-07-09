@@ -6,19 +6,26 @@ const BASE_URL = '';
 
 export const api = {
   async getRoute(routeId: string) {
-    const response = await axios.get(`/api/ridewithgps/route.js`, {
+    const response = await axios.get(`/api/ridewithgps.js`, {
       params: { id: routeId }
     });
     return response.data;
   },
 
   async getPOIs(): Promise<POI[]> {
-    const response = await axios.get(`/api/pois`);
+    const response = await axios.get(`/api/pois.js`);
     return response.data;
   },
 
   async getWordPressConfig(): Promise<WordPressConfig> {
     return wordpressConfig.getConfig();
+  },
+
+  async getGooglePlacesDetails(placeId: string) {
+    const response = await axios.get(`/api/google-places.js`, {
+      params: { placeId }
+    });
+    return response.data;
   }
 };
 

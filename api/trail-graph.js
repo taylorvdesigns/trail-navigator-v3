@@ -143,6 +143,26 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Check for required environment variables
+  const requiredEnvVars = {
+    RIDEWITHGPS_API_KEY: process.env.RIDEWITHGPS_API_KEY,
+    RIDEWITHGPS_AUTH_TOKEN: process.env.RIDEWITHGPS_AUTH_TOKEN
+  };
+
+  const missingVars = Object.entries(requiredEnvVars)
+    .filter(([key, value]) => !value)
+    .map(([key]) => key);
+
+  if (missingVars.length > 0) {
+    console.error('Missing environment variables:', missingVars);
+    return res.status(500).json({ 
+      error: 'Missing environment variables', 
+      missing: missingVars,
+      message: 'Please set the required environment variables in your Vercel dashboard'
+    });
+  }
+
   try {
     // Fetch real trail geometry for each trail
     const trailsWithPoints = [];

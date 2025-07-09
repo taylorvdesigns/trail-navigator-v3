@@ -17,12 +17,15 @@ import {
 import { 
   Place as PlaceIcon,
   Close as CloseIcon,
-  DirectionsWalk as WalkIcon
+  DirectionsWalk as WalkIcon,
+  Info as InfoIcon
 } from '@mui/icons-material';
 import { POI, TrailPoint } from '../../types/index';
 import { useNavigate } from 'react-router-dom';
 import { calculateDistance } from '../../utils/distance';
 import { getPOIsForTrail } from '../../utils/poi';
+import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
+import { findNearestTrailPoint } from '../../utils/trail';
 
 interface ListViewProps {
   pois: POI[];
@@ -51,16 +54,33 @@ export const ListView: React.FC<ListViewProps> = ({
   activeTrailId,
   allTrailData
 }) => {
+  // Debug: Log the props to see what's being passed
+  React.useEffect(() => {
+    
+  }, [pois, activeTrailId, allTrailData]);
   const navigate = useNavigate();
   const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
+  const [selectedPoiName, setSelectedPoiName] = useState<string>('');
 
   const trailPois = React.useMemo(() => {
-    if (!activeTrailId || !allTrailData) {
-      return pois;
-    }
-    return getPOIsForTrail(pois, allTrailData, activeTrailId, 100);
-  }, [pois, allTrailData, activeTrailId]);
+    // Show all POIs for the active trail, or all if no trail is selected
+    if (!activeTrailId) return pois;
+    // If you have a field to assign POIs to trails, filter here. Otherwise, show all.
+    return pois;
+  }, [pois, activeTrailId]);
+
+  // Debug: Log POI data to see what we're working with
+  React.useEffect(() => {
+
+    
+    // Count POIs with and without Google Place IDs
+    const withGooglePlaceId = trailPois.filter(poi => poi.google_place_id).length;
+    const withoutGooglePlaceId = trailPois.filter(poi => !poi.google_place_id).length;
+
+  }, [trailPois]);
 
   const groupedPois = React.useMemo(() => {
     return trailPois.reduce((acc: GroupedPOIs, poi) => {
@@ -84,35 +104,78 @@ export const ListView: React.FC<ListViewProps> = ({
   }, [trailPois]);
 
   const getDistance = (poi: POI): number | null => {
-    if (!currentLocation || !poi.coordinates) return null;
+    if (!currentLocation || !poi.coordinates || !allTrailData || !activeTrailId) return null;
     
     try {
+      // Find the active trail data
+      const activeTrail = allTrailData.find(trail => trail.id === activeTrailId);
+      if (!activeTrail || activeTrail.points.length === 0) {
+        return calculateDistance(
+          currentLocation[1], // latitude
+          currentLocation[0], // longitude
+          poi.coordinates[1], // latitude
+          poi.coordinates[0]  // longitude
+        );
+      }
+
+      // Find the nearest point on the trail to the user's location
+      const userLocation: [number, number] = [currentLocation[1], currentLocation[0]]; // [lat, lng]
+      const userNearestPoint = findNearestTrailPoint(userLocation, activeTrail.points);
+      
+      // Find the nearest point on the trail to the POI
+      const poiLocation: [number, number] = [poi.coordinates[1], poi.coordinates[0]]; // [lat, lng]
+      const poiNearestPoint = findNearestTrailPoint(poiLocation, activeTrail.points);
+      
+
+
+      if (userNearestPoint && poiNearestPoint) {
+        // Use the .distance property of the nearest trail points
+        const userTrailDist = userNearestPoint.point.distance ?? 0;
+        const poiTrailDist = poiNearestPoint.point.distance ?? 0;
+        const trailDistance = Math.abs(userTrailDist - poiTrailDist);
+        // Add the off-trail distances
+        const totalDistance = trailDistance + userNearestPoint.distance + poiNearestPoint.distance;
+
+        return totalDistance;
+      }
+      
+      // Fallback to straight-line distance if trail calculation fails
       return calculateDistance(
-        currentLocation[0],
-        currentLocation[1],
-        poi.coordinates[0],
-        poi.coordinates[1]
+        currentLocation[1], // latitude
+        currentLocation[0], // longitude
+        poi.coordinates[1], // latitude
+        poi.coordinates[0]  // longitude
       );
     } catch (error) {
-      console.error('Error calculating distance:', error);
-      return null;
+      console.error('Error calculating trail distance:', error);
+      // Fallback to straight-line distance
+      return calculateDistance(
+        currentLocation[1], // latitude
+        currentLocation[0], // longitude
+        poi.coordinates[1], // latitude
+        poi.coordinates[0]  // longitude
+      );
     }
   };
 
   const handlePoiClick = (poi: POI) => {
-    setSelectedPOI(poi);
-    // onPoiClick(poi); // No longer needed for navigation
+    
+    if (poi.google_place_id) {
+      // Open Google Places modal
+      setSelectedPlaceId(poi.google_place_id);
+      setSelectedPoiName(poi.title.rendered);
+      setGooglePlacesModalOpen(true);
+    } else {
+      // Open regular POI modal
+      setSelectedPOI(poi);
+    }
   };
 
   const handleShowOnMap = (poi: POI) => {
     // Swap coordinates to match Leaflet's expected format [latitude, longitude]
     const latLng: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
     
-    console.log('POI coordinates:', {
-      original: poi.coordinates,
-      swapped: latLng,
-      poiName: poi.title.rendered
-    });
+
 
     navigate('/map', { 
       state: { 
@@ -186,7 +249,7 @@ export const ListView: React.FC<ListViewProps> = ({
                             primary={
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <PlaceIcon sx={{ color: 'primary.main', fontSize: 20 }} />
-                                <Typography component="span" variant="subtitle1">
+                                <Typography component="span" variant="subtitle1" sx={{ color: 'white' }}>
                                   {poi.title.rendered}
                                 </Typography>
                               </Box>
@@ -200,7 +263,15 @@ export const ListView: React.FC<ListViewProps> = ({
                                   <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
                                     <WalkIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
                                     <Typography component="span" variant="body2" color="text.secondary">
-                                      {(distance / 1609.34).toFixed(1)} mi
+                                      {(distance / 1609.34).toFixed(1)} mi away from your location
+                                    </Typography>
+                                  </Box>
+                                )}
+                                {!poi.google_place_id && (
+                                  <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+                                    <InfoIcon sx={{ fontSize: 14, color: 'warning.main' }} />
+                                    <Typography component="span" variant="body2" color="warning.main" sx={{ fontSize: '0.75rem' }}>
+                                      Needs Google Place ID
                                     </Typography>
                                   </Box>
                                 )}
@@ -296,6 +367,14 @@ export const ListView: React.FC<ListViewProps> = ({
           </>
         )}
       </Dialog>
+
+      {/* Google Places Modal */}
+      <GooglePlacesModal
+        open={googlePlacesModalOpen}
+        onClose={() => setGooglePlacesModalOpen(false)}
+        placeId={selectedPlaceId}
+        poiName={selectedPoiName}
+      />
     </Box>
   );
 };

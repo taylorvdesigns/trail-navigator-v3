@@ -47,6 +47,7 @@ export interface POI {
   amenities?: string[];
   distance?: number; // Distance from current position in meters
   featured_image?: string | null; // URL of the featured image
+  google_place_id?: string; // Google Place ID for fetching additional details
 }
 
 export interface TestLocation {

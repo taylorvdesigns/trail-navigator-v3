@@ -13,9 +13,9 @@ import { NavContextCard } from '../NavView/NavContextCard';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { calculatePreciseNetworkDistance } from '../../utils/trailGraph';
-import { Textfit } from 'react-textfit';
 
-console.log('[DEBUG] NavViewV2.tsx loaded');
+
+// Component loaded
 
 // Styled components
 const SectionHeader = styled(Box)(({ theme }) => ({
@@ -237,10 +237,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     junctions,
     pois,
   });
-  console.log('[DEBUG] NavViewV2 received stops:', stops);
-  console.log('[DEBUG] NavViewV2 received userStop:', userStop);
   const { graph, isLoading, error: trailGraphError } = useTrailGraph();
-  console.log('[DEBUG] useTrailGraph', { graph, isLoading, error: trailGraphError });
   const { entryPoint } = useContext(LocationContext) || {};
 
   // Debug: Log precise network distance from entry point to user location
@@ -400,31 +397,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   // Helper to get network distance and ETA for a stop
   const getStopMetrics = (stop: Stop): { distanceMiles: number | null, etaMinutes: number | null } => {
-    console.log('[DEBUG] getStopMetrics', {
-      stopId: stop.id,
-      stopName: stop.name,
-      hasGraph: !!graph,
-      userStopCoords: userStop?.metadata?.coordinates,
-      stopCoords: stop.metadata?.coordinates
-    });
     if (!graph || !userStop || !userStop.metadata?.coordinates || !stop.metadata?.coordinates) {
-      console.log('[DEBUG] getStopMetrics - missing data', {
-        stopId: stop.id,
-        hasGraph: !!graph,
-        hasUserStop: !!userStop,
-        userStopCoords: userStop?.metadata?.coordinates,
-        stopCoords: stop.metadata?.coordinates
-      });
       return { distanceMiles: null, etaMinutes: null };
     }
     const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
     const stopCoords: [number, number] = [stop.metadata.coordinates[1], stop.metadata.coordinates[0]];
     const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, stopCoords);
-    console.log('[DEBUG] getStopMetrics - networkDistance', {
-      stopId: stop.id,
-      stopName: stop.name,
-      networkDistance
-    });
     if (networkDistance === null) return { distanceMiles: null, etaMinutes: null };
     const distanceMiles = metersToMiles(networkDistance);
     const etaMinutes = calculateETA(networkDistance, locomotionMode);
@@ -432,11 +410,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   };
 
   // Memoize metrics for all stops for performance
-  console.log('[DEBUG] stopMetricsMap dependencies', {
-    hasGraph: !!graph,
-    userStop,
-    userStopCoords: userStop?.metadata?.coordinates
-  });
   const stopMetricsMap = useMemo(() => {
     if (!graph || !userStop || !userStop.metadata?.coordinates) return {};
     const metrics: Record<string, { distanceMiles: number | null, etaMinutes: number | null }> = {};
@@ -486,7 +459,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   // In renderStop, use the 4-column layout
   const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
-    console.log('[DEBUG] renderStop', stop);
     const stopColor = color || activeTrail.color;
     const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
 
@@ -496,9 +468,19 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           <TrailEndCard color={stopColor}>
             <TrailEndMarker color={stopColor} />
             <Box sx={{ width: 180, flex: 1, minWidth: 0 }}>
-              <Textfit mode="single" min={10} max={13} style={{ width: '100%' }}>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  width: '100%',
+                  fontSize: 'clamp(10px, 2.5vw, 13px)',
+                  lineHeight: 1.2,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
                 TRAIL END ({stop.name})
-              </Textfit>
+              </Typography>
             </Box>
           </TrailEndCard>
         </Box>

@@ -97,7 +97,23 @@ export function getPOIsForTrail(
   targetTrailId: string,
   proximityThreshold: number = 100
 ): POI[] {
+  console.log('DEBUG: getPOIsForTrail called with:', {
+    poisCount: pois.length,
+    trailsCount: trails.length,
+    targetTrailId,
+    proximityThreshold
+  });
+  
   const assignments = assignPOIsToTrails(pois, trails, proximityThreshold);
+  
+  console.log('DEBUG: getPOIsForTrail assignments:', {
+    allAssignments: Array.from(assignments.entries()).map(([trailId, pois]) => ({
+      trailId,
+      poiCount: pois.length
+    })),
+    targetTrailPOIs: assignments.get(targetTrailId)?.length || 0
+  });
+  
   return assignments.get(targetTrailId) || [];
 }
 

@@ -18,7 +18,7 @@ import { useWordPressConfig } from '../hooks/useWordPressConfig';
 import { useTrailsData } from '../hooks/useTrailsData';
 import { useTrailJunctions } from '../hooks/useTrailJunctions';
 import { useNavViewV3 } from '../hooks/useNavViewV3';
-import DebugTrailStructure from '../pages/debug-trail-structure';
+import DebugTrailStructure from '../devtools/DebugTrailStructure';
 
 // Convert WordPress trail config to TrailConfig
 export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
