@@ -27,7 +27,7 @@ const TRAIL_ROUTES = [
   }
 ];
 
-import axios from 'axios';
+const axios = require('axios');
 
 // Haversine distance in meters
 function haversine(a, b) {
@@ -138,7 +138,7 @@ function buildTrailGraphFromPoints(trailsWithPoints) {
   return { nodes, edges };
 }
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   console.log('[DEBUG] /api/trail-graph.js endpoint hit');
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
