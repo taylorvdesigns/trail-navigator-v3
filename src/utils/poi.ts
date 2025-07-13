@@ -97,23 +97,7 @@ export function getPOIsForTrail(
   targetTrailId: string,
   proximityThreshold: number = 100
 ): POI[] {
-  console.log('DEBUG: getPOIsForTrail called with:', {
-    poisCount: pois.length,
-    trailsCount: trails.length,
-    targetTrailId,
-    proximityThreshold
-  });
-  
   const assignments = assignPOIsToTrails(pois, trails, proximityThreshold);
-  
-  console.log('DEBUG: getPOIsForTrail assignments:', {
-    allAssignments: Array.from(assignments.entries()).map(([trailId, pois]) => ({
-      trailId,
-      poiCount: pois.length
-    })),
-    targetTrailPOIs: assignments.get(targetTrailId)?.length || 0
-  });
-  
   return assignments.get(targetTrailId) || [];
 }
 
@@ -136,4 +120,88 @@ export function isPOIOnTrail(
   const nearestPoint = findNearestTrailPoint(poiCoords, trail.points);
   
   return nearestPoint ? nearestPoint.distance <= proximityThreshold : false;
+} 
+
+/**
+ * Convert a tag name to a URL-friendly slug
+ * @param tagName The tag name to convert
+ * @returns URL-friendly slug
+ */
+export function tagNameToSlug(tagName: string): string {
+  return tagName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim();
+}
+
+/**
+ * Convert a slug back to the original tag name
+ * @param pois Array of all POIs to search through
+ * @param slug The slug to convert back
+ * @returns Original tag name or null if not found
+ */
+export function slugToTagName(pois: POI[], slug: string): string | null {
+  const uniqueTags = getUniqueTags(pois);
+  return uniqueTags.find(tag => tagNameToSlug(tag) === slug) || null;
+}
+
+/**
+ * Get POIs by tag name (supports both original name and slug)
+ * @param pois Array of all POIs
+ * @param tagNameOrSlug The tag name or slug to filter by
+ * @returns Object containing filtered POIs and center coordinates
+ */
+export function getPOIsByTag(pois: POI[], tagNameOrSlug: string): { pois: POI[], center: [number, number] | null } {
+  // First try to find by original tag name
+  let tagName = tagNameOrSlug;
+  
+  // If not found, try to convert from slug
+  if (!pois.some(poi => poi.post_tags.some(tag => tag.name === tagNameOrSlug))) {
+    const foundTagName = slugToTagName(pois, tagNameOrSlug);
+    if (foundTagName) {
+      tagName = foundTagName;
+    }
+  }
+
+  const filteredPOIs = pois.filter(poi => 
+    poi.post_tags.some(tag => tag.name === tagName)
+  );
+
+  if (filteredPOIs.length === 0) {
+    return { pois: [], center: null };
+  }
+
+  // Calculate center point from all POIs in the tag group
+  const validCoordinates = filteredPOIs
+    .filter(poi => poi.coordinates)
+    .map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
+
+  if (validCoordinates.length === 0) {
+    return { pois: filteredPOIs, center: null };
+  }
+
+  const centerLat = validCoordinates.reduce((sum, coord) => sum + coord[0], 0) / validCoordinates.length;
+  const centerLng = validCoordinates.reduce((sum, coord) => sum + coord[1], 0) / validCoordinates.length;
+
+  return {
+    pois: filteredPOIs,
+    center: [centerLat, centerLng] as [number, number]
+  };
+}
+
+/**
+ * Get all unique tag names from POIs
+ * @param pois Array of POIs
+ * @returns Array of unique tag names
+ */
+export function getUniqueTags(pois: POI[]): string[] {
+  const tags = new Set<string>();
+  pois.forEach(poi => {
+    poi.post_tags.forEach(tag => {
+      tags.add(tag.name);
+    });
+  });
+  return Array.from(tags).sort();
 } 

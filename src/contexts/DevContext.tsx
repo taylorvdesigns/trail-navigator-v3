@@ -24,7 +24,7 @@ export const DevProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Check URL for dev mode parameter
     const searchParams = new URLSearchParams(location.search);
     const modeParam = searchParams.get('mode');
-    const isDev = modeParam === 'dev' || location.pathname.startsWith('/dev/');
+    const isDev = modeParam === 'dev' || modeParam === 'sim' || location.pathname.startsWith('/dev/') || location.pathname === '/simconfig';
     setIsDevMode(isDev);
   }, [location]);
 

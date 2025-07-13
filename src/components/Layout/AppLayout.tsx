@@ -21,7 +21,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
     }}>
       <AppBar position="sticky" sx={{ bgcolor: 'background.paper' }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', color: 'white' }}>
             SWAMP RABBIT TRAIL NAVIGATOR
           </Typography>
         </Toolbar>

@@ -4,6 +4,7 @@ import { TestLocation } from '../types/index';
 
 export interface LocationContextType {
   currentLocation: [number, number] | null;
+  previousLocation: [number, number] | null;
   setCurrentLocation: (location: [number, number]) => void;
   isSimulationMode: boolean;
   setSimulationMode: (mode: boolean) => void;
@@ -26,7 +27,8 @@ export interface LocationContextType {
 export const LocationContext = createContext<LocationContextType | undefined>(undefined);
 
 export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
+  const [currentLocation, setCurrentLocationState] = useState<[number, number] | null>(null);
+  const [previousLocation, setPreviousLocation] = useState<[number, number] | null>(null);
   const [isSimulationMode, setSimulationMode] = useState(false);
   const [simDirection, setSimDirection] = useState<'top' | 'bottom'>('top');
   const [entryPoint, setEntryPointState] = useState<[number, number] | null>(null);
@@ -36,6 +38,12 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [simTimer, setSimTimer] = useState<NodeJS.Timeout | null>(null);
   const [simTrailPoints, setSimTrailPoints] = useState<any[]>([]);
   const [simAnimatedLocation, setSimAnimatedLocation] = useState<[number, number] | null>(null);
+
+  // Custom setCurrentLocation that tracks previous location
+  const setCurrentLocation = (location: [number, number]) => {
+    setPreviousLocation(currentLocation);
+    setCurrentLocationState(location);
+  };
 
   // Load entry point from localStorage on mount
   useEffect(() => {
@@ -121,9 +129,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Always set first test location when simulation mode is enabled
   useEffect(() => {
     if (isSimulationMode) {
-      const firstLocation = TEST_LOCATIONS[0];
-      if (firstLocation) {
-        setCurrentLocation([firstLocation.coordinates[0], firstLocation.coordinates[1]]);
+      const defaultIndex = 1; // 'Between Downtown and Unity'
+      const defaultLocation = TEST_LOCATIONS[defaultIndex];
+      if (defaultLocation) {
+        setCurrentLocation([defaultLocation.coordinates[0], defaultLocation.coordinates[1]]);
       }
     }
   }, [isSimulationMode]);
@@ -243,6 +252,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     <LocationContext.Provider 
       value={{ 
         currentLocation, 
+        previousLocation,
         setCurrentLocation,
         isSimulationMode,
         setSimulationMode,

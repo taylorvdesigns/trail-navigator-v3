@@ -13,13 +13,13 @@
   padding: 16px;
   border-bottom: 1px solid var(--border-color);
   overflow-y: auto;
-  background: var(--card-background);
+  background: var(--background-color);
 }
 
 /* MIDDLE SECTION - Current Context */
 .middleSection {
   padding: 20px 16px;
-  background: var(--primary-color);
+  background: var(--background-color);
   color: white;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
@@ -30,7 +30,7 @@
   flex: 1;
   padding: 16px;
   overflow-y: auto;
-  background: var(--card-background);
+  background: var(--background-color);
 }
 
 .sectionHeader {
@@ -182,4 +182,27 @@
 .noStops p {
   margin: 0;
   font-size: 0.9rem;
+}
+
+.navview-split-pane .gutter {
+  display: none !important;
+  background: #444;
+  opacity: 0.7;
+  transition: background 0.2s;
+  cursor: row-resize;
+  height: 16px !important;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.navview-split-pane .gutter:hover {
+  background: #39FF14;
+  opacity: 1;
+}
+
+/* Add explicit constraints for split panes to prevent overflow */
+.navview-split-pane {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
 } 

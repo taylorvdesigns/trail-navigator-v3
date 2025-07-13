@@ -144,43 +144,43 @@ export const DevPanel: React.FC = () => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      bgcolor: 'transparent',
+      justifyContent: 'center',
+      alignItems: 'center',
     }}>
       <Box sx={{ 
-        p: 3, 
-        maxWidth: 400, 
-        margin: '0 auto',
+        p: 4, 
+        maxWidth: 420, 
+        margin: '32px auto',
         overflowY: 'auto',
         flex: 1,
+        bgcolor: 'rgba(34, 34, 34, 0.98)',
+        borderRadius: 4,
+        boxShadow: '0 4px 24px 0 rgba(0,0,0,0.25)',
+        border: '1px solid #222',
         '&::-webkit-scrollbar': {
           width: '8px',
         },
         '&::-webkit-scrollbar-track': {
-          background: '#1a1a1a',
+          background: '#222',
         },
         '&::-webkit-scrollbar-thumb': {
-          background: '#39FF14',
+          background: '#444',
           borderRadius: '4px',
         },
         '&::-webkit-scrollbar-thumb:hover': {
-          background: '#32CD32',
-        }
+          background: '#666',
+        },
       }}>
-        <Typography variant="h5" sx={{ mb: 2, color: '#39FF14', textAlign: 'center' }}>
+        <Typography variant="h5" sx={{ mb: 3, color: '#39FF14', textAlign: 'center', fontWeight: 700 }}>
           Development Mode
         </Typography>
-        <Divider sx={{ mb: 2, borderColor: 'rgba(255,255,255,0.1)' }} />
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            Current Location:
-          </Typography>
-          <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-            {currentLocation ? `${currentLocation[0]}, ${currentLocation[1]}` : 'Not set'}
-          </Typography>
-        </Box>
+        <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+        {/* Removed Current Location section */}
         {/* Vertical ToggleButtonGroup for locations */}
-        <Box sx={{ mt: 2, mb: 2 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        <Box sx={{ mt: 2, mb: 3 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Select Test Location:
           </Typography>
           <ToggleButtonGroup
@@ -190,6 +190,7 @@ export const DevPanel: React.FC = () => {
             orientation="vertical"
             aria-label="Test Location"
             fullWidth
+            sx={{ gap: 1 }}
           >
             {TEST_LOCATIONS.map((location, index) => (
               <ToggleButton
@@ -200,6 +201,7 @@ export const DevPanel: React.FC = () => {
                   justifyContent: 'flex-start',
                   color: '#fff',
                   borderColor: '#39FF14',
+                  borderRadius: 2,
                   '&.Mui-selected': {
                     bgcolor: '#39FF14',
                     color: '#000',
@@ -216,73 +218,103 @@ export const DevPanel: React.FC = () => {
             ))}
           </ToggleButtonGroup>
         </Box>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={simDirection === 'top'}
-              onChange={e => setSimDirection(e.target.checked ? 'top' : 'bottom')}
-              sx={{
-                '& .MuiSwitch-track': {
-                  backgroundColor: '#666666'
-                },
-                '& .MuiSwitch-thumb': {
-                  backgroundColor: '#FFFFFF'
-                }
-              }}
-            />
-          }
-          label={<Typography sx={{ color: '#FFFFFF', fontSize: '0.9rem' }}>Direction: {simDirection === 'top' ? 'Top' : 'Bottom'}</Typography>}
-          sx={{ mt: 2 }}
-        />
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+            Direction:
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1, color: '#ccc', fontSize: '0.8rem' }}>
+            Change the direction you are headed on the trail.
+          </Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={simDirection === 'top'}
+                onChange={e => setSimDirection(e.target.checked ? 'top' : 'bottom')}
+                sx={{
+                  '& .MuiSwitch-track': {
+                    backgroundColor: '#666666'
+                  },
+                  '& .MuiSwitch-thumb': {
+                    backgroundColor: '#FFFFFF'
+                  },
+                  mr: 2
+                }}
+              />
+            }
+            label={<Typography sx={{ color: '#FFFFFF', fontSize: '0.9rem' }}>Top / Bottom</Typography>}
+            sx={{ mt: 1, mb: 1, ml: 1 }}
+          />
+        </Box>
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
         {/* Entry Point Selection */}
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Set Entry Point (Test Locations):
           </Typography>
-          <Box sx={{ maxHeight: 180, overflowY: 'auto', border: '1px solid #444', borderRadius: 2, p: 1, background: '#222' }}>
-            {TEST_LOCATIONS.map((loc, idx) => {
-              const isCurrent = entryPoint && entryPoint[0] === loc.coordinates[0] && entryPoint[1] === loc.coordinates[1];
-              return (
-                <Button
-                  key={idx}
-                  variant={isCurrent ? 'contained' : 'outlined'}
-                  color={isCurrent ? 'primary' : 'secondary'}
-                  size="small"
-                  sx={{
-                    mb: 1,
-                    mr: 1,
-                    minWidth: 0,
-                    fontSize: 12,
-                    fontWeight: isCurrent ? 700 : 400,
-                    bgcolor: isCurrent ? '#e91e63' : undefined,
-                    color: isCurrent ? '#fff' : '#e91e63',
-                    borderColor: '#e91e63',
-                    '&:hover': { bgcolor: isCurrent ? '#d81b60' : '#fce4ec' }
-                  }}
-                  onClick={() => setEntryPoint([loc.coordinates[0], loc.coordinates[1]])}
-                >
-                  {loc.name}
-                </Button>
-              );
-            })}
-          </Box>
+          <ToggleButtonGroup
+            value={(() => {
+              if (!entryPoint) return null;
+              return TEST_LOCATIONS.findIndex(loc => entryPoint[0] === loc.coordinates[0] && entryPoint[1] === loc.coordinates[1]);
+            })()}
+            exclusive
+            onChange={(_event, newValue) => {
+              if (typeof newValue === 'number') {
+                const loc = TEST_LOCATIONS[newValue];
+                setEntryPoint([loc.coordinates[0], loc.coordinates[1]]);
+              }
+            }}
+            orientation="vertical"
+            aria-label="Entry Point Location"
+            fullWidth
+            sx={{ gap: 1, mb: 2 }}
+          >
+            {TEST_LOCATIONS.map((location, index) => (
+              <ToggleButton
+                key={index}
+                value={index}
+                aria-label={location.name}
+                sx={{
+                  justifyContent: 'flex-start',
+                  color: '#fff',
+                  borderColor: '#e91e63',
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    bgcolor: '#e91e63',
+                    color: '#fff',
+                  },
+                  fontWeight: 600,
+                  fontSize: 13,
+                  py: 1.5,
+                  px: 2,
+                  mb: 1
+                }}
+              >
+                {location.name}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+          <Button variant="outlined" color="secondary" fullWidth onClick={clearEntryPoint} sx={{ borderRadius: 2, py: 1, fontWeight: 600 }}>
+            Reset Entry Point
+          </Button>
         </Box>
-        <Button variant="outlined" color="secondary" fullWidth onClick={clearEntryPoint}>
-          Reset Entry Point
-        </Button>
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
         {/* Simulated Locomotion Controls */}
         <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Simulated Locomotion:
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-            <Button onClick={handlePlay} disabled={isSimPlaying} startIcon={<PlayArrowIcon />} variant="contained" color="success">Play</Button>
-            <Button onClick={handlePause} disabled={!isSimPlaying} startIcon={<PauseIcon />} variant="contained" color="warning">Pause</Button>
-            <Button onClick={handleReset} startIcon={<ReplayIcon />} variant="contained" color="secondary">Reset</Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Button onClick={handlePlay} disabled={isSimPlaying} startIcon={<PlayArrowIcon />} variant="contained" color="success" sx={{ borderRadius: 2, minWidth: 90 }}>
+              Play
+            </Button>
+            <Button onClick={handlePause} disabled={!isSimPlaying} startIcon={<PauseIcon />} variant="contained" color="warning" sx={{ borderRadius: 2, minWidth: 90 }}>
+              Pause
+            </Button>
+            <Button onClick={handleReset} startIcon={<ReplayIcon />} variant="contained" color="secondary" sx={{ borderRadius: 2, minWidth: 90 }}>
+              Reset
+            </Button>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Typography variant="body2" sx={{ color: '#fff' }}>Speed:</Typography>
             <ToggleButtonGroup
               value={simSpeedMultiplier}
@@ -290,9 +322,10 @@ export const DevPanel: React.FC = () => {
               onChange={(_e, v) => v && setSimSpeedMultiplier(v)}
               size="small"
               aria-label="Speed Multiplier"
+              sx={{ gap: 1 }}
             >
               {SPEED_MULTIPLIERS.map(mult => (
-                <ToggleButton key={mult} value={mult} sx={{ color: '#fff', borderColor: '#39FF14', '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' } }}>
+                <ToggleButton key={mult} value={mult} sx={{ color: '#fff', borderColor: '#39FF14', borderRadius: 2, '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' } }}>
                   {SPEED_LABELS[mult as keyof typeof SPEED_LABELS]}
                 </ToggleButton>
               ))}

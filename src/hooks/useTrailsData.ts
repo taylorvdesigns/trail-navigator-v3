@@ -22,18 +22,14 @@ export const useTrailsData = (trails: TrailConfig[]) => {
           const response = await fetch(url);
           
           if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`[DEBUG] Failed to fetch trail data for routeId ${trail.routeId}:`, errorText);
-            throw new Error(`Failed to fetch trail data: ${response.status} ${response.statusText} - ${errorText}`);
+            throw new Error(`Failed to fetch trail data: ${response.status} ${response.statusText}`);
           }
 
           const data = await response.json();
-          console.log(`[DEBUG] Trail data fetched for routeId ${trail.routeId}:`, data);
           
           // Check for track_points directly on the data object (not nested under 'route')
           if (!data.route || !data.route.track_points) {
-            console.error(`[DEBUG] Invalid trail data format for routeId ${trail.routeId} - missing route.track_points`, data);
-            throw new Error('Invalid trail data format - missing track_points');
+            throw new Error('Invalid trail data format - missing route.track_points');
           }
 
           const points = data.route.track_points.map((point: any) => ({

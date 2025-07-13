@@ -75,7 +75,7 @@ const DistanceTrackingMapPicker: React.FC<{
 
   return (
     <Box sx={{ width: '100%', height: 400, display: 'flex', flexDirection: 'column', mb: 2 }}>
-      <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
+      <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
         Tap the exact spot where you got on the trail in {selectedPOIGroup}:
       </Typography>
       <Box sx={{ flex: 1, minHeight: 0 }}>
@@ -242,7 +242,7 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
       <Modal open={open} onClose={onClose}>
         {step === 'initial' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
               Would you like the app to show you how far you've gone on the trail today?
             </Typography>
             <Button
@@ -266,7 +266,7 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
 
         {step === 'knows-location' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
               Do you know where you got on the trail?
             </Typography>
             <Button
@@ -297,7 +297,7 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
 
         {step === 'poi-selection' && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
               Select the area where you got on the trail:
             </Typography>
             <Box sx={{ width: '100%', maxHeight: 300, overflow: 'auto' }}>
@@ -336,7 +336,7 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
 
         {step === 'reuse-last' && lastEntryPoint && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
               Did you get on the trail at the same location as last time?
             </Typography>
             <Button

@@ -2,11 +2,11 @@
 // Next.js page to debug and visualize all POIs, POI groups, and junctions in a single list
 
 import React from 'react';
-import { useTrailsData } from '../hooks/useTrailsData';
-import { useTrailJunctions } from '../hooks/useTrailJunctions';
+import { useTrailsData } from '../../hooks/useTrailsData';
+import { useTrailJunctions } from '../../hooks/useTrailJunctions';
 import { Box, Typography, Divider } from '@mui/material';
-import { POI } from '../types/trail';
-import { Junction } from '../utils/navViewSplit';
+import { POI } from '../../types/trail';
+import { Junction } from '../../utils/navViewSplit';
 
 const DebugPOIListPage: React.FC = () => {
   // useTrailsData expects an array of TrailConfig, so pass an empty array for now

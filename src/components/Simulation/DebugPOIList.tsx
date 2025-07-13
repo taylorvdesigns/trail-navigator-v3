@@ -1,10 +1,10 @@
 import React from 'react';
-import { useTrailsData } from '../hooks/useTrailsData';
-import { useTrailJunctions } from '../hooks/useTrailJunctions';
-import { usePOIs } from '../hooks/usePOIs';
-import { POI } from '../types/trail';
-import { Junction } from '../utils/navViewSplit';
-import { TRAIL_ROUTES } from '../config/routes.config';
+import { useTrailsData } from '../../hooks/useTrailsData';
+import { useTrailJunctions } from '../../hooks/useTrailJunctions';
+import { usePOIs } from '../../hooks/usePOIs';
+import { POI } from '../../types/trail';
+import { Junction } from '../../utils/navViewSplit';
+import { TRAIL_ROUTES } from '../../config/routes.config';
 
 const DebugPOIList: React.FC = () => {
   const { data: trailsData = [] } = useTrailsData(TRAIL_ROUTES);

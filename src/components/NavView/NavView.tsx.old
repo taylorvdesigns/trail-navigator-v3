@@ -27,6 +27,7 @@ import { calculateETA } from '../../utils/eta';
 import he from 'he';
 import { getNavViewSplitData, Junction } from '../../utils/navViewSplit';
 import { useWordPressConfig } from '../../hooks/useWordPressConfig';
+import { useNavigate } from 'react-router-dom';
 
 // Standard list row (full-width)
 const StandardRow = styled(Box)(({ theme }) => ({
@@ -240,6 +241,7 @@ export const NavView: React.FC<NavViewProps> = ({
   locomotionMode,
   onChangeEntryPoint
 }) => {
+  const navigate = useNavigate();
   const { data: trailData } = useTrailData(trailConfig.routeId) as { data: import('../../types').TrailData | undefined };
   const { currentLocation, isSimulationMode, simDirection, entryPoint, clearEntryPoint } = useLocation();
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
@@ -821,7 +823,10 @@ export const NavView: React.FC<NavViewProps> = ({
                 {etaDisplay}
               </Box>
               {/* Name (col 4, absolutely centered in row) */}
-              <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: (stop as any).color || '#fff', textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
+              <Box
+                sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: (stop as any).color || '#fff', textAlign: 'center', zIndex: 3, cursor: 'pointer', pointerEvents: 'auto' }}
+                onClick={() => navigate('/list', { state: { groupName: stop.name } })}
+              >
                 {stop.name}
               </Box>
             </SubwayStop>
@@ -1002,13 +1007,13 @@ export const NavView: React.FC<NavViewProps> = ({
             minWidth: 180,
             textTransform: 'uppercase',
             zIndex: 2,
-            mb: '0px', // Pull heading down to overlap card border
+            mb: '2px', // Reduce space below heading
           }}
         >
           Destinations Ahead
         </Box>
         {/* Context card with matching positive margin-top */}
-        <Box sx={{ width: '100%', mt: '-15px' }}>
+        <Box sx={{ width: '100%', mt: 0, mb: 0 }}>
           {stops.length > 0 ? (
             <NavContextCard
               destination={stops[0].name.toUpperCase()}
@@ -1113,7 +1118,10 @@ export const NavView: React.FC<NavViewProps> = ({
                     {etaDisplay}
                   </Box>
                   {/* Name (col 4, absolutely centered in row) */}
-                  <Box sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: '#fff', textAlign: 'center', pointerEvents: 'none', zIndex: 3 }}>
+                  <Box
+                    sx={{ position: 'absolute', left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, color: '#fff', textAlign: 'center', zIndex: 3, cursor: 'pointer', pointerEvents: 'auto' }}
+                    onClick={() => navigate('/list', { state: { groupName } })}
+                  >
                     {groupName}
                   </Box>
                 </SubwayStop>

@@ -6,8 +6,8 @@ interface MiddleCardProps {
 
 export const MiddleCard: React.FC<MiddleCardProps> = ({ children }) => {
   return (
-    <div className="middle-card">
+    <div className="middle-card" style={{ background: 'none', border: 'none', boxShadow: 'none' }}>
       {children}
     </div>
   );
-};
+}; 

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Box, Typography, Paper, List, ListItem, ListItemText, Chip, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import { useLocation } from '../hooks/useLocation';
-import { useTrailsData } from '../hooks/useTrailsData';
-import { usePOIs } from '../hooks/usePOIs';
-import { useWordPressConfig } from '../hooks/useWordPressConfig';
-import { TRAIL_ROUTES } from '../config/routes.config';
-import { findNearestTrailPoint } from '../utils/trail';
-import { metersToMiles } from '../utils/distance';
-import { useTrailJunctions } from '../hooks/useTrailJunctions';
-import { getPOIsForTrail } from '../utils/poi';
+import { useLocation } from '../../hooks/useLocation';
+import { useTrailsData } from '../../hooks/useTrailsData';
+import { usePOIs } from '../../hooks/usePOIs';
+import { useWordPressConfig } from '../../hooks/useWordPressConfig';
+import { TRAIL_ROUTES } from '../../config/routes.config';
+import { findNearestTrailPoint } from '../../utils/trail';
+import { metersToMiles } from '../../utils/distance';
+import { useTrailJunctions } from '../../hooks/useTrailJunctions';
+import { getPOIsForTrail } from '../../utils/poi';
 import { PlayArrow as PlayArrowIcon, Pause as PauseIcon, Replay as ReplayIcon } from '@mui/icons-material';
 import he from 'he';
 

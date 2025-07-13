@@ -19,12 +19,13 @@ interface NavContextCardProps {
   onChangeEntryPoint?: () => void;
   borderColor?: string;
   highlightColor?: string;
+  noCardBackground?: boolean;
 }
 
 const modeIconMap = {
-  walking: <FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 35, color: '#7FFF00' }} />,
-  running: <FontAwesomeIcon icon={faPersonRunning} style={{ fontSize: 35, color: '#7FFF00' }} />,
-  biking: <FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 35, color: '#7FFF00' }} />,
+  walking: faPersonWalking,
+  running: faPersonRunning,
+  biking: faPersonBiking,
 };
 
 const fadedIconMap = {
@@ -62,24 +63,33 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
   onChangeEntryPoint,
   borderColor = '#39FF14',
   highlightColor = '#39FF14',
+  noCardBackground = false,
 }) => {
   const theme = useTheme();
   return (
     <Paper
       elevation={4}
       sx={{
-        borderRadius: 6,
-        border: `15px solid ${borderColor}`,
-        background: '#fff',
-        p: 2.5,
+        borderRadius: noCardBackground ? 0 : 10,
+        border: 'none',
+        background: noCardBackground ? 'none' : 'rgba(255,255,255,0.97)',
+        boxShadow: noCardBackground ? 'none' : '0 4px 16px rgba(0,0,0,0.12)',
+        p: { xs: 2, sm: 3 }, // Responsive padding
+        mt: 0.5, // Reduce top margin
+        mb: 0.5, // Reduce bottom margin
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        maxWidth: 480,
+        width: '100%',
+        maxWidth: '100vw',
         mx: 'auto',
         position: 'relative',
-        height: 300,
         justifyContent: 'center',
+        boxSizing: 'border-box',
+        overflowX: 'hidden', // Prevent horizontal overflow
+        wordBreak: 'break-word', // Prevent long content overflow
+        minWidth: 0, // Allow shrinking
+        flexShrink: 1, // Allow shrinking
       }}
     >
       {/* Heading - two lines */}
@@ -106,7 +116,6 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
           </Box>
         </Box>
       </Box>
-
       {/* 3-column grid for main content */}
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', width: '100%', alignItems: 'center', flex: 1 }}>
         {/* Left: Entry Point Distance and Change Button */}
@@ -184,52 +193,31 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
             <FontAwesomeIcon icon={faArrowUp} style={{ fontSize: 38, color: highlightColor }} />
           </Box>
           {/* Locomotion icons: active in center, inactive on sides */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', mt: 6 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', mt: 6, gap: 2 }}>
             {(['walking', 'running', 'biking'] as const).map((m) => {
               const isActive = mode === m;
               return (
                 <Box
                   key={m}
                   sx={{
-                    mx: 1.5,
                     cursor: onLocomotionChange ? 'pointer' : 'default',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'color 0.2s, font-size 0.2s',
+                    width: isActive ? 32 : 25,
+                    height: isActive ? 32 : 25,
+                    transition: 'all 0.2s ease',
                   }}
                   onClick={() => onLocomotionChange && onLocomotionChange(m)}
                 >
-                  {m === 'walking' && (
-                    <FontAwesomeIcon
-                      icon={faPersonWalking}
-                      style={{
-                        fontSize: isActive ? 38 : 19,
-                        color: isActive ? highlightColor : '#6B7280',
-                        transition: 'color 0.2s, font-size 0.2s',
-                      }}
-                    />
-                  )}
-                  {m === 'running' && (
-                    <FontAwesomeIcon
-                      icon={faPersonRunning}
-                      style={{
-                        fontSize: isActive ? 38 : 19,
-                        color: isActive ? highlightColor : '#6B7280',
-                        transition: 'color 0.2s, font-size 0.2s',
-                      }}
-                    />
-                  )}
-                  {m === 'biking' && (
-                    <FontAwesomeIcon
-                      icon={faPersonBiking}
-                      style={{
-                        fontSize: isActive ? 38 : 19,
-                        color: isActive ? highlightColor : '#6B7280',
-                        transition: 'color 0.2s, font-size 0.2s',
-                      }}
-                    />
-                  )}
+                  <FontAwesomeIcon 
+                    icon={modeIconMap[m]} 
+                    style={{ 
+                      fontSize: isActive ? 32 : 25,
+                      color: isActive ? highlightColor : '#888',
+                      transition: 'all 0.2s ease'
+                    }} 
+                  />
                 </Box>
               );
             })}
@@ -238,22 +226,23 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
             {mode.toUpperCase()}
           </Typography>
         </Box>
-        {/* Right: Description */}
-        <Box sx={{ textAlign: 'right', maxWidth: 180, justifySelf: 'end' }}>
-          <Typography variant="body2" sx={{ color: '#222', fontWeight: 500, textTransform: 'uppercase' }}>
+        {/* Right: Elevation description */}
+        <Box sx={{ textAlign: 'right', maxWidth: 140, justifySelf: 'end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+          <Typography variant="body2" sx={{ color: '#222', fontWeight: 500, mb: 0.5 }}>
             {description}
           </Typography>
         </Box>
       </Box>
 
       {/* Bottom: Amenity icons */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 0.5, width: '100%' }}>
+      {/* HIDDEN FOR TESTING - will re-enable with category filtering later */}
+      {/* <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 0.5, width: '100%' }}>
         {CATEGORIES.map((category) => (
           <Box key={category.slug} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <FontAwesomeIcon icon={category.icon} style={{ fontSize: 18 }} />
           </Box>
         ))}
-      </Box>
+      </Box> */}
     </Paper>
   );
 }; 

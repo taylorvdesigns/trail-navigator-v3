@@ -18,12 +18,13 @@ import {
   Place as PlaceIcon,
   Close as CloseIcon,
   DirectionsWalk as WalkIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  Map as MapIcon
 } from '@mui/icons-material';
 import { POI, TrailPoint } from '../../types/index';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { calculateDistance } from '../../utils/distance';
-import { getPOIsForTrail } from '../../utils/poi';
+import { getUniqueTags, tagNameToSlug } from '../../utils/poi';
 import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
 import { findNearestTrailPoint } from '../../utils/trail';
 
@@ -54,13 +55,10 @@ export const ListView: React.FC<ListViewProps> = ({
   activeTrailId,
   allTrailData
 }) => {
-  // Debug: Log the props to see what's being passed
-  React.useEffect(() => {
-    
-  }, [pois, activeTrailId, allTrailData]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const groupNameFromNav = location.state?.groupName || null;
   const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
   const [selectedPoiName, setSelectedPoiName] = useState<string>('');
@@ -72,15 +70,57 @@ export const ListView: React.FC<ListViewProps> = ({
     return pois;
   }, [pois, activeTrailId]);
 
-  // Debug: Log POI data to see what we're working with
+  const [selectedTag, setSelectedTag] = useState<string | null>(groupNameFromNav);
+  // If groupNameFromNav changes, update selectedTag and potentially open POI modal
   React.useEffect(() => {
+    if (groupNameFromNav) {
+      setSelectedTag(groupNameFromNav);
+      
+      console.log('ListView: groupNameFromNav received:', groupNameFromNav);
+      console.log('ListView: trailPois count:', trailPois.length);
+      
+      // Check if this is an individual POI (ungrouped or single POI in a group)
+      const matchingPOI = trailPois.find(poi => poi.title.rendered === groupNameFromNav);
+      
+      // Individual POI: either has no tags (ungrouped) or is the only POI with its tag
+      const isIndividualPOI = matchingPOI && (
+        matchingPOI.post_tags.length === 0 || // Ungrouped POI
+        (matchingPOI.post_tags.length > 0 && // Has tags but is the only POI with that tag
+          !trailPois.some(poi => 
+            poi.id !== matchingPOI.id && 
+            poi.post_tags.some(tag => tag.name === matchingPOI.post_tags[0]?.name)
+          ))
+      );
+      
+      console.log('ListView: matchingPOI found:', !!matchingPOI);
+      console.log('ListView: isIndividualPOI:', isIndividualPOI);
+      if (matchingPOI) {
+        console.log('ListView: matchingPOI details:', {
+          title: matchingPOI.title.rendered,
+          post_tags: matchingPOI.post_tags,
+          post_tags_length: matchingPOI.post_tags.length
+        });
+      }
+      
+      if (isIndividualPOI && matchingPOI) {
+        console.log('ListView: Opening modal for POI:', matchingPOI.title.rendered);
+        if (matchingPOI.google_place_id) {
+          // Open Google Places modal
+          console.log('ListView: Opening Google Places modal');
+          setSelectedPlaceId(matchingPOI.google_place_id);
+          setSelectedPoiName(matchingPOI.title.rendered);
+          setGooglePlacesModalOpen(true);
+        } else {
+          // Open regular POI modal
+          console.log('ListView: Opening regular POI modal');
+          setSelectedPOI(matchingPOI);
+        }
+      }
+    }
+  }, [groupNameFromNav, trailPois]);
 
-    
-    // Count POIs with and without Google Place IDs
-    const withGooglePlaceId = trailPois.filter(poi => poi.google_place_id).length;
-    const withoutGooglePlaceId = trailPois.filter(poi => !poi.google_place_id).length;
-
-  }, [trailPois]);
+  // Debug: Log POI data to see what we're working with
+  // (Removed debug useEffect)
 
   const groupedPois = React.useMemo(() => {
     return trailPois.reduce((acc: GroupedPOIs, poi) => {
@@ -187,6 +227,7 @@ export const ListView: React.FC<ListViewProps> = ({
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      
       {/* Tags Filter */}
       <Box sx={{ p: 2, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
         <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
@@ -213,24 +254,38 @@ export const ListView: React.FC<ListViewProps> = ({
             !selectedTag || 
             groupName === selectedTag || 
             groupedPois[groupName].some(poi => 
-              poi.post_tags.some(tag => tag.name === selectedTag)
+              poi.post_tags.some(tag => tag.name === selectedTag) ||
+              poi.title.rendered === selectedTag
             )
           )
           .map(([groupName, groupPois]) => (
             <Box key={groupName}>
-              <Typography
-                variant="h6"
-                sx={{
-                  p: 2,
-                  color: 'text.secondary',
-                  bgcolor: 'background.paper'
-                }}
-              >
-                {groupName.toUpperCase()} ({groupPois.length})
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', p: 2, color: 'text.secondary', bgcolor: 'background.paper' }}>
+                <Typography
+                  variant="h6"
+                  sx={{ flex: 1 }}
+                >
+                  {groupName.toUpperCase()} ({groupPois.length})
+                </Typography>
+                <IconButton
+                  aria-label={`View ${groupName} on map`}
+                  onClick={() => {
+                    const slug = tagNameToSlug(groupName);
+                    // Get all coordinates for this group
+                    const coords = groupPois
+                      .filter(poi => poi.coordinates)
+                      .map(poi => [poi.coordinates[1], poi.coordinates[0]]);
+                    navigate(`/places/${slug}`, { state: { fitBounds: coords } });
+                  }}
+                  size="small"
+                  sx={{ color: 'primary.main', ml: 1 }}
+                >
+                  <MapIcon />
+                </IconButton>
+              </Box>
               <List>
                 {groupPois
-                  .filter(poi => !selectedTag || poi.post_tags.some(tag => tag.name === selectedTag))
+                  .filter(poi => !selectedTag || poi.post_tags.some(tag => tag.name === selectedTag) || poi.title.rendered === selectedTag)
                   .map(poi => {
                     const distance = getDistance(poi);
                     return (

@@ -6,7 +6,6 @@ import L from 'leaflet';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import { useLocation as useAppLocation } from '../../hooks/useLocation';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
-import StarIcon from '@mui/icons-material/Star';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useTrailJunctions } from '../../hooks/useTrailJunctions';
 import { findNearestTrailPoint } from '../../utils/trail';
@@ -16,10 +15,16 @@ import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
 
-interface TrailData {
-  id: string;
-  points: TrailPoint[];
-  color: string;
+interface MapViewProps {
+  trails: TrailConfig[];
+  pois?: POI[];
+  onPoiClick?: (poi: POI) => void;
+  center?: [number, number];
+  zoom?: number;
+  currentLocation?: [number, number];
+  highlightedPOIs?: POI[];
+  onZoomChange?: (zoom: number) => void;
+  fitBounds?: [number, number][] | null;
 }
 
 // Custom hook to fit bounds to trail
@@ -35,56 +40,6 @@ const FitBounds: React.FC<{ coordinates: [number, number][] }> = ({ coordinates 
 
   return null;
 };
-
-interface MapViewProps {
-  trails: TrailConfig[];
-  pois?: POI[];
-  onPoiClick?: (poi: POI) => void;
-  center?: [number, number];
-  zoom?: number;
-  currentLocation?: [number, number];
-}
-
-// Convex hull algorithm (Graham scan, suitable for small sets)
-function convexHull(points: [number, number][]): [number, number][] {
-  if (points.length < 4) return points;
-  // Sort by x, then y
-  points = points.slice().sort((a, b) => a[1] - b[1] || a[0] - b[0]);
-  const cross = (o: [number, number], a: [number, number], b: [number, number]) =>
-    (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
-  const lower: [number, number][] = [];
-  for (const p of points) {
-    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop();
-    lower.push(p);
-  }
-  const upper: [number, number][] = [];
-  for (let i = points.length - 1; i >= 0; i--) {
-    const p = points[i];
-    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop();
-    upper.push(p);
-  }
-  upper.pop();
-  lower.pop();
-  return lower.concat(upper);
-}
-
-// Expand hull points outward from centroid by a fixed distance (in degrees)
-function expandHullFixed(hull: [number, number][], distance: number = 0.003): [number, number][] {
-  if (hull.length === 0) return hull;
-  // Calculate centroid
-  const centroid = hull.reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1]], [0, 0]);
-  centroid[0] /= hull.length;
-  centroid[1] /= hull.length;
-  // Expand each point
-  return hull.map(([lat, lng]) => {
-    const dLat = lat - centroid[0];
-    const dLng = lng - centroid[1];
-    const length = Math.sqrt(dLat * dLat + dLng * dLng);
-    if (length === 0) return [lat, lng];
-    const scale = (length + distance) / length;
-    return [centroid[0] + dLat * scale, centroid[1] + dLng * scale];
-  });
-}
 
 // Helper: Check if a point is inside a polygon (ray-casting algorithm)
 function pointInPolygon(point: [number, number], polygon: [number, number][]) {
@@ -129,22 +84,6 @@ function pointNearPolyline(point: [number, number], polyline: [number, number][]
     if (dist < minDist) minDist = dist;
   }
   return minDist < threshold;
-}
-
-// Helper: Find the farthest hull point from centroid
-function farthestHullPoint(hull: [number, number][], centroid: [number, number]) {
-  return hull.reduce((max, p) => {
-    const d = Math.hypot(p[0] - centroid[0], p[1] - centroid[1]);
-    return d > max.dist ? { point: p, dist: d } : max;
-  }, { point: hull[0], dist: 0 }).point;
-}
-
-// Helper: Find nearest hull point to a given point
-function nearestHullPoint(hull: [number, number][], pt: [number, number]) {
-  return hull.reduce((min, p) => {
-    const d = Math.hypot(p[0] - pt[0], p[1] - pt[1]);
-    return d < min.dist ? { point: p, dist: d } : min;
-  }, { point: hull[0], dist: Infinity }).point;
 }
 
 // Helper: Estimate label width in pixels (font size 14px, bold, padding 2px 8px)
@@ -251,7 +190,10 @@ export const MapView: React.FC<MapViewProps> = ({
   onPoiClick,
   center = [34.8526, -82.3940],
   zoom = 13,
-  currentLocation
+  currentLocation,
+  highlightedPOIs,
+  onZoomChange,
+  fitBounds
 }) => {
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
@@ -311,8 +253,12 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Determine if we should fit bounds
   const shouldFitBounds = useMemo(() => {
+    // Don't auto-fit to trails if we have specific fitBounds (like for POI groups)
+    if (fitBounds && fitBounds.length > 0) {
+      return false;
+    }
     return trailsWithCoordinates && trailsWithCoordinates.length > 0 && !highlightPOI;
-  }, [trailsWithCoordinates, highlightPOI]);
+  }, [trailsWithCoordinates, highlightPOI, fitBounds]);
 
   // Swap coordinates to match Leaflet's expected format [latitude, longitude]
   const safeCenter = useMemo(() => {
@@ -397,6 +343,21 @@ export const MapView: React.FC<MapViewProps> = ({
     return () => { map.off('moveend', onMove); };
   }, [focusedGroup, lastBounds]);
 
+  // Listen for zoom changes to update onZoomChange prop
+  useEffect(() => {
+    if (!mapRef.current || !onZoomChange) return;
+    const map = mapRef.current;
+    const handleZoom = () => {
+      onZoomChange(map.getZoom());
+    };
+    map.on('zoomend', handleZoom);
+    // Call once on mount
+    onZoomChange(map.getZoom());
+    return () => {
+      map.off('zoomend', handleZoom);
+    };
+  }, [onZoomChange]);
+
   // Map POI id to assigned trail color
   const poiTrailColorMap = useMemo(() => {
     if (!pois || !trailsData) return {};
@@ -411,6 +372,20 @@ export const MapView: React.FC<MapViewProps> = ({
     }
     return colorMap;
   }, [pois, trailsData]);
+
+  useEffect(() => {
+    if (fitBounds && mapRef.current) {
+      const map = mapRef.current;
+      if (fitBounds.length > 0) {
+        // Add a small delay to ensure this runs after any FitBounds component effects
+        setTimeout(() => {
+          if (mapRef.current) {
+            mapRef.current.fitBounds(fitBounds, { padding: [40, 40], maxZoom: 17 });
+          }
+        }, 100);
+      }
+    }
+  }, [fitBounds]);
 
   if (isLoading) {
     return (
@@ -594,25 +569,17 @@ export const MapView: React.FC<MapViewProps> = ({
         ))}
 
         {pois?.map((poi, index) => {
-          const isHighlighted = highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1];
+          // Only show marker, not always-visible label
+          const isHighlighted = (highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1]) ||
+                               (highlightedPOIs && highlightedPOIs.some(highlightedPoi => highlightedPoi.id === poi.id));
           // Use trail color for marker
           const markerColor = poiTrailColorMap[poi.id] || '#43D633';
           let markerIcon = L.divIcon({
-            className: 'poi-marker',
-            iconSize: [12, 12],
-            iconAnchor: [6, 6],
-            html: `<div style='width:12px;height:12px;background:${markerColor};border-radius:50%;border:2px solid #fff;'></div>`
+            className: isHighlighted ? 'highlight-poi-marker' : 'poi-marker',
+            iconSize: [isHighlighted ? 16 : 12, isHighlighted ? 16 : 12],
+            iconAnchor: [isHighlighted ? 8 : 6, isHighlighted ? 8 : 6],
+            html: `<div style='width:${isHighlighted ? 16 : 12}px;height:${isHighlighted ? 16 : 12}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);'></div>`
           });
-          if (isHighlighted) {
-            markerIcon = new L.DivIcon({
-              className: 'highlight-poi-marker',
-              iconAnchor: [8, 8],
-              html: `<div style="display:flex;align-items:center;">
-                <div style='width:16px;height:16px;background:#e53935;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.18);margin-right:4px;z-index:2;'></div>
-                <div style='padding:2px 8px;background:#fff;border-radius:4px;font-size:14px;font-weight:bold;color:#333;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:1;'>${poi.title.rendered}</div>
-              </div>`
-            });
-          }
           return (
             <Marker
               key={`poi-${index}`}
@@ -652,8 +619,8 @@ export const MapView: React.FC<MapViewProps> = ({
               iconAnchor: [8, 8],
               html: `
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                  <div style=\"width:16px;height:16px;background:#e91e63;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:2;\"></div>
-                  <div style=\"margin-top:4px;background:#fff;color:#e91e63;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;\">Starting Point</div>
+                  <div style="width:16px;height:16px;background:#e91e63;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:2;"></div>
+                  <div style="margin-top:4px;background:#fff;color:#e91e63;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Starting Point</div>
                 </div>
               `
             })}
