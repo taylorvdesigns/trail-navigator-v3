@@ -247,6 +247,12 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     }
     
     // --- Step 5: Sort the final, relevant list of stops ---
+    // The stops are sorted by their distance along the trail (metadata.distance).
+    // This means:
+    //   - The stop with the smallest distance is closest to the trail start
+    //   - The stop with the largest distance is farthest from the trail start (usually the trail end)
+    //   - The user's current location is mapped to a "user stop" with its own distance
+    // This natural order is used for both ahead and behind sections in the NavView.
     const sortedStops = relevantStops.sort((a, b) => {
       // Sort primarily by whether the stop is on the active trail or not
       const aIsActive = a.trailId === activeTrailId;
@@ -257,6 +263,18 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
       // If both are on the same trail (either active or a branch), sort by distance.
       return (a.metadata.distance || 0) - (b.metadata.distance || 0);
     });
+
+    // The sortedStops array is then split by getNavViewSplitData into:
+    //   - beforeJunction: stops before the next junction (from the user's current position)
+    //   - junctionStop: the junction itself (if present)
+    //   - afterJunction: stops after the junction (continuing on the current trail)
+    //   - (in split view) leftBranch/rightBranch: stops on branch trails at a junction
+    //
+    // The NavView renders these arrays in natural order:
+    //   - Ahead section: farthest POI at the top, closest at the bottom (just above the middle card)
+    //   - Behind section: closest POI at the top (just below the middle card), farthest at the bottom
+    //
+    // No reversal or column-reverse is needed; the order is always correct due to this sorting and splitting logic.
     
     return { stops: sortedStops, userStop: finalUserStop };
 

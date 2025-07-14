@@ -176,8 +176,11 @@ export function getNavViewSplitData(
           }
         }
         
+        // Filter out junction stops from the branch trail to avoid duplication in the right column
+        const branchStopsWithoutJunctions = branchTrailStops.filter(s => s.type !== 'junction');
+        
         rightBranch = {
-          stops: branchTrailStops,
+          stops: branchStopsWithoutJunctions,
           name: `View ${turnTrailConfig?.name || 'Branch'}`,
           color: turnTrailConfig?.color || '#808080'
         };
