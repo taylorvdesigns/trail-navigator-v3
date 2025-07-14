@@ -27,6 +27,8 @@ import { calculateDistance } from '../../utils/distance';
 import { getUniqueTags, tagNameToSlug } from '../../utils/poi';
 import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
 import { findNearestTrailPoint } from '../../utils/trail';
+import { getNetworkDistanceBetweenPoints } from '../../utils/trailGraph';
+import { useTrailGraph } from '../../hooks/useTrailGraph';
 
 interface ListViewProps {
   pois: POI[];
@@ -57,6 +59,7 @@ export const ListView: React.FC<ListViewProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { graph } = useTrailGraph();
   const groupNameFromNav = location.state?.groupName || null;
   const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
@@ -144,58 +147,13 @@ export const ListView: React.FC<ListViewProps> = ({
   }, [trailPois]);
 
   const getDistance = (poi: POI): number | null => {
-    if (!currentLocation || !poi.coordinates || !allTrailData || !activeTrailId) return null;
-    
-    try {
-      // Find the active trail data
-      const activeTrail = allTrailData.find(trail => trail.id === activeTrailId);
-      if (!activeTrail || activeTrail.points.length === 0) {
-        return calculateDistance(
-          currentLocation[1], // latitude
-          currentLocation[0], // longitude
-          poi.coordinates[1], // latitude
-          poi.coordinates[0]  // longitude
-        );
-      }
-
-      // Find the nearest point on the trail to the user's location
-      const userLocation: [number, number] = [currentLocation[1], currentLocation[0]]; // [lat, lng]
-      const userNearestPoint = findNearestTrailPoint(userLocation, activeTrail.points);
-      
-      // Find the nearest point on the trail to the POI
-      const poiLocation: [number, number] = [poi.coordinates[1], poi.coordinates[0]]; // [lat, lng]
-      const poiNearestPoint = findNearestTrailPoint(poiLocation, activeTrail.points);
-      
-
-
-      if (userNearestPoint && poiNearestPoint) {
-        // Use the .distance property of the nearest trail points
-        const userTrailDist = userNearestPoint.point.distance ?? 0;
-        const poiTrailDist = poiNearestPoint.point.distance ?? 0;
-        const trailDistance = Math.abs(userTrailDist - poiTrailDist);
-        // Add the off-trail distances
-        const totalDistance = trailDistance + userNearestPoint.distance + poiNearestPoint.distance;
-
-        return totalDistance;
-      }
-      
-      // Fallback to straight-line distance if trail calculation fails
-      return calculateDistance(
-        currentLocation[1], // latitude
-        currentLocation[0], // longitude
-        poi.coordinates[1], // latitude
-        poi.coordinates[0]  // longitude
-      );
-    } catch (error) {
-      console.error('Error calculating trail distance:', error);
-      // Fallback to straight-line distance
-      return calculateDistance(
-        currentLocation[1], // latitude
-        currentLocation[0], // longitude
-        poi.coordinates[1], // latitude
-        poi.coordinates[0]  // longitude
-      );
-    }
+    if (!graph || !currentLocation || !poi.coordinates) return null;
+    // Use [lat, lng] order for both
+    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
+    const poiCoords: [number, number] = [poi.coordinates[0], poi.coordinates[1]];
+    const distance = getNetworkDistanceBetweenPoints(graph, userCoords, poiCoords);
+    console.log('[ListView] POI:', poi.title?.rendered || poi.title, 'UserCoords:', userCoords, 'POICoords:', poiCoords, 'Distance:', distance);
+    return distance;
   };
 
   const handlePoiClick = (poi: POI) => {
