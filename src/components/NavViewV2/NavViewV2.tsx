@@ -100,11 +100,11 @@ const TrailEndCard = styled(Paper, {
 
 const TrailEndMarker = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'color'
-})<{ color?: string }>(({ theme, color }) => ({
+})<{ color?: string }>(({ color }) => ({
   width: 16,
   height: 16,
   borderRadius: '50%',
-  backgroundColor: theme.palette.getContrastText(color || theme.palette.primary.main),
+  backgroundColor: color || '#242424',
 }));
 
 const StopInfo = styled(Box)(({ theme }) => ({
@@ -559,6 +559,13 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const behindLeftSwipe = useSwipe(handleBehindLeft, handleBehindRight);
   const behindRightSwipe = useSwipe(handleBehindLeft, handleBehindRight);
 
+  // Auto-scroll ahead section to bottom to show closest POIs when the list is long
+  React.useEffect(() => {
+    if (aheadRef.current && aheadHeight >= MAX_AHEAD_HEIGHT) {
+      aheadRef.current.scrollTop = aheadRef.current.scrollHeight;
+    }
+  }, [aheadSplitData, aheadHeight]);
+
   if (loading) {
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
@@ -587,7 +594,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   // In renderStop, use the 4-column layout
   const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
     let stopColor = color || activeTrail.color;
-    
+    const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
     // For junctions, use the color of the trail it connects to (not the current trail)
     if (stop.type === 'junction' && stop.metadata.branchTrailIds && stop.metadata.branchTrailIds.length > 0) {
       const connectedTrailId = stop.metadata.branchTrailIds[0]; // Get the first connected trail
@@ -595,15 +602,79 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       if (connectedTrail) {
         stopColor = connectedTrail.color;
       }
+      // Render junction with special background and text/line/circle color
+      return (
+        <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333`, background: stopColor, borderRadius: 8 }}>
+          {/* Distance (left) */}
+          <StopCol width={36} direction="column">
+            <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+              {metrics.distanceMiles !== null ? metrics.distanceMiles.toFixed(1) : '--'}
+            </Typography>
+            <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em' }}>
+              mi
+            </Typography>
+          </StopCol>
+          {/* Subway line & dot (center) */}
+          <StopCol width={36} sx={{ position: 'relative', minHeight: 52 }}>
+            <SubwayLine color={'#242424'} />
+            <StopMarker color={'#242424'} sx={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' }} />
+          </StopCol>
+          {/* ETA (right of line) */}
+          <StopCol width={36} direction="column">
+            {metrics.etaMinutes !== null && metrics.etaMinutes >= 60 ? (
+              <>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                    {Math.floor(Math.round(metrics.etaMinutes) / 60)}
+                  </Typography>
+                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                    hr
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                    {Math.round(metrics.etaMinutes) % 60}
+                  </Typography>
+                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                    min
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  {metrics.etaMinutes !== null ? Math.round(metrics.etaMinutes) : '--'}
+                </Typography>
+                <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                  min
+                </Typography>
+              </Box>
+            )}
+          </StopCol>
+          {/* POI Name (rightmost, flexes) */}
+          <StopCol sx={{ flex: 1, justifyContent: 'flex-start', pl: 1 }}>
+            <Typography 
+              variant="subtitle1" 
+              sx={{ 
+                fontWeight: 600, 
+                color: '#242424', 
+                fontSize: '0.8rem',
+                cursor: 'default',
+              }}
+            >
+              {stop.name}
+              {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
+            </Typography>
+          </StopCol>
+        </StopRow>
+      );
     }
-    
-    const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
 
     if (stop.type === 'endpoint') {
       return (
         <Box key={stop.id} sx={{ position: 'relative', pt: 1, pb: 1 }}>
-          <TrailEndCard color={stopColor}>
-            <TrailEndMarker color={stopColor} />
+          <TrailEndCard color={stopColor} sx={{ background: stopColor, color: '#242424', borderRadius: 50, display: 'flex', alignItems: 'center', padding: '0.5em 1.5em' }}>
+            <TrailEndMarker color={'#242424'} />
             <Box sx={{ width: 180, flex: 1, minWidth: 0 }}>
               <Typography 
                 variant="body2" 
@@ -613,10 +684,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                   lineHeight: 1.2,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  color: '#242424',
+                  fontWeight: 700
                 }}
               >
-                TRAIL END ({stop.name})
+                {`TRAIL END: ${stop.name}`}
               </Typography>
             </Box>
           </TrailEndCard>
@@ -772,8 +845,9 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     overflowX: 'hidden', 
                     overflowY: 'hidden', 
                     position: 'relative', 
-                    marginBottom: 16,
-                    zIndex: 10
+                    marginBottom: 0,
+                    zIndex: 10,
+                    borderBottom: '1px solid #333'
                   }}
 
                 >
@@ -869,7 +943,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               {(behindSplitData.leftBranch || behindSplitData.rightBranch) ? (
                 <div
                   className="split-slider"
-                  style={{ width: '100%', overflowX: 'hidden', overflowY: 'hidden', position: 'relative', marginBottom: 16 }}
+                  style={{ width: '100%', overflowX: 'hidden', overflowY: 'hidden', position: 'relative', marginBottom: 0, borderBottom: '1px solid #333' }}
                 >
                   <div
                     className="split-columns"
@@ -940,7 +1014,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     overflowX: 'hidden', 
                     overflowY: 'hidden', 
                     position: 'relative', 
-                    marginBottom: 16
+                    marginBottom: 0,
+                    borderBottom: '1px solid #333'
                   }}
                 >
                   <div
@@ -1051,7 +1126,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                         overflowX: 'hidden', 
                         overflowY: 'hidden', 
                         position: 'relative', 
-                        marginBottom: 16
+                        marginBottom: 0,
+                        borderBottom: '1px solid #333'
                       }}
                     >
                       <div
