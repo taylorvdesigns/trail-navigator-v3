@@ -754,6 +754,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               color: stopColor, 
               fontSize: '0.8rem',
               cursor: stop.type === 'poi' ? 'pointer' : 'default',
+              textAlign: 'left',
               '&:hover': stop.type === 'poi' ? {
                 textDecoration: 'underline',
                 opacity: 0.8
