@@ -1,4 +1,4 @@
-import React, { useMemo, useContext, useRef, useState } from 'react';
+import React, { useMemo, useContext, useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { LocomotionMode, Stop, TrailConfig, POI, TrailPoint } from '../../types';
 import { Junction, getNavViewSplitData, NavViewSplitData } from '../../utils/navViewSplit';
@@ -225,6 +225,187 @@ function formatETA(minutes: number | null): string {
   return rem === 0 ? `${hr} hr` : `${hr} hr ${rem} min`;
 }
 
+// Add SplitView component at the top (after imports, before NavViewV2)
+
+interface SplitViewProps {
+  leftContent: React.ReactNode;
+  rightContent: React.ReactNode;
+  leftAlign?: 'flex-start' | 'flex-end' | 'center';
+  rightAlign?: 'flex-start' | 'flex-end' | 'center';
+  rightColWidth?: string;
+  leftColWidth?: string;
+  slidingTransform?: string;
+  onLeftClick?: () => void;
+  onRightClick?: () => void;
+  leftSwipeHandlers?: any;
+  rightSwipeHandlers?: any;
+  showCloseButton?: boolean;
+  onClose?: () => void;
+  alignItems?: 'flex-start' | 'flex-end' | 'center' | 'stretch';
+}
+
+const SplitView: React.FC<SplitViewProps> = ({
+  leftContent,
+  rightContent,
+  leftAlign = 'flex-end',
+  rightAlign = 'flex-end',
+  rightColWidth = 'calc(50% + 20px)',
+  leftColWidth = 'calc(50% - 85px)',
+  slidingTransform = 'translateX(0)',
+  onLeftClick,
+  onRightClick,
+  leftSwipeHandlers,
+  rightSwipeHandlers,
+  showCloseButton,
+  onClose,
+  alignItems = 'stretch',
+}) => {
+  const splitViewRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
+  const rightContentRef = useRef<HTMLDivElement>(null);
+  const [rightContentHeight, setRightContentHeight] = useState<number>(0);
+
+  // Measure the right content height
+  useLayoutEffect(() => {
+    if (rightContentRef.current) {
+      setRightContentHeight(rightContentRef.current.offsetHeight);
+    }
+  }, [rightContent]);
+
+  useLayoutEffect(() => {
+    if (splitViewRef.current) {
+      console.log('[DEBUG] SplitView', {
+        offsetHeight: splitViewRef.current.offsetHeight,
+        scrollHeight: splitViewRef.current.scrollHeight,
+        clientHeight: splitViewRef.current.clientHeight,
+      });
+    }
+    if (leftColRef.current) {
+      console.log('[DEBUG] SplitView LeftCol', {
+        offsetHeight: leftColRef.current.offsetHeight,
+        scrollHeight: leftColRef.current.scrollHeight,
+        clientHeight: leftColRef.current.clientHeight,
+      });
+    }
+    if (rightColRef.current) {
+      console.log('[DEBUG] SplitView RightCol', {
+        offsetHeight: rightColRef.current.offsetHeight,
+        scrollHeight: rightColRef.current.scrollHeight,
+        clientHeight: rightColRef.current.clientHeight,
+        offsetWidth: rightColRef.current.offsetWidth,
+        clientWidth: rightColRef.current.clientWidth,
+        scrollWidth: rightColRef.current.scrollWidth,
+      });
+    }
+  });
+  return (
+    <div
+      ref={splitViewRef}
+      className="split-slider"
+      style={{
+        width: '100%',
+        overflowX: 'hidden',
+        position: 'relative',
+        marginBottom: 0,
+        // borderBottom: '1px solid #333',
+        // border: '3px solid blue', // DEBUG
+      }}
+    >
+      <div
+        className="split-columns"
+        style={{
+          display: 'flex',
+          alignItems: 'stretch', // force columns to stretch vertically
+          width: 'calc(200% - 30px)',
+          transform: slidingTransform,
+          transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)',
+        }}
+      >
+        <div
+          ref={leftColRef}
+          style={{
+            minWidth: 0,
+            zIndex: 2,
+            display: 'block',
+            alignSelf: 'stretch', // force stretch
+            height: 'auto', // allow to grow with content
+            // border: '3px solid green', // DEBUG
+          }}
+          onClick={onLeftClick}
+          {...(leftSwipeHandlers || {})}
+        >
+          {leftContent}
+        </div>
+        <div
+          ref={rightColRef}
+          style={{
+            width: rightColWidth,
+            minWidth: 0,
+            zIndex: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignSelf: 'stretch', // stretch to match left column height
+            height: 'auto', // allow to grow with content
+            position: 'relative',
+            paddingRight: '0',
+            // border: '3px solid orange', // DEBUG
+          }}
+          onClick={onRightClick}
+          {...(rightSwipeHandlers || {})}
+        >
+          <div style={{ 
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: rightAlign === 'flex-end' ? 'flex-end' : 'flex-start',
+            height: '100%',
+            position: 'relative'
+          }}>
+            <div style={{ paddingRight: 48 }}>
+              <div ref={rightContentRef}>
+                {rightContent}
+              </div>
+            </div>
+            {showCloseButton && (
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  onClose && onClose();
+                }}
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: rightAlign === 'flex-end' ? 'auto' : '10px',
+                  bottom: rightAlign === 'flex-end' ? '10px' : 'auto',
+                  height: rightContentHeight > 0 ? `${rightContentHeight}px` : 'auto',
+                  width: 40,
+                  background: '#35393d',
+                  border: 'none',
+                  borderRadius: 3,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0.9,
+                  transition: 'opacity 0.2s',
+                  color: 'white',
+                  fontSize: '2rem',
+                  fontWeight: 700
+                }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '0.9')}
+                aria-label="Close right column"
+              >
+                <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const NavViewV2: React.FC<NavViewV2Props> = ({
   trailConfig,
   allTrails,
@@ -439,6 +620,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const aheadRef = useRef<HTMLDivElement>(null);
   const [aheadHeight, setAheadHeight] = useState(0);
   const MAX_AHEAD_HEIGHT = 400;
+  // Define MAX_BEHIND_HEIGHT near MAX_AHEAD_HEIGHT if not already
+  const MAX_BEHIND_HEIGHT = 400;
   // Measure ahead section height on render and resize
   React.useLayoutEffect(() => {
     function updateAheadHeight() {
@@ -574,6 +757,41 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       aheadRef.current.scrollTop = aheadRef.current.scrollHeight;
     }
   }, [aheadSplitData, aheadHeight]);
+
+  const behindStickyRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function logHeight() {
+      if (behindStickyRef.current) {
+        console.log('[DEBUG] Behind section container height:', behindStickyRef.current.offsetHeight);
+      }
+    }
+    logHeight();
+    window.addEventListener('resize', logHeight);
+    return () => window.removeEventListener('resize', logHeight);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (splitPaneRef.current) {
+      console.log('[DEBUG] splitPaneRef', splitPaneRef.current.offsetHeight, splitPaneRef.current.clientHeight);
+    }
+  });
+  useLayoutEffect(() => {
+    const el = document.querySelector('[data-behind-section]');
+    if (el) {
+      // @ts-ignore
+      console.log('[DEBUG] behind section', el.offsetHeight, el.clientHeight);
+    }
+  });
+
+  useLayoutEffect(() => {
+    if (behindStickyRef.current) {
+      console.log('[DEBUG] Behind section', {
+        offsetHeight: behindStickyRef.current.offsetHeight,
+        scrollHeight: behindStickyRef.current.scrollHeight,
+        clientHeight: behindStickyRef.current.clientHeight,
+      });
+    }
+  });
 
   if (loading) {
     return (
@@ -785,6 +1003,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   const renderStopList = (stops: Stop[], color?: string) => {
     const listColor = color || activeTrail.color;
+    console.log('[DEBUG] renderStopList called with:', { stops: stops.length, color: listColor });
     return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
   };
   
@@ -827,7 +1046,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   };
   
   return (
-    <div ref={containerRef} style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#23272a' }}>
+    <div ref={containerRef} style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#23272a', minHeight: 0, flex: 1 }}>
       {aheadHeight < MAX_AHEAD_HEIGHT ? (
         // Sticky mode: ahead section natural height, middle directly below, behind fills rest
         <>
@@ -856,89 +1075,21 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             }}>
               {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
               {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) && (
-                <div
-                  className="split-slider"
-                  style={{ 
-                    width: '100%', 
-                    overflowX: 'hidden', 
-                    overflowY: 'hidden', 
-                    position: 'relative', 
-                    marginBottom: 0,
-                    zIndex: 10,
-                    borderBottom: '1px solid #333'
-                  }}
-
-                >
-                  <div
-                    className="split-columns"
-                    style={{
-                      display: 'flex',
-                      width: 'calc(200% - 30px)',
-                      transform: aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 65px))',
-                      transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
-                    }}
-
-                  >
-                    <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 65px)' }}
-                      onClick={handleAheadLeft}
-                      {...aheadLeftSwipe}
-                    >
-                      {renderStopList(aheadSplitData.leftBranch?.stops.slice().reverse() || [], aheadSplitData.leftBranch?.color)}
-                    </div>
-                    <div
-                      style={{ 
-                        flex: 1, 
-                        minWidth: 0, 
-                        zIndex: 2, 
-                        maxWidth: 'calc(50% - 0px)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-end',
-                        position: 'relative', // Make this column relative for absolute positioning of the button
-                        paddingRight: '60px' // Add padding to make room for the close button
-                      }}
-                      onClick={handleAheadRight}
-                      {...aheadRightSwipe}
-                    >
-                      {renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
-                      {/* Close button - only show when not on left (default) position */}
-                      {aheadFocus !== 'left' && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAheadClose();
-                          }}
-                          style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: 10,
-                            bottom: 10,
-                            width: 40,
-                            background: '#35393d',
-                            border: 'none',
-                            borderRadius: 3,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 20,
-                            opacity: 0.9,
-                            transition: 'opacity 0.2s',
-                            color: 'white',
-                            fontSize: '2rem',
-                            fontWeight: 700
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                          aria-label="Close right column"
-                        >
-                          <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <SplitView
+                  leftContent={renderStopList(aheadSplitData.leftBranch?.stops.slice().reverse() || [], aheadSplitData.leftBranch?.color)}
+                  rightContent={renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
+                  leftAlign="flex-start"
+                  rightAlign="flex-end"
+                  rightColWidth="calc(50% - 0px)"
+                  leftColWidth="calc(50% - 65px)"
+                  slidingTransform={aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                  onLeftClick={handleAheadLeft}
+                  onRightClick={handleAheadRight}
+                  leftSwipeHandlers={aheadLeftSwipe}
+                  rightSwipeHandlers={aheadRightSwipe}
+                  showCloseButton={aheadFocus !== 'left'}
+                  onClose={handleAheadClose}
+                />
               )}
               {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
               {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
@@ -984,368 +1135,207 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 />
               </div>
             </div>
-            <div style={{ 
+            <div ref={behindStickyRef} style={{ 
               padding: '0 16px', 
               textAlign: 'center', 
               marginTop: 16,
-              flex: 1,
-              minHeight: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              overflowY: 'auto',
-              overflowX: 'hidden'
+              overflowY: 'auto', // allow scrolling
+              overflowX: 'hidden',
             }}>
               <SectionHeader>
                 Behind You
               </SectionHeader>
               {/* Sliding split view for behind */}
+              {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
+              {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
               {(behindSplitData.leftBranch || behindSplitData.rightBranch) ? (
-                <div
-                  className="split-slider"
-                  style={{ width: '100%', overflowX: 'hidden', overflowY: 'hidden', position: 'relative', marginBottom: 0, borderBottom: '1px solid #333' }}
-                >
-                  <div
-                    className="split-columns"
-                    style={{
-                      display: 'flex',
-                      width: 'calc(200% - 30px)',
-                      transform: behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))',
-                      transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
-                    }}
-
-                  >
-                    <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 85px)' }}
-                      onClick={handleBehindLeft}
-                      {...behindLeftSwipe}
-                    >
-                      {renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
-                    </div>
-                    <div
-                      style={{ 
-                        flex: 1, 
-                        minWidth: 0, 
-                        zIndex: 2, 
-                        maxWidth: 'calc(50% + 20px)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        position: 'relative',
-                        paddingRight: '60px'
-                      }}
-                      onClick={handleBehindRight}
-                      {...behindRightSwipe}
-                    >
-                      {renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
-                      {/* Close button - only show when not on left (default) position */}
-                      {behindFocus !== 'left' && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleBehindClose();
-                          }}
-                          style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: 10,
-                            bottom: 10,
-                            width: 40,
-                            background: '#35393d',
-                            border: 'none',
-                            borderRadius: 3,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 20,
-                            opacity: 0.9,
-                            transition: 'opacity 0.2s',
-                            color: 'white',
-                            fontSize: '2rem',
-                            fontWeight: 700
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                          aria-label="Close right column"
-                        >
-                          <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                <div style={{ width: '100%' }}>
+                  <SplitView
+                    leftContent={renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
+                    rightContent={renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
+                    leftAlign="flex-start"
+                    rightAlign="flex-start"
+                    rightColWidth="calc(50% - 0px)"
+                    leftColWidth="calc(50% - 65px)"
+                    slidingTransform={behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                    onLeftClick={handleBehindLeft}
+                    onRightClick={handleBehindRight}
+                    leftSwipeHandlers={behindLeftSwipe}
+                    rightSwipeHandlers={behindRightSwipe}
+                    showCloseButton={behindFocus !== 'left'}
+                    onClose={handleBehindClose}
+                    alignItems="flex-start"
+                  />
                 </div>
               ) :
-                // Default single column
-                <>
-                  {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
-                  {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
-                  {renderStopList(behindSplitData.afterJunction, activeTrail.color)}
-                </>
+                null
               }
+              {renderStopList(behindSplitData.afterJunction, activeTrail.color)}
             </div>
           </div>
         </>
       ) : (
         // Split/drag mode
-        <div ref={splitPaneRef} style={{ width: '100vw', maxWidth: '100vw', overflowX: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ width: '100vw', maxWidth: '100vw', overflowX: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <>
+          <div ref={splitPaneRef} style={{
+            width: '100vw',
+            maxWidth: '100vw',
+            overflowX: 'visible', // DEBUG: allow overflow
+            display: 'flex',
+            flexDirection: 'column',
+            height: 'calc(100vh - 0px)', // adjust 0px if you have a header/footer
+            // border: '3px solid magenta', // DEBUG
+            // background: 'rgba(255,0,255,0.05)', // DEBUG
+          }}>
             <Split
               direction="vertical"
               sizes={splitSizes}
               minSize={[100, 200]}
               gutterSize={0}
               snapOffset={0}
-              style={{ 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column', 
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
                 width: '100vw',
-                maxWidth: '100vw', 
+                maxWidth: '100vw',
                 overflowX: 'hidden',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                height: '100%',
               }}
               className="navview-split-pane"
             >
-            {/* Ahead Section (capped at max height) */}
-            <div ref={aheadRef} style={{ overflowY: 'auto', overflowX: 'hidden', padding: '0 16px', textAlign: 'center', maxHeight: MAX_AHEAD_HEIGHT, minHeight: 0, maxWidth: '100vw' }}>
-              {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
-              {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) && (
+              {/* Ahead Section (capped at max height) */}
+              <div ref={aheadRef} style={{ overflowY: 'auto', overflowX: 'hidden', padding: '0 16px', textAlign: 'center', maxHeight: MAX_AHEAD_HEIGHT, minHeight: 0, maxWidth: '100vw' }}>
+                {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
+                {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) && (
+                  <SplitView
+                    leftContent={renderStopList(aheadSplitData.leftBranch?.stops.slice().reverse() || [], aheadSplitData.leftBranch?.color)}
+                    rightContent={renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
+                    leftAlign="flex-start"
+                    rightAlign="flex-end"
+                    rightColWidth="calc(50% - 0px)"
+                    leftColWidth="calc(50% - 65px)"
+                    slidingTransform={aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                    onLeftClick={handleAheadLeft}
+                    onRightClick={handleAheadRight}
+                    leftSwipeHandlers={aheadLeftSwipe}
+                    rightSwipeHandlers={aheadRightSwipe}
+                    showCloseButton={aheadFocus !== 'left'}
+                    onClose={handleAheadClose}
+                  />
+                )}
+                {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
+                {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
+              </div>
+              {/* Middle + Behind Section */}
+              <div ref={middleSectionRef} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100vw',
+                maxWidth: '100vw',
+                overflowX: 'hidden',
+                boxSizing: 'border-box',
+                height: 176, // 160px middle + 16px drag handle
+              }}>
+                {/* Drag handle for split mode */}
                 <div
-                  className="split-slider"
-                  style={{ 
-                    width: '100%', 
-                    overflowX: 'hidden', 
-                    overflowY: 'hidden', 
-                    position: 'relative', 
-                    marginBottom: 0,
-                    borderBottom: '1px solid #333'
+                  style={{
+                    width: 40,
+                    height: 6,
+                    borderRadius: 3,
+                    background: '#ccc',
+                    margin: '8px auto',
+                    cursor: 'row-resize',
+                    opacity: 0.7,
                   }}
+                />
+                {/* Middle Section - Current Location (Unified) */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 160,
+                    maxHeight: 'none',
+                    flexShrink: 0,
+                    cursor: 'row-resize',
+                    userSelect: draggingRef.current ? 'none' : 'auto',
+                    width: '100vw',
+                    maxWidth: '100vw',
+                    boxSizing: 'border-box',
+                    padding: 0,
+                    margin: 0,
+                    overflowX: 'hidden',
+                    overflowY: 'visible',
+                  }}
+                  onMouseDown={onMiddleMouseDown}
+                  onTouchStart={onMiddleMouseDown}
                 >
-                  <div
-                    className="split-columns"
-                    style={{
-                      display: 'flex',
-                      width: 'calc(200% - 30px)',
-                      transform: aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 65px))',
-                      transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
-                    }}
-
-                  >
-                    <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 65px)' }}
-                      onClick={handleAheadLeft}
-                      {...aheadLeftSwipe}
-                    >
-                      {renderStopList(aheadSplitData.leftBranch?.stops.slice().reverse() || [], aheadSplitData.leftBranch?.color)}
-                    </div>
-                    <div
-                      style={{ 
-                        flex: 1, 
-                        minWidth: 0, 
-                        zIndex: 2, 
-                        maxWidth: 'calc(50% - 0px)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-end',
-                        position: 'relative',
-                        paddingRight: '60px'
-                      }}
-                      onClick={handleAheadRight}
-                      {...aheadRightSwipe}
-                    >
-                      {renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
-                      {/* Close button - only show when not on left (default) position */}
-                      {aheadFocus !== 'left' && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAheadClose();
-                          }}
-                          style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: 10,
-                            bottom: 10,
-                            width: 40,
-                            background: '#35393d',
-                            border: 'none',
-                            borderRadius: 3,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 20,
-                            opacity: 0.9,
-                            transition: 'opacity 0.2s',
-                            color: 'white',
-                            fontSize: '2rem',
-                            fontWeight: 700
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                          aria-label="Close right column"
-                        >
-                          <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
-                        </button>
-                      )}
-                    </div>
+                  {/* Attach ref to a wrapping div, not the NavContextCard component */}
+                  <div ref={navContextCardRef} style={{ width: '100vw', maxWidth: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', display: 'flex', justifyContent: 'center' }}>
+                    <NavContextCard
+                      destination={endpointName}
+                      trail={activeTrail.name}
+                      distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
+                      description={elevationDescription}
+                      mode={locomotionMode}
+                      amenities={['food', 'water', 'restroom', 'cafe', 'store', 'accessible']}
+                      onLocomotionChange={onLocomotionChange}
+                      onChangeEntryPoint={onChangeEntryPoint}
+                      entryPointDistanceMiles={entryPointDistanceMiles}
+                      preciseNetworkDistanceMiles={preciseNetworkDistanceMiles}
+                      borderColor={activeTrail.color}
+                      highlightColor={activeTrail.color}
+                    />
                   </div>
                 </div>
-              )}
-              {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
-              {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
-            </div>
-            {/* Middle + Behind Section */}
-            <div ref={middleSectionRef} style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100vw', maxWidth: '100vw', overflowX: 'hidden', boxSizing: 'border-box', flex: 1, minHeight: 0 }}>
-              {/* Drag handle for split mode */}
-              <div
-                style={{
-                  width: 40,
-                  height: 6,
-                  borderRadius: 3,
-                  background: '#ccc',
-                  margin: '8px auto',
-                  cursor: 'row-resize',
-                  opacity: 0.7,
-                }}
-              />
-              {/* Middle Section - Current Location (Unified) */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: 160,
-                  maxHeight: 'none',
-                  flexShrink: 0,
-                  cursor: 'row-resize',
-                  userSelect: draggingRef.current ? 'none' : 'auto',
-                  width: '100vw',
-                  maxWidth: '100vw',
-                  boxSizing: 'border-box',
-                  padding: 0,
-                  margin: 0,
-                  overflowX: 'hidden',
-                  overflowY: 'visible',
-                }}
-                onMouseDown={onMiddleMouseDown}
-                onTouchStart={onMiddleMouseDown}
-              >
-                {/* Attach ref to a wrapping div, not the NavContextCard component */}
-                <div ref={navContextCardRef} style={{ width: '100vw', maxWidth: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', display: 'flex', justifyContent: 'center' }}>
-                  <NavContextCard
-                    destination={endpointName}
-                    trail={activeTrail.name}
-                    distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
-                    description={elevationDescription}
-                    mode={locomotionMode}
-                    amenities={['food', 'water', 'restroom', 'cafe', 'store', 'accessible']}
-                    onLocomotionChange={onLocomotionChange}
-                    onChangeEntryPoint={onChangeEntryPoint}
-                    entryPointDistanceMiles={entryPointDistanceMiles}
-                    preciseNetworkDistanceMiles={preciseNetworkDistanceMiles}
-                    borderColor={activeTrail.color}
-                    highlightColor={activeTrail.color}
-                  />
-                </div>
-              </div>
-              {/* Behind Section */}
-              <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-                <SectionHeader>
-                  Behind You
-                </SectionHeader>
-                <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', padding: '0 16px', textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
+                {/* Behind Section */}
+                <div
+                  ref={behindStickyRef}
+                  style={{
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    padding: '0 16px',
+                    textAlign: 'center',
+                    maxHeight: MAX_BEHIND_HEIGHT,
+                    minHeight: 0,
+                    maxWidth: '100vw',
+                    // display: 'flex', // REMOVE flex for block layout
+                    // flexDirection: 'column', // REMOVE for block layout
+                    // alignItems: 'stretch', // REMOVE for block layout
+                  }}
+                >
+                  <SectionHeader>
+                    Behind You
+                  </SectionHeader>
+                  {/* Sliding split view for behind */}
                   {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
                   {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
                   {(behindSplitData.leftBranch || behindSplitData.rightBranch) && (
-                    <div
-                      className="split-slider"
-                      style={{ 
-                        width: '100%', 
-                        overflowX: 'hidden', 
-                        overflowY: 'hidden', 
-                        position: 'relative', 
-                        marginBottom: 0,
-                        borderBottom: '1px solid #333'
-                      }}
-                    >
-                      <div
-                        className="split-columns"
-                        style={{
-                          display: 'flex',
-                          width: 'calc(200% - 30px)',
-                          transform: behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))',
-                          transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
-                        }}
-
-                      >
-                        <div
-                          style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 85px)' }}
-                          onClick={handleBehindLeft}
-                          {...behindLeftSwipe}
-                        >
-                          {renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
-                        </div>
-                        <div
-                          style={{ 
-                            flex: 1, 
-                            minWidth: 0, 
-                            zIndex: 2, 
-                            maxWidth: 'calc(50% + 20px)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            position: 'relative',
-                            paddingRight: '60px'
-                          }}
-                          onClick={handleBehindRight}
-                          {...behindRightSwipe}
-                        >
-                          {renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
-                          {/* Close button - only show when not on left (default) position */}
-                          {behindFocus !== 'left' && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleBehindClose();
-                              }}
-                              style={{
-                                position: 'absolute',
-                                right: 0,
-                                top: 10,
-                                bottom: 10,
-                                width: 40,
-                                background: '#35393d',
-                                border: 'none',
-                                borderRadius: 3,
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                zIndex: 20,
-                                opacity: 0.9,
-                                transition: 'opacity 0.2s',
-                                color: 'white',
-                                fontSize: '2rem',
-                                fontWeight: 700
-                              }}
-                              onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                              onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                            >
-                              <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
-                            </button>
-                          )}
-                        </div>
-                      </div>
+                    <div style={{ width: '100%' }}>
+                      <SplitView
+                        leftContent={renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
+                        rightContent={renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
+                        leftAlign="flex-start"
+                        rightAlign="flex-start"
+                        rightColWidth="calc(50% - 0px)"
+                        leftColWidth="calc(50% - 65px)"
+                        slidingTransform={behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                        onLeftClick={handleBehindLeft}
+                        onRightClick={handleBehindRight}
+                        leftSwipeHandlers={behindLeftSwipe}
+                        rightSwipeHandlers={behindRightSwipe}
+                        showCloseButton={behindFocus !== 'left'}
+                        onClose={handleBehindClose}
+                      />
                     </div>
                   )}
                   {renderStopList(behindSplitData.afterJunction, activeTrail.color)}
                 </div>
               </div>
-            </div>
-          </Split>
+            </Split>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
