@@ -846,8 +846,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               marginBottom: 32,
               flexShrink: 0
             }}>
-              {/* Sliding split view for ahead */}
-              {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) ? (
+              {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
+              {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) && (
                 <div
                   className="split-slider"
                   style={{ 
@@ -895,14 +895,9 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     </div>
                   </div>
                 </div>
-              ) : (
-                // Default single column
-                <>
-                  {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
-                  {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
-                  {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
-                </>
               )}
+              {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
+              {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
             </div>
             {/* Middle Section - Current Location (Unified) */}
             <div ref={stickyMiddleSectionRef} style={{ 
