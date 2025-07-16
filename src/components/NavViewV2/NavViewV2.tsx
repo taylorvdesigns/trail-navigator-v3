@@ -1236,7 +1236,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 maxWidth: '100vw',
                 overflowX: 'hidden',
                 boxSizing: 'border-box',
-                height: 176, // 160px middle + 16px drag handle
+                flex: 1, // Allow to expand to fill available space
               }}>
                 {/* Drag handle for split mode */}
                 <div
@@ -1298,7 +1298,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     overflowX: 'hidden',
                     padding: '0 16px',
                     textAlign: 'center',
-                    maxHeight: MAX_BEHIND_HEIGHT,
+                    // maxHeight: MAX_BEHIND_HEIGHT, // Remove constraint in draggable mode
                     minHeight: 0,
                     maxWidth: '100vw',
                     // display: 'flex', // REMOVE flex for block layout
