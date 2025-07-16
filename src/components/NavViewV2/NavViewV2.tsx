@@ -325,6 +325,7 @@ const SplitView: React.FC<SplitViewProps> = ({
         <div
           ref={leftColRef}
           style={{
+            width: leftColWidth,
             minWidth: 0,
             zIndex: 2,
             display: 'block',
@@ -1081,8 +1082,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                   leftAlign="flex-start"
                   rightAlign="flex-end"
                   rightColWidth="calc(50% - 0px)"
-                  leftColWidth="calc(50% - 65px)"
-                  slidingTransform={aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                  leftColWidth="calc(50% - 85px)"
+                  slidingTransform={aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))'}
                   onLeftClick={handleAheadLeft}
                   onRightClick={handleAheadRight}
                   leftSwipeHandlers={aheadLeftSwipe}
@@ -1156,8 +1157,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     leftAlign="flex-start"
                     rightAlign="flex-start"
                     rightColWidth="calc(50% - 0px)"
-                    leftColWidth="calc(50% - 65px)"
-                    slidingTransform={behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                    leftColWidth="calc(50% - 85px)"
+                    slidingTransform={behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))'}
                     onLeftClick={handleBehindLeft}
                     onRightClick={handleBehindRight}
                     leftSwipeHandlers={behindLeftSwipe}
@@ -1214,8 +1215,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     leftAlign="flex-start"
                     rightAlign="flex-end"
                     rightColWidth="calc(50% - 0px)"
-                    leftColWidth="calc(50% - 65px)"
-                    slidingTransform={aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                    leftColWidth="calc(50% - 85px)"
+                    slidingTransform={aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))'}
                     onLeftClick={handleAheadLeft}
                     onRightClick={handleAheadRight}
                     leftSwipeHandlers={aheadLeftSwipe}
@@ -1319,8 +1320,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                         leftAlign="flex-start"
                         rightAlign="flex-start"
                         rightColWidth="calc(50% - 0px)"
-                        leftColWidth="calc(50% - 65px)"
-                        slidingTransform={behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 31px))'}
+                        leftColWidth="calc(50% - 85px)"
+                        slidingTransform={behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))'}
                         onLeftClick={handleBehindLeft}
                         onRightClick={handleBehindRight}
                         leftSwipeHandlers={behindLeftSwipe}
