@@ -3,7 +3,7 @@ import { Box, Paper, Typography, styled } from '@mui/material';
 import { LocomotionMode, Stop, TrailConfig, POI, TrailPoint } from '../../types';
 import { Junction, getNavViewSplitData, NavViewSplitData } from '../../utils/navViewSplit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching } from '@fortawesome/free-solid-svg-icons';
+import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching, faRightLong } from '@fortawesome/free-solid-svg-icons';
 import { Restaurant, LocalCafe, Store, Wc } from '@mui/icons-material';
 import { useNavViewV3 } from '../../hooks/useNavViewV3';
 import { LocationContext } from '../../contexts/LocationContext';
@@ -873,14 +873,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     className="split-columns"
                     style={{
                       display: 'flex',
-                      width: 'calc(200% - 80px)',
-                      transform: aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 80px))',
+                      width: 'calc(200% - 30px)',
+                      transform: aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 65px))',
                       transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
                     }}
 
                   >
                     <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 40px)' }}
+                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 65px)' }}
                       onClick={handleAheadLeft}
                       {...aheadLeftSwipe}
                     >
@@ -891,48 +891,53 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                         flex: 1, 
                         minWidth: 0, 
                         zIndex: 2, 
-                        maxWidth: 'calc(50% - 40px)',
+                        maxWidth: 'calc(50% - 0px)',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'flex-end'
+                        justifyContent: 'flex-end',
+                        position: 'relative', // Make this column relative for absolute positioning of the button
+                        paddingRight: '60px' // Add padding to make room for the close button
                       }}
                       onClick={handleAheadRight}
                       {...aheadRightSwipe}
                     >
                       {renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
+                      {/* Close button - only show when not on left (default) position */}
+                      {aheadFocus !== 'left' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAheadClose();
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 10,
+                            bottom: 10,
+                            width: 40,
+                            background: '#35393d',
+                            border: 'none',
+                            borderRadius: 3,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 20,
+                            opacity: 0.9,
+                            transition: 'opacity 0.2s',
+                            color: 'white',
+                            fontSize: '2rem',
+                            fontWeight: 700
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
+                          aria-label="Close right column"
+                        >
+                          <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {/* Close button - only show when not on left (default) position */}
-                  {aheadFocus !== 'left' && (
-                    <button
-                      onClick={handleAheadClose}
-                      style={{
-                        position: 'absolute',
-                        right: 8,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        background: '#333',
-                        border: 'none',
-                        color: 'white',
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 20,
-                        opacity: 0.8,
-                        transition: 'opacity 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
-                    >
-                      ×
-                    </button>
-                  )}
                 </div>
               )}
               {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
@@ -1003,58 +1008,71 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     className="split-columns"
                     style={{
                       display: 'flex',
-                      width: 'calc(200% - 80px)',
-                      transform: behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 80px))',
+                      width: 'calc(200% - 30px)',
+                      transform: behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))',
                       transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
                     }}
 
                   >
                     <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 40px)' }}
+                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 85px)' }}
                       onClick={handleBehindLeft}
                       {...behindLeftSwipe}
                     >
                       {renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
                     </div>
                     <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 40px)' }}
+                      style={{ 
+                        flex: 1, 
+                        minWidth: 0, 
+                        zIndex: 2, 
+                        maxWidth: 'calc(50% + 20px)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
+                        position: 'relative',
+                        paddingRight: '60px'
+                      }}
                       onClick={handleBehindRight}
                       {...behindRightSwipe}
                     >
                       {renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
+                      {/* Close button - only show when not on left (default) position */}
+                      {behindFocus !== 'left' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBehindClose();
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 10,
+                            bottom: 10,
+                            width: 40,
+                            background: '#35393d',
+                            border: 'none',
+                            borderRadius: 3,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 20,
+                            opacity: 0.9,
+                            transition: 'opacity 0.2s',
+                            color: 'white',
+                            fontSize: '2rem',
+                            fontWeight: 700
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
+                          aria-label="Close right column"
+                        >
+                          <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {/* Close button - only show when not on left (default) position */}
-                  {behindFocus !== 'left' && (
-                    <button
-                      onClick={handleBehindClose}
-                      style={{
-                        position: 'absolute',
-                        right: 8,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        background: '#333',
-                        border: 'none',
-                        color: 'white',
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 20,
-                        opacity: 0.8,
-                        transition: 'opacity 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
-                    >
-                      ×
-                    </button>
-                  )}
                 </div>
               ) :
                 // Default single column
@@ -1107,14 +1125,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     className="split-columns"
                     style={{
                       display: 'flex',
-                      width: 'calc(200% - 80px)',
-                      transform: aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 80px))',
+                      width: 'calc(200% - 30px)',
+                      transform: aheadFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 65px))',
                       transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
                     }}
 
                   >
                     <div
-                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 40px)' }}
+                      style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 65px)' }}
                       onClick={handleAheadLeft}
                       {...aheadLeftSwipe}
                     >
@@ -1125,48 +1143,53 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                         flex: 1, 
                         minWidth: 0, 
                         zIndex: 2, 
-                        maxWidth: 'calc(50% - 40px)',
+                        maxWidth: 'calc(50% - 0px)',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'flex-end'
+                        justifyContent: 'flex-end',
+                        position: 'relative',
+                        paddingRight: '60px'
                       }}
                       onClick={handleAheadRight}
                       {...aheadRightSwipe}
                     >
                       {renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
+                      {/* Close button - only show when not on left (default) position */}
+                      {aheadFocus !== 'left' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAheadClose();
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 10,
+                            bottom: 10,
+                            width: 40,
+                            background: '#35393d',
+                            border: 'none',
+                            borderRadius: 3,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 20,
+                            opacity: 0.9,
+                            transition: 'opacity 0.2s',
+                            color: 'white',
+                            fontSize: '2rem',
+                            fontWeight: 700
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
+                          aria-label="Close right column"
+                        >
+                          <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {/* Close button - only show when not on left (default) position */}
-                  {aheadFocus !== 'left' && (
-                    <button
-                      onClick={handleAheadClose}
-                      style={{
-                        position: 'absolute',
-                        right: 8,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        background: '#333',
-                        border: 'none',
-                        color: 'white',
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 20,
-                        opacity: 0.8,
-                        transition: 'opacity 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
-                    >
-                      ×
-                    </button>
-                  )}
                 </div>
               )}
               {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
@@ -1250,58 +1273,70 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                         className="split-columns"
                         style={{
                           display: 'flex',
-                          width: 'calc(200% - 80px)',
-                          transform: behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 80px))',
+                          width: 'calc(200% - 30px)',
+                          transform: behindFocus === 'left' ? 'translateX(0)' : 'translateX(calc(-50% + 85px))',
                           transition: 'transform 0.3s cubic-bezier(.4,0,.2,1)'
                         }}
 
                       >
                         <div
-                          style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 40px)' }}
+                          style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 85px)' }}
                           onClick={handleBehindLeft}
                           {...behindLeftSwipe}
                         >
                           {renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
                         </div>
                         <div
-                          style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: 'calc(50% - 40px)' }}
+                          style={{ 
+                            flex: 1, 
+                            minWidth: 0, 
+                            zIndex: 2, 
+                            maxWidth: 'calc(50% + 20px)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            position: 'relative',
+                            paddingRight: '60px'
+                          }}
                           onClick={handleBehindRight}
                           {...behindRightSwipe}
                         >
                           {renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
+                          {/* Close button - only show when not on left (default) position */}
+                          {behindFocus !== 'left' && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleBehindClose();
+                              }}
+                              style={{
+                                position: 'absolute',
+                                right: 0,
+                                top: 10,
+                                bottom: 10,
+                                width: 40,
+                                background: '#35393d',
+                                border: 'none',
+                                borderRadius: 3,
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: 20,
+                                opacity: 0.9,
+                                transition: 'opacity 0.2s',
+                                color: 'white',
+                                fontSize: '2rem',
+                                fontWeight: 700
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                              onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
+                            >
+                              <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
+                            </button>
+                          )}
                         </div>
                       </div>
-                      {/* Close button - only show when not on left (default) position */}
-                      {behindFocus !== 'left' && (
-                        <button
-                          onClick={handleBehindClose}
-                          style={{
-                            position: 'absolute',
-                            right: 8,
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: 24,
-                            height: 24,
-                            borderRadius: '50%',
-                            background: '#333',
-                            border: 'none',
-                            color: 'white',
-                            fontSize: '14px',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 20,
-                            opacity: 0.8,
-                            transition: 'opacity 0.2s'
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
-                        >
-                          ×
-                        </button>
-                      )}
                     </div>
                   )}
                   {renderStopList(behindSplitData.afterJunction, activeTrail.color)}
