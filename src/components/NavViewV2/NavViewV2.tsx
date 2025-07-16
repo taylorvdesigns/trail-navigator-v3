@@ -532,6 +532,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     setBehindFocus('right');
   };
 
+  // Close button handlers for split views
+  const handleAheadClose = () => {
+    setAheadFocus('left');
+  };
+  const handleBehindClose = () => {
+    setBehindFocus('left');
+  };
+
   // Touch swipe detection helpers
   function useSwipe(onLeft: () => void, onRight: () => void) {
     const touchStartX = useRef<number | null>(null);
@@ -894,6 +902,37 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                       {renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
                     </div>
                   </div>
+                  {/* Close button - only show when not on left (default) position */}
+                  {aheadFocus !== 'left' && (
+                    <button
+                      onClick={handleAheadClose}
+                      style={{
+                        position: 'absolute',
+                        right: 8,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        background: '#333',
+                        border: 'none',
+                        color: 'white',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 20,
+                        opacity: 0.8,
+                        transition: 'opacity 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               )}
               {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
@@ -985,6 +1024,37 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                       {renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
                     </div>
                   </div>
+                  {/* Close button - only show when not on left (default) position */}
+                  {behindFocus !== 'left' && (
+                    <button
+                      onClick={handleBehindClose}
+                      style={{
+                        position: 'absolute',
+                        right: 8,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        background: '#333',
+                        border: 'none',
+                        color: 'white',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 20,
+                        opacity: 0.8,
+                        transition: 'opacity 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               ) :
                 // Default single column
@@ -1066,6 +1136,37 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                       {renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
                     </div>
                   </div>
+                  {/* Close button - only show when not on left (default) position */}
+                  {aheadFocus !== 'left' && (
+                    <button
+                      onClick={handleAheadClose}
+                      style={{
+                        position: 'absolute',
+                        right: 8,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        background: '#333',
+                        border: 'none',
+                        color: 'white',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 20,
+                        opacity: 0.8,
+                        transition: 'opacity 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               )}
               {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
@@ -1170,6 +1271,37 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                           {renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
                         </div>
                       </div>
+                      {/* Close button - only show when not on left (default) position */}
+                      {behindFocus !== 'left' && (
+                        <button
+                          onClick={handleBehindClose}
+                          style={{
+                            position: 'absolute',
+                            right: 8,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: 24,
+                            height: 24,
+                            borderRadius: '50%',
+                            background: '#333',
+                            border: 'none',
+                            color: 'white',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 20,
+                            opacity: 0.8,
+                            transition: 'opacity 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
+                        >
+                          ×
+                        </button>
+                      )}
                     </div>
                   )}
                   {renderStopList(behindSplitData.afterJunction, activeTrail.color)}
