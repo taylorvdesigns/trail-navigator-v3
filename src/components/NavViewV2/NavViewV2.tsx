@@ -560,6 +560,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const behindRightSwipe = useSwipe(handleBehindLeft, handleBehindRight);
 
   // Auto-scroll ahead section to bottom to show closest POIs when the list is long
+  // Only run this in split/drag mode where the ahead section is actually scrollable
   React.useEffect(() => {
     if (aheadRef.current && aheadHeight >= MAX_AHEAD_HEIGHT) {
       aheadRef.current.scrollTop = aheadRef.current.scrollHeight;
@@ -834,9 +835,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               width: '100vw',
               maxWidth: '100vw',
               boxSizing: 'border-box',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <div ref={aheadRef} style={{ padding: '0 16px', textAlign: 'center', marginBottom: 32 }}>
+            <div ref={aheadRef} style={{ 
+              padding: '0 16px', 
+              textAlign: 'center', 
+              marginBottom: 32,
+              flexShrink: 0
+            }}>
               {/* Sliding split view for ahead */}
               {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) ? (
                 <div
@@ -936,7 +945,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 />
               </div>
             </div>
-            <div style={{ padding: '0 16px', textAlign: 'center', marginTop: 16 }}>
+            <div style={{ 
+              padding: '0 16px', 
+              textAlign: 'center', 
+              marginTop: 16,
+              flex: 1,
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              overflowY: 'auto',
+              overflowX: 'hidden'
+            }}>
               <SectionHeader>
                 Behind You
               </SectionHeader>
