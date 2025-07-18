@@ -27,7 +27,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ flex: 1, overflow: 'hidden' }}>
+      <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
         {children}
       </Box>
 

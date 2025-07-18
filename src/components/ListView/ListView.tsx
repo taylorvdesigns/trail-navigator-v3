@@ -148,9 +148,9 @@ export const ListView: React.FC<ListViewProps> = ({
 
   const getDistance = (poi: POI): number | null => {
     if (!graph || !currentLocation || !poi.coordinates) return null;
-    // Use [lat, lng] order for both
-    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
-    const poiCoords: [number, number] = [poi.coordinates[0], poi.coordinates[1]];
+    // currentLocation is [lng, lat] format, but we need [lat, lng] for distance calculation
+    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
+    const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
     const distance = getNetworkDistanceBetweenPoints(graph, userCoords, poiCoords);
     console.log('[ListView] POI:', poi.title?.rendered || poi.title, 'UserCoords:', userCoords, 'POICoords:', poiCoords, 'Distance:', distance);
     return distance;

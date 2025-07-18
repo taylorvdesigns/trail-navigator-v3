@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { useLocation } from '../hooks/useLocation';
+import { useLocation } from '../contexts/LocationContext';
 import { useUser } from '../contexts/UserContext';
 import { MapView } from '../components/MapView/MapView';
 import { TRAIL_ROUTES } from '../config/routes.config';

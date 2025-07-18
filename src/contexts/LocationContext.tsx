@@ -1,6 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { TEST_LOCATIONS } from '../config/appSettings';
-import { TestLocation } from '../types/index';
 
 export interface LocationContextType {
   currentLocation: [number, number] | null;
@@ -22,77 +21,42 @@ export interface LocationContextType {
   setSimIndex: (index: number | null) => void;
   setSimTrailPoints: (points: any[]) => void;
   simAnimatedLocation: [number, number] | null;
+  simLoop: boolean;
+  setSimLoop: (loop: boolean) => void;
 }
 
 export const LocationContext = createContext<LocationContextType | undefined>(undefined);
 
+export const useLocation = () => {
+  const context = useContext(LocationContext);
+  if (context === undefined) {
+    throw new Error('useLocation must be used within a LocationProvider');
+  }
+  return context;
+};
+
 export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentLocation, setCurrentLocationState] = useState<[number, number] | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
   const [previousLocation, setPreviousLocation] = useState<[number, number] | null>(null);
   const [isSimulationMode, setSimulationMode] = useState(false);
   const [simDirection, setSimDirection] = useState<'top' | 'bottom'>('top');
-  const [entryPoint, setEntryPointState] = useState<[number, number] | null>(null);
+  const [entryPoint, setEntryPoint] = useState<[number, number] | null>(null);
   const [isSimPlaying, setIsSimPlaying] = useState(false);
-  const [simSpeedMultiplier, setSimSpeedMultiplier] = useState(4);
+  const [simSpeedMultiplier, setSimSpeedMultiplier] = useState(1);
   const [simIndex, setSimIndex] = useState<number | null>(null);
-  const [simTimer, setSimTimer] = useState<NodeJS.Timeout | null>(null);
   const [simTrailPoints, setSimTrailPoints] = useState<any[]>([]);
   const [simAnimatedLocation, setSimAnimatedLocation] = useState<[number, number] | null>(null);
+  const [simLoop, setSimLoop] = useState(false);
+  
+  // Simple simulation timer ref
+  const simTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Custom setCurrentLocation that tracks previous location
-  const setCurrentLocation = (location: [number, number]) => {
-    setPreviousLocation(currentLocation);
-    setCurrentLocationState(location);
-  };
-
-  // Load entry point from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem('entryPoint');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length === 2) {
-          setEntryPointState(parsed as [number, number]);
-        }
-      } catch {}
-    }
-    // Load currentLocation from localStorage on mount
-    const storedLoc = localStorage.getItem('currentLocation');
-    if (storedLoc) {
-      try {
-        const parsedLoc = JSON.parse(storedLoc);
-        if (Array.isArray(parsedLoc) && parsedLoc.length === 2) {
-          setCurrentLocation(parsedLoc as [number, number]);
-        }
-      } catch {}
-    }
-  }, []);
-
-  // Persist entry point to localStorage
-  useEffect(() => {
-    if (entryPoint) {
-      localStorage.setItem('entryPoint', JSON.stringify(entryPoint));
-    } else {
-      localStorage.removeItem('entryPoint');
-    }
-  }, [entryPoint]);
-
-  // Persist currentLocation to localStorage
+  // Update previous location when current location changes
   useEffect(() => {
     if (currentLocation) {
-      localStorage.setItem('currentLocation', JSON.stringify(currentLocation));
-    } else {
-      localStorage.removeItem('currentLocation');
+      setPreviousLocation(currentLocation);
     }
   }, [currentLocation]);
-
-  const setEntryPoint = (location: [number, number]) => {
-    setEntryPointState(location);
-  };
-
-  const clearEntryPoint = () => {
-    setEntryPointState(null);
-  };
 
   // Handle real-time GPS tracking when not in simulation mode
   useEffect(() => {
@@ -104,7 +68,6 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           },
           (error) => {
             console.error('Error getting location:', error);
-            // If location access is denied, prompt to enter simulation mode
             if (error.code === error.PERMISSION_DENIED) {
               setSimulationMode(true);
             }
@@ -126,127 +89,104 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [isSimulationMode]);
 
-  // Always set first test location when simulation mode is enabled
+  // Set default test location when simulation mode is enabled
   useEffect(() => {
-    if (isSimulationMode) {
+    if (isSimulationMode && !currentLocation) {
       const defaultIndex = 1; // 'Between Downtown and Unity'
       const defaultLocation = TEST_LOCATIONS[defaultIndex];
       if (defaultLocation) {
-        setCurrentLocation([defaultLocation.coordinates[0], defaultLocation.coordinates[1]]);
+        setCurrentLocation([defaultLocation.coordinates[1], defaultLocation.coordinates[0]]);
       }
     }
-  }, [isSimulationMode]);
+  }, [isSimulationMode, currentLocation]);
 
   const setTestLocation = (index: number) => {
     const location = TEST_LOCATIONS[index];
     if (location) {
-      setCurrentLocation([location.coordinates[0], location.coordinates[1]]);
+      setCurrentLocation([location.coordinates[1], location.coordinates[0]]);
     }
   };
 
-  // Clean up simulation timer on unmount
-  useEffect(() => {
-    return () => {
-      if (simTimer) clearInterval(simTimer);
-    };
-  }, [simTimer]);
+  const clearEntryPoint = () => {
+    setEntryPoint(null);
+  };
 
-  // Simulation movement logic (runs regardless of view)
+  // Simple simulation logic
   useEffect(() => {
-    if (!isSimPlaying || !simTrailPoints.length || simIndex == null) return;
-    const BASE_SPEEDS = {
-      walking: 1.4,
-      running: 3.0,
-      biking: 4.5,
-      accessible: 1.0
-    };
-    // TODO: Get locomotionMode from context or pass as prop
-    const locomotionMode = 'walking'; // fallback, should be settable
-    const baseSpeed = BASE_SPEEDS[locomotionMode] || 1.4;
-    const speed = baseSpeed * simSpeedMultiplier;
+    // Clear any existing timer
+    if (simTimerRef.current) {
+      clearInterval(simTimerRef.current);
+      simTimerRef.current = null;
+    }
+
+    // Don't start simulation if not playing or no trail points
+    if (!isSimPlaying || !simTrailPoints.length || simIndex === null) {
+      return;
+    }
+
+    console.log('[Simulation] Starting simple simulation:', {
+      isSimPlaying,
+      trailPointsLength: simTrailPoints.length,
+      simIndex,
+      simLoop,
+      simSpeedMultiplier
+    });
+
+    // Calculate interval based on speed (faster speed = shorter interval)
     const intervalMs = 1000 / simSpeedMultiplier;
-    let idx = simIndex;
-    function step() {
-      let nextIdx = simDirection === 'top' ? idx + 1 : idx - 1;
+    let currentIdx = simIndex;
+
+    const step = () => {
+      // Calculate next index based on direction
+      let nextIdx = simDirection === 'top' ? currentIdx + 1 : currentIdx - 1;
+
+      // Handle reaching trail boundaries
       if (nextIdx < 0 || nextIdx >= simTrailPoints.length) {
-        setIsSimPlaying(false);
-        return;
+        if (simLoop) {
+          // Loop back to the beginning/end
+          nextIdx = simDirection === 'top' ? 0 : simTrailPoints.length - 1;
+          console.log('[Simulation] Looping back to index:', nextIdx);
+        } else {
+          // Stop simulation
+          console.log('[Simulation] Reached end of trail, stopping');
+          setIsSimPlaying(false);
+          return;
+        }
       }
-      idx = nextIdx;
-      setSimIndex(idx);
-      const pt = simTrailPoints[idx];
-      if (pt) {
-        console.log('[SimLocomotion] index:', idx, 'coords:', [pt.latitude, pt.longitude], 'playing:', isSimPlaying);
-        setCurrentLocation([pt.latitude, pt.longitude]);
+
+      // Update current index and location
+      currentIdx = nextIdx;
+      const point = simTrailPoints[currentIdx];
+      
+      if (point) {
+        // Update both current location and animated location
+        const newLocation: [number, number] = [point.longitude, point.latitude];
+        setCurrentLocation(newLocation);
+        setSimAnimatedLocation([point.latitude, point.longitude]);
+        setSimIndex(currentIdx);
       }
-    }
-    const timer = setInterval(step, intervalMs);
-    setSimTimer(timer);
-    return () => clearInterval(timer);
-  }, [isSimPlaying, simSpeedMultiplier, simDirection, simTrailPoints, simIndex, setCurrentLocation, setIsSimPlaying]);
-
-  // Haversine formula to calculate distance in meters between two lat/lng points
-  function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
-    const R = 6371000; // Earth radius in meters
-    const toRad = (deg: number) => deg * Math.PI / 180;
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-  }
-
-  // Smoothing animation for simulation
-  useEffect(() => {
-    if (!isSimPlaying || !simTrailPoints.length || simIndex == null) {
-      setSimAnimatedLocation(null);
-      return;
-    }
-    let animationFrame: number;
-    let prevIdx = simDirection === 'top' ? simIndex - 1 : simIndex + 1;
-    if (prevIdx < 0 || prevIdx >= simTrailPoints.length) prevIdx = simIndex;
-    const start = simTrailPoints[prevIdx];
-    const end = simTrailPoints[simIndex];
-    if (!start || !end) {
-      setSimAnimatedLocation([end?.latitude ?? 0, end?.longitude ?? 0]);
-      return;
-    }
-    const BASE_SPEEDS = {
-      walking: 1.4,
-      running: 3.0,
-      biking: 4.5,
-      accessible: 1.0
     };
-    // TODO: Get locomotionMode from context or prop
-    const locomotionMode = 'walking';
-    const baseSpeed = BASE_SPEEDS[locomotionMode] || 1.4;
-    const speed = baseSpeed * simSpeedMultiplier; // meters per second
-    // Calculate real distance between points in meters
-    const distanceMeters = haversine(start.latitude, start.longitude, end.latitude, end.longitude);
-    // Duration to move between points (ms)
-    const duration = (distanceMeters / speed) * 1000;
-    let startTime: number | null = null;
-    function animate(ts: number) {
-      if (!startTime) startTime = ts;
-      const elapsed = ts - startTime;
-      let t = Math.min(elapsed / duration, 1);
-      // Linear interpolation
-      const lat = start.latitude + t * (end.latitude - start.latitude);
-      const lng = start.longitude + t * (end.longitude - start.longitude);
-      setSimAnimatedLocation([lat, lng]);
-      if (t < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      } else {
-        setSimAnimatedLocation([end.latitude, end.longitude]);
-      }
-    }
-    animationFrame = requestAnimationFrame(animate);
+
+    // Start the simulation timer
+    simTimerRef.current = setInterval(step, intervalMs);
+
+    // Cleanup function
     return () => {
-      if (animationFrame) cancelAnimationFrame(animationFrame);
+      if (simTimerRef.current) {
+        clearInterval(simTimerRef.current);
+        simTimerRef.current = null;
+      }
     };
-  }, [isSimPlaying, simTrailPoints, simIndex, simDirection, simSpeedMultiplier]);
+  }, [isSimPlaying, simTrailPoints, simIndex, simDirection, simSpeedMultiplier, simLoop]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (simTimerRef.current) {
+        clearInterval(simTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <LocationContext.Provider 
@@ -269,7 +209,9 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         simIndex,
         setSimIndex,
         setSimTrailPoints,
-        simAnimatedLocation
+        simAnimatedLocation,
+        simLoop,
+        setSimLoop
       }}
     >
       {children}

@@ -4,7 +4,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { POI, TrailConfig, TrailPoint } from '../../types/index';
 import L from 'leaflet';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
-import { useLocation as useAppLocation } from '../../hooks/useLocation';
+import { LocationContext } from '../../contexts/LocationContext';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useTrailJunctions } from '../../hooks/useTrailJunctions';
@@ -14,6 +14,7 @@ import { calculateETA } from '../../utils/eta';
 import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
+import { useContext } from 'react';
 
 interface MapViewProps {
   trails: TrailConfig[];
@@ -197,9 +198,18 @@ export const MapView: React.FC<MapViewProps> = ({
 }) => {
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
-  const { currentLocation: userLocation, entryPoint, isSimPlaying, simAnimatedLocation } = useAppLocation();
+  const locationContext = useContext(LocationContext);
   const { locomotionMode } = useUser();
   const navigate = useNavigate();
+  
+  // Use the location from context if available, otherwise fall back to prop
+  const userLocation = locationContext?.currentLocation || currentLocation;
+  const entryPoint = locationContext?.entryPoint;
+  const isSimPlaying = locationContext?.isSimPlaying || false;
+  const simAnimatedLocation = locationContext?.simAnimatedLocation;
+  
+
+  
   const [focusedGroup, setFocusedGroup] = useState<string | null>(null);
   const [showViewList, setShowViewList] = useState(false);
   const [showZoomOut, setShowZoomOut] = useState(false);
@@ -257,6 +267,7 @@ export const MapView: React.FC<MapViewProps> = ({
     if (fitBounds && fitBounds.length > 0) {
       return false;
     }
+    // Always fit bounds when we have trails and no specific highlight POI
     return trailsWithCoordinates && trailsWithCoordinates.length > 0 && !highlightPOI;
   }, [trailsWithCoordinates, highlightPOI, fitBounds]);
 
@@ -407,7 +418,7 @@ export const MapView: React.FC<MapViewProps> = ({
     <Box sx={{ height: '100vh', width: '100%', position: 'relative' }}>
       <MapContainer
         center={safeCenter}
-        zoom={highlightZoom || zoom}
+        zoom={highlightZoom || (shouldFitBounds ? 13 : zoom)} // fallback zoom if no bounds
         style={{ height: '100%', width: '100%' }}
         whenReady={() => {
           if (mapRef.current) {
@@ -419,11 +430,12 @@ export const MapView: React.FC<MapViewProps> = ({
         ref={mapRef}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
         />
         <GrayscaleMapLayer />
         <Pane name="group-labels" style={{ zIndex: 1000 }} />
+        {/* Always fit bounds to all trails if shouldFitBounds is true */}
         {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && (
           <FitBounds coordinates={allTrailCoords} />
         )}
@@ -605,7 +617,13 @@ export const MapView: React.FC<MapViewProps> = ({
 
         {((isSimPlaying && simAnimatedLocation) || (!isSimPlaying && userLocation)) && (
           <Marker
-            position={isSimPlaying ? (simAnimatedLocation as [number, number]) : (userLocation as [number, number])}
+            position={
+              isSimPlaying 
+                ? (simAnimatedLocation as [number, number]) 
+                : userLocation 
+                  ? [userLocation[1], userLocation[0]] as [number, number] // Convert [lng, lat] to [lat, lng] for Leaflet
+                  : [0, 0] as [number, number]
+            }
             icon={userLocationIcon}
           />
         )}

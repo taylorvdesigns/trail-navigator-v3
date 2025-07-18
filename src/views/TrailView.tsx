@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { MapView } from '../components/MapView/MapView';
-import { useLocation } from '../hooks/useLocation';
+import { useLocation } from '../contexts/LocationContext';
 import { TRAIL_ROUTES } from '../config/routes.config';
 import { usePOIs } from '../hooks/usePOIs';
 import axios from 'axios';

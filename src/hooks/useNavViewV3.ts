@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useLocation } from './useLocation';
+import { useLocation } from '../contexts/LocationContext';
 import { POI, Stop, TrailConfig, LocomotionMode, TrailPoint } from '../types';
 import { Junction } from '../utils/navViewSplit';
 import { useTrailsData } from './useTrailsData';
@@ -96,8 +96,14 @@ function groupPOIsByTag(pois: POI[], trailId: string): Stop[] {
 export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNavViewV3Props): UseNavViewV3Result {
   const { currentLocation } = useLocation();
 
+  // Debug: log currentLocation whenever it changes
+  console.log('[useNavViewV3] currentLocation:', currentLocation);
+
+  // Always convert currentLocation to [lat, lng] for trail calculations
+  const currentLocationLatLng = currentLocation ? [currentLocation[1], currentLocation[0]] as [number, number] : null;
+
   const { activeTrailId, userPointOnTrail } = useMemo(() => {
-    if (!currentLocation || !allTrailData) {
+    if (!currentLocationLatLng || !allTrailData) {
       return { activeTrailId: '', userPointOnTrail: null };
     }
 
@@ -109,7 +115,7 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
 
     allTrailData.forEach(trail => {
       if(trail.points) {
-        const nearestPoint = findNearestTrailPoint(currentLocation, trail.points);
+        const nearestPoint = findNearestTrailPoint(currentLocationLatLng, trail.points);
         
         if (nearestPoint && nearestPoint.distance < closestMatch.distance) {
           closestMatch = {
@@ -122,7 +128,7 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     });
 
     return { activeTrailId: closestMatch.trailId, userPointOnTrail: closestMatch.point };
-  }, [currentLocation, allTrailData, allTrails]);
+  }, [currentLocationLatLng, allTrailData, allTrails]);
 
   const { stops, userStop } = useMemo(() => {
     if (!allTrailData || !activeTrailId) return { stops: [], userStop: null };
@@ -205,14 +211,14 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
 
     // --- Step 3: Create the user's stop ---
     let finalUserStop: Stop | null = null;
-    if (currentLocation && userPointOnTrail) {
+    if (currentLocationLatLng && userPointOnTrail) {
       finalUserStop = {
         id: 'user-location',
         type: 'user',
         name: "Current Location",
         trailId: activeTrailId,
         metadata: {
-          coordinates: currentLocation,
+          coordinates: currentLocationLatLng,
           distance: userPointOnTrail.distance || 0,
         }
       };
@@ -278,7 +284,7 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     
     return { stops: sortedStops, userStop: finalUserStop };
 
-  }, [allTrailData, allTrails, pois, junctions, currentLocation, userPointOnTrail, activeTrailId]);
+  }, [allTrailData, allTrails, pois, junctions, currentLocationLatLng, userPointOnTrail, activeTrailId]);
 
   return {
     stops,

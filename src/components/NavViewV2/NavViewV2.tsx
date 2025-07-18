@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching, faRightLong } from '@fortawesome/free-solid-svg-icons';
 import { Restaurant, LocalCafe, Store, Wc } from '@mui/icons-material';
 import { useNavViewV3 } from '../../hooks/useNavViewV3';
-import { LocationContext } from '../../contexts/LocationContext';
+import { useLocation } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 import { NavContextCard } from '../NavView/NavContextCard';
@@ -431,8 +431,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     pois,
   });
   const { graph, isLoading, error: trailGraphError } = useTrailGraph();
-  const locationContext = useContext(LocationContext);
-  const { entryPoint, currentLocation, previousLocation, simDirection, isSimulationMode } = locationContext || {};
+  const { entryPoint, currentLocation, previousLocation, simDirection, isSimulationMode } = useLocation();
 
   // --- DEBUG REFS FOR WIDTHS ---
   const splitPaneRef = useRef<HTMLDivElement>(null);

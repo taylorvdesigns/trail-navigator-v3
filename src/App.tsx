@@ -25,16 +25,16 @@ const queryClient = new QueryClient({
 export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter>
         <ThemeProvider>
-          <LocationProvider>
-            <UserProvider>
+          <UserProvider>
+            <LocationProvider>
               <DevProvider>
                 <CssBaseline />
                 <AppContent />
               </DevProvider>
-            </UserProvider>
-          </LocationProvider>
+            </LocationProvider>
+          </UserProvider>
         </ThemeProvider>
       </BrowserRouter>
     </QueryClientProvider>

@@ -2,7 +2,7 @@
 text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:34:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -37,7 +37,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:34:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -73,7 +73,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:34:49 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:34:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -108,7 +108,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:34:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -143,7 +143,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:34:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -179,7 +179,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:34:55 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:34:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -221,7 +221,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:19 UTC] sync_licenses
 [05-Jul-2025 03:35:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -256,7 +256,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:35:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -292,7 +292,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:19 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:35:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -329,7 +329,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:19 UTC] TNPOI Map Preview: Is plugin page: false
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -364,7 +364,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -400,7 +400,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -437,7 +437,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:38 UTC] TNPOI Map Preview: Is plugin page: true
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -472,7 +472,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -508,7 +508,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:35:38 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -553,7 +553,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:39 UTC] TNPOI Map Preview: Track points count: 26
 [05-Jul-2025 03:35:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -588,7 +588,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:35:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -624,7 +624,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:43 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:35:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -687,7 +687,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:45 UTC] TNPOI Map Preview: Querying OSM at (34.865125, -82.419773) with radius 241.5m
 [05-Jul-2025 03:35:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -722,7 +722,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:35:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -758,7 +758,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:35:47 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:35:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -896,7 +896,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:36:08 UTC] TNPOI Map Preview: Generated sync preview with 12 sampled points, interval: 160m, radius: 161m
 [05-Jul-2025 03:36:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -931,7 +931,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:36:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -967,7 +967,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:36:21 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:36:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1002,7 +1002,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:36:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1037,7 +1037,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:36:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1073,7 +1073,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:36:40 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:36:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1108,7 +1108,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1143,7 +1143,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1179,7 +1179,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:03 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1246,7 +1246,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:11 UTC] TNPOI Map Preview: Cached 3 zones for trail 51203945
 [05-Jul-2025 03:37:28 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1281,7 +1281,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:28 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1317,7 +1317,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:28 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:28 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1365,7 +1365,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:28 UTC] TNPOI Sync: Found 3 cached zones for trail 51203945
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1400,7 +1400,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1436,7 +1436,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1471,7 +1471,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1508,16 +1508,16 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Syncing trail point at 34.866246,-82.421236 | Zone: warm | Search Radius: 161m
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=REMOVED
+[05-Jul-2025 03:37:37 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:37:38 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:37:38 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: all types
 [05-Jul-2025 03:37:38 UTC] TNPOI DEBUG: Found place: "Parker" | Types: [locality, political] | Address: Parker | Strategy: all types
 [05-Jul-2025 03:37:38 UTC] TNPOI DEBUG: Strategy "all types" found 2 places
 [05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=REMOVED&type=establishment
+[05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1552,7 +1552,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1588,7 +1588,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1627,7 +1627,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:39 UTC] TNPOI DEBUG: Strategy "establishments only" found 2 places
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1662,7 +1662,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1698,7 +1698,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1732,12 +1732,12 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:37:40 UTC] TNPOI DEBUG: Strategy "points of interest only" found 0 places
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1772,7 +1772,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1808,7 +1808,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1842,18 +1842,18 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=REMOVED&type=business
+[05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: businesses only
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Found place: "Parker" | Types: [locality, political] | Address: Parker | Strategy: businesses only
 [05-Jul-2025 03:37:41 UTC] TNPOI DEBUG: Strategy "businesses only" found 2 places
 [05-Jul-2025 03:37:42 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:37:42 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=REMOVED&type=store
+[05-Jul-2025 03:37:42 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:37:42 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:37:42 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1888,7 +1888,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1924,7 +1924,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -1958,7 +1958,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=REMOVED&type=food
+[05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866246,-82.421236&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: food establishments only
 [05-Jul-2025 03:37:43 UTC] TNPOI DEBUG: Found place: "Parker" | Types: [locality, political] | Address: Parker | Strategy: food establishments only
@@ -1966,7 +1966,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:44 UTC] TNPOI DEBUG: Summary - Found 2 total places with 2 unique types: locality, political
 [05-Jul-2025 03:37:45 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2001,7 +2001,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:45 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2037,7 +2037,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:45 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:45 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2079,7 +2079,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:45 UTC] TNPOI DEBUG: Saved POI: Parker (ChIJa18eHR8xWIgRye9YzZ66fGg)
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2114,7 +2114,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2150,7 +2150,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2185,7 +2185,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2222,7 +2222,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Syncing trail point at 34.865125,-82.419773 | Zone: warm | Search Radius: 161m
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=REMOVED
+[05-Jul-2025 03:37:47 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:37:48 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 4
 [05-Jul-2025 03:37:48 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: all types
 [05-Jul-2025 03:37:48 UTC] TNPOI DEBUG: Found place: "Republic Locomotive" | Types: [school, point_of_interest, establishment] | Address: 1861 West Washington Street, Greenville | Strategy: all types
@@ -2231,7 +2231,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:48 UTC] TNPOI DEBUG: Strategy "all types" found 4 places
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2266,7 +2266,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2302,7 +2302,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2336,7 +2336,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=REMOVED&type=establishment
+[05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 4
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: establishments only
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Found place: "Republic Locomotive" | Types: [school, point_of_interest, establishment] | Address: 1861 West Washington Street, Greenville | Strategy: establishments only
@@ -2344,14 +2344,14 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Found place: "Parker" | Types: [locality, political] | Address: Parker | Strategy: establishments only
 [05-Jul-2025 03:37:49 UTC] TNPOI DEBUG: Strategy "establishments only" found 4 places
 [05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Found place: "Republic Locomotive" | Types: [school, point_of_interest, establishment] | Address: 1861 West Washington Street, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:37:50 UTC] TNPOI DEBUG: Strategy "points of interest only" found 2 places
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2386,7 +2386,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2422,7 +2422,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2456,7 +2456,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=REMOVED&type=business
+[05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 4
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: businesses only
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Found place: "Republic Locomotive" | Types: [school, point_of_interest, establishment] | Address: 1861 West Washington Street, Greenville | Strategy: businesses only
@@ -2464,12 +2464,12 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Found place: "Parker" | Types: [locality, political] | Address: Parker | Strategy: businesses only
 [05-Jul-2025 03:37:51 UTC] TNPOI DEBUG: Strategy "businesses only" found 4 places
 [05-Jul-2025 03:37:52 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:37:52 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=REMOVED&type=store
+[05-Jul-2025 03:37:52 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:37:52 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:37:52 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2504,7 +2504,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2540,7 +2540,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2574,7 +2574,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=REMOVED&type=food
+[05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865125,-82.419773&radius=161&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 4
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: food establishments only
 [05-Jul-2025 03:37:53 UTC] TNPOI DEBUG: Found place: "Republic Locomotive" | Types: [school, point_of_interest, establishment] | Address: 1861 West Washington Street, Greenville | Strategy: food establishments only
@@ -2584,7 +2584,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:54 UTC] TNPOI DEBUG: Summary - Found 4 total places with 5 unique types: establishment, locality, point_of_interest, political, school
 [05-Jul-2025 03:37:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2619,7 +2619,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2655,7 +2655,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:55 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2699,7 +2699,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:55 UTC] TNPOI DEBUG: Saved POI: Parker (ChIJa18eHR8xWIgRye9YzZ66fGg)
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2734,7 +2734,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2770,7 +2770,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2805,7 +2805,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2842,14 +2842,14 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Syncing trail point at 34.865526,-82.418805 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=REMOVED
+[05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: all types
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: all types
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: all types
 [05-Jul-2025 03:37:57 UTC] TNPOI DEBUG: Strategy "all types" found 3 places
 [05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: establishments only
 [05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: establishments only
@@ -2857,7 +2857,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:58 UTC] TNPOI DEBUG: Strategy "establishments only" found 3 places
 [05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2892,7 +2892,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2928,7 +2928,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -2962,13 +2962,13 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:37:59 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:38:00 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:38:00 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:00 UTC] TNPOI DEBUG: Strategy "points of interest only" found 1 places
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3003,7 +3003,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3039,7 +3039,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3073,19 +3073,19 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: businesses only
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: businesses only
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: businesses only
 [05-Jul-2025 03:38:01 UTC] TNPOI DEBUG: Strategy "businesses only" found 3 places
 [05-Jul-2025 03:38:02 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:38:02 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:38:02 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:38:02 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:38:02 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3120,7 +3120,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3156,7 +3156,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3190,7 +3190,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.865526,-82.418805&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Found place: "Greenville" | Types: [locality, political] | Address: Greenville | Strategy: food establishments only
 [05-Jul-2025 03:38:03 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: food establishments only
@@ -3207,7 +3207,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:05 UTC] TNPOI DEBUG: Saved POI: City View (ChIJ7TPMnqYxWIgRykdsBF_2qaY)
 [05-Jul-2025 03:38:05 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3242,7 +3242,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:05 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3278,7 +3278,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:05 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:05 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3313,7 +3313,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3348,7 +3348,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3384,7 +3384,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3419,7 +3419,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3456,14 +3456,14 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Syncing trail point at 34.866128,-82.418015 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=REMOVED
+[05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: all types
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: all types
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: all types
 [05-Jul-2025 03:38:07 UTC] TNPOI DEBUG: Strategy "all types" found 3 places
 [05-Jul-2025 03:38:08 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:38:08 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:38:08 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: establishments only
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: establishments only
@@ -3471,7 +3471,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Strategy "establishments only" found 3 places
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3506,7 +3506,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3542,7 +3542,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:09 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3576,13 +3576,13 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:10 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:38:10 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:38:10 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:38:10 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:38:10 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:10 UTC] TNPOI DEBUG: Strategy "points of interest only" found 1 places
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3617,7 +3617,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3653,7 +3653,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3687,19 +3687,19 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: businesses only
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: businesses only
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: businesses only
 [05-Jul-2025 03:38:11 UTC] TNPOI DEBUG: Strategy "businesses only" found 3 places
 [05-Jul-2025 03:38:12 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:38:12 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:38:12 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:38:12 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:38:12 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3734,7 +3734,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3770,7 +3770,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3804,7 +3804,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866128,-82.418015&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: food establishments only
 [05-Jul-2025 03:38:13 UTC] TNPOI DEBUG: Found place: "Water Tower Apartments" | Types: [point_of_interest, establishment] | Address: 1000 Water Tower Circle, Greenville | Strategy: food establishments only
@@ -3813,7 +3813,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:14 UTC] TNPOI DEBUG: Summary - Found 3 total places with 4 unique types: establishment, locality, point_of_interest, political
 [05-Jul-2025 03:38:15 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3848,7 +3848,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:15 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3884,7 +3884,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:15 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:15 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3927,7 +3927,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:15 UTC] TNPOI DEBUG: Saved POI: City View (ChIJ7TPMnqYxWIgRykdsBF_2qaY)
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3962,7 +3962,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -3998,7 +3998,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4033,7 +4033,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4070,7 +4070,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Syncing trail point at 34.866163,-82.417189 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=REMOVED
+[05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 6
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: all types
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [restaurant, food, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: all types
@@ -4080,7 +4080,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: all types
 [05-Jul-2025 03:38:17 UTC] TNPOI DEBUG: Strategy "all types" found 6 places
 [05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 6
 [05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: establishments only
 [05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [bar, restaurant, food, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: establishments only
@@ -4091,7 +4091,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:18 UTC] TNPOI DEBUG: Strategy "establishments only" found 6 places
 [05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4126,7 +4126,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4162,7 +4162,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4196,7 +4196,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:38:19 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:38:20 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 4
 [05-Jul-2025 03:38:20 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [bar, restaurant, food, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:20 UTC] TNPOI DEBUG: Found place: "Creative Concepts Photography" | Types: [art_gallery, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #205A, Greenville | Strategy: points of interest only
@@ -4205,7 +4205,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:20 UTC] TNPOI DEBUG: Strategy "points of interest only" found 4 places
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4240,7 +4240,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4276,7 +4276,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4310,7 +4310,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 6
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: businesses only
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [restaurant, food, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: businesses only
@@ -4321,7 +4321,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Strategy "businesses only" found 6 places
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4356,7 +4356,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4392,7 +4392,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4426,13 +4426,13 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:22 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:38:22 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:38:22 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:38:22 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:38:22 UTC] TNPOI DEBUG: Found place: "Cripple Creek Grocery" | Types: [grocery_or_supermarket, store, food, point_of_interest, establishment] | Address: 1319 Hampton Avenue Extension, Greenville | Strategy: stores only
 [05-Jul-2025 03:38:22 UTC] TNPOI DEBUG: Strategy "stores only" found 1 places
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4467,7 +4467,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4503,7 +4503,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4537,7 +4537,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866163,-82.417189&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 6
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: food establishments only
 [05-Jul-2025 03:38:23 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [restaurant, food, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: food establishments only
@@ -4557,7 +4557,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:25 UTC] TNPOI DEBUG: Saved POI: City View (ChIJ7TPMnqYxWIgRykdsBF_2qaY)
 [05-Jul-2025 03:38:25 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4592,7 +4592,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:25 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4628,7 +4628,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:25 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:25 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4663,7 +4663,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4698,7 +4698,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4734,7 +4734,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4769,7 +4769,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4806,7 +4806,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Syncing trail point at 34.866411,-82.416257 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=REMOVED
+[05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 20
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: all types
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [restaurant, food, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: all types
@@ -4830,7 +4830,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:27 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: all types
 [05-Jul-2025 03:38:29 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4865,7 +4865,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:29 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4901,7 +4901,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:29 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:29 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4934,7 +4934,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 )
 
-[05-Jul-2025 03:38:29 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=REMOVED&pagetoken=ATKogpdWfCkVRo9EZWxE4zLQ5B24uvGgf-O3x1yriHNy7rIRY8fFNYHbcBisZvizHLrKCakTO8qZcDeRhBraRq40o2Osjcw8K2vHs5fILiCYCeKvLwiTWxB3I7Jh7GkrjpBOD_Gm6rEycXIAq0mUotaHKdxbFjzncNLyHw7bRpJeBluIGiXbZklod-CB0hiAxf0glu8yuPTOWN7ZOT51i7yCOrXYLEJH2_YiKZw0dgNKbbTMTjwt7VzCCFMyulrpJUcEeISWruZFhcnbLx18W4AHNWKQZB0dSoKyk8MFwsFLHp-J3dAMHwY-gan4eNkp8fTJWtKKPRPnmvHztQJsNWFKcWy9gqY0VCzlN-iBQtPGWW6QQq8JuSM7KceS_i_JSUKrYxgz3noC__B8QpgvCvmIS1roujo5cUFLHmrMISXBAPLZ
+[05-Jul-2025 03:38:29 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&pagetoken=ATKogpdWfCkVRo9EZWxE4zLQ5B24uvGgf-O3x1yriHNy7rIRY8fFNYHbcBisZvizHLrKCakTO8qZcDeRhBraRq40o2Osjcw8K2vHs5fILiCYCeKvLwiTWxB3I7Jh7GkrjpBOD_Gm6rEycXIAq0mUotaHKdxbFjzncNLyHw7bRpJeBluIGiXbZklod-CB0hiAxf0glu8yuPTOWN7ZOT51i7yCOrXYLEJH2_YiKZw0dgNKbbTMTjwt7VzCCFMyulrpJUcEeISWruZFhcnbLx18W4AHNWKQZB0dSoKyk8MFwsFLHp-J3dAMHwY-gan4eNkp8fTJWtKKPRPnmvHztQJsNWFKcWy9gqY0VCzlN-iBQtPGWW6QQq8JuSM7KceS_i_JSUKrYxgz3noC__B8QpgvCvmIS1roujo5cUFLHmrMISXBAPLZ
 [05-Jul-2025 03:38:30 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:30 UTC] TNPOI DEBUG: Found place: "Cripple Creek Grocery" | Types: [grocery_or_supermarket, store, food, point_of_interest, establishment] | Address: 1319 Hampton Avenue Extension, Greenville | Strategy: all types
 [05-Jul-2025 03:38:30 UTC] TNPOI DEBUG: Found place: "Isomer Project Group" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Suite 14, Greenville | Strategy: all types
@@ -4942,7 +4942,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:30 UTC] TNPOI DEBUG: Strategy "all types" found 23 places
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -4977,7 +4977,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5013,7 +5013,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5047,7 +5047,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 20
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: establishments only
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [bar, restaurant, food, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: establishments only
@@ -5071,7 +5071,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:31 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: establishments only
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5106,7 +5106,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5142,7 +5142,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5175,14 +5175,14 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 )
 
-[05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=REMOVED&type=establishment&pagetoken=ATKogpe_2gNR_X6Ja0nizKVSuLSbZUdNg38vUyMa9q58D1dzsWhAQbwkVTqnLjXAGNaK78O6Ut-Wq-PgQrJMez6VQnFeg4WPrLDqrlFjFJ3cki0yYqJXlsJs_aIeS3jQEnSdlsqA8Y3-gKAdtlxIBgV6GSTKJGgbizmmejxaww7VzkDJ7K2EBzN-Yo1-OY40IXxE-wV3-6Y-AJdPQiqtEUSWNDLh6s2ndVDipGQ3bJObpuB7Er_4nHKts6wrP5GUPlPrtThNEw0lR4VrmqZUeqvNd8k-ZfHi6q5KcbpCFTY3saGmyd6Hj9EXvdP4QVu9nQyaM5RHTaDydlwqOCjzydm40wMuKuzg-QjZscZ_tmBHy0HaK50IGmbxFkZx34Lh04ipXy8TWkPKv0RWKNX6-WnV-pnxKnGNbBL6ojGipzpR8FM_
+[05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment&pagetoken=ATKogpe_2gNR_X6Ja0nizKVSuLSbZUdNg38vUyMa9q58D1dzsWhAQbwkVTqnLjXAGNaK78O6Ut-Wq-PgQrJMez6VQnFeg4WPrLDqrlFjFJ3cki0yYqJXlsJs_aIeS3jQEnSdlsqA8Y3-gKAdtlxIBgV6GSTKJGgbizmmejxaww7VzkDJ7K2EBzN-Yo1-OY40IXxE-wV3-6Y-AJdPQiqtEUSWNDLh6s2ndVDipGQ3bJObpuB7Er_4nHKts6wrP5GUPlPrtThNEw0lR4VrmqZUeqvNd8k-ZfHi6q5KcbpCFTY3saGmyd6Hj9EXvdP4QVu9nQyaM5RHTaDydlwqOCjzydm40wMuKuzg-QjZscZ_tmBHy0HaK50IGmbxFkZx34Lh04ipXy8TWkPKv0RWKNX6-WnV-pnxKnGNbBL6ojGipzpR8FM_
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Found place: "Cripple Creek Grocery" | Types: [grocery_or_supermarket, store, food, point_of_interest, establishment] | Address: 1319 Hampton Avenue Extension, Greenville | Strategy: establishments only
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Found place: "Isomer Project Group" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Suite 14, Greenville | Strategy: establishments only
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: establishments only
 [05-Jul-2025 03:38:33 UTC] TNPOI DEBUG: Strategy "establishments only" found 23 places
 [05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 20
 [05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [restaurant, food, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Found place: "Due South Coffee Roasters" | Types: [cafe, food, store, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #4B, Greenville | Strategy: points of interest only
@@ -5206,7 +5206,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:34 UTC] TNPOI DEBUG: Found place: "Isomer Project Group" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Suite 14, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:35 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5241,7 +5241,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:35 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5277,7 +5277,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:35 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:35 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5310,13 +5310,13 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 )
 
-[05-Jul-2025 03:38:36 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=REMOVED&type=point_of_interest&pagetoken=ATKogpe8tflv8j5qyboskoZuiqj4hdZO0K2aqEAqjWk4iNMxvwL6MBVsi1J4FKr9-DrWj6qtumYVpNFouaSyGw0hjf3vcD8U9gBHjv_VI3ZCJziLWtmQmlTc5zSouvB30HGe7gz5d9cAnm81CcbxOAaNxtuBzvI6ezVe55AzBfcPlybYf6kVSkHwYMw7BGWYBcRUGTqe0UeR3mGw3ym30h-3_KCt6u7UiIJK9B8ydQsXt67u1NMJRIzTJwiuFi9_Lx8YvA87NdXDSEgN8EPeRHipGn-lRL0eeQuN26bEtWz-lIIEGklt-IOA9HJ0stHtEVGD5xSv12qt3h2EUVPFbdNxz4heST23lUBtygUngUTQJjd-LJPDiAU_jTQGyeXrSD7OSJkEgw6mQFq0QvWADl75vdh3j0l9d_4CWOeSMfNqL24_9d5hMQ6CS-tb2MEernNJtsPw9A
+[05-Jul-2025 03:38:36 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest&pagetoken=ATKogpe8tflv8j5qyboskoZuiqj4hdZO0K2aqEAqjWk4iNMxvwL6MBVsi1J4FKr9-DrWj6qtumYVpNFouaSyGw0hjf3vcD8U9gBHjv_VI3ZCJziLWtmQmlTc5zSouvB30HGe7gz5d9cAnm81CcbxOAaNxtuBzvI6ezVe55AzBfcPlybYf6kVSkHwYMw7BGWYBcRUGTqe0UeR3mGw3ym30h-3_KCt6u7UiIJK9B8ydQsXt67u1NMJRIzTJwiuFi9_Lx8YvA87NdXDSEgN8EPeRHipGn-lRL0eeQuN26bEtWz-lIIEGklt-IOA9HJ0stHtEVGD5xSv12qt3h2EUVPFbdNxz4heST23lUBtygUngUTQJjd-LJPDiAU_jTQGyeXrSD7OSJkEgw6mQFq0QvWADl75vdh3j0l9d_4CWOeSMfNqL24_9d5hMQ6CS-tb2MEernNJtsPw9A
 [05-Jul-2025 03:38:36 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:38:36 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:36 UTC] TNPOI DEBUG: Strategy "points of interest only" found 21 places
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5351,7 +5351,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5387,7 +5387,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5421,7 +5421,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 20
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: businesses only
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [bar, restaurant, food, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: businesses only
@@ -5445,7 +5445,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:37 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: businesses only
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5480,7 +5480,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5516,7 +5516,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5549,7 +5549,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 )
 
-[05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=REMOVED&type=business&pagetoken=ATKogpcsmg6BMghkl82sYbGihbfDKG_MizhLfXnCd5jWZugBBnZsm4FAtLaJWb4SA-IEqrw6Xcat9NSlIvx7u45D44eUJDuRDGMUGG-CpNYNmNgF55KbLtOrkBFWWVLScFlVnUl4vV3Uspeq7cl3CijVSh4HaQmIWUklBqGhFb9K7Qt3lmF8YyAYhyQwjC_JZPfk6-NkK7ZWGsgDSwx3nEghQvJR6bRGQ_iZYaqoWN1tV_IfEUVYq-N2gA2pyvcdxEVvD8ZSKQJZWfoqcrlRzl9E0lWJu9i3JME77zkipcWLi5cWTGORsyMF8ZWEr4fvV8T2Y2trFzXKZb9oGMefjzUvoScNngWBjprbzwCgiCWKSqBKUGK451OP91EdC2EAk7hXAosHoQUGe9_asnKjyYIZqv3JYUMQYhpn_0Qv1nc9zChxZzxvmkFlYpumdg
+[05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business&pagetoken=ATKogpcsmg6BMghkl82sYbGihbfDKG_MizhLfXnCd5jWZugBBnZsm4FAtLaJWb4SA-IEqrw6Xcat9NSlIvx7u45D44eUJDuRDGMUGG-CpNYNmNgF55KbLtOrkBFWWVLScFlVnUl4vV3Uspeq7cl3CijVSh4HaQmIWUklBqGhFb9K7Qt3lmF8YyAYhyQwjC_JZPfk6-NkK7ZWGsgDSwx3nEghQvJR6bRGQ_iZYaqoWN1tV_IfEUVYq-N2gA2pyvcdxEVvD8ZSKQJZWfoqcrlRzl9E0lWJu9i3JME77zkipcWLi5cWTGORsyMF8ZWEr4fvV8T2Y2trFzXKZb9oGMefjzUvoScNngWBjprbzwCgiCWKSqBKUGK451OP91EdC2EAk7hXAosHoQUGe9_asnKjyYIZqv3JYUMQYhpn_0Qv1nc9zChxZzxvmkFlYpumdg
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Found place: "Cripple Creek Grocery" | Types: [grocery_or_supermarket, food, store, point_of_interest, establishment] | Address: 1319 Hampton Avenue Extension, Greenville | Strategy: businesses only
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Found place: "Isomer Project Group" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Suite 14, Greenville | Strategy: businesses only
@@ -5557,7 +5557,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:39 UTC] TNPOI DEBUG: Strategy "businesses only" found 23 places
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5592,7 +5592,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5628,7 +5628,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5662,7 +5662,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 6
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Found place: "Due South Coffee Roasters" | Types: [cafe, store, food, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #4B, Greenville | Strategy: stores only
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Found place: "Liz Daly Designs" | Types: [art_gallery, jewelry_store, store, point_of_interest, establishment] | Address: 1320 Hampton Avenue Ext. Bay, 205 Hampton Avenue Extension 2, Space, Greenville | Strategy: stores only
@@ -5673,7 +5673,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:40 UTC] TNPOI DEBUG: Strategy "stores only" found 6 places
 [05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5708,7 +5708,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5744,7 +5744,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5778,7 +5778,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:38:41 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411,-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:38:42 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 20
 [05-Jul-2025 03:38:42 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: food establishments only
 [05-Jul-2025 03:38:42 UTC] TNPOI DEBUG: Found place: "Wandering Bard Meadery" | Types: [bar, restaurant, food, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension STE 3, Greenville | Strategy: food establishments only
@@ -5802,7 +5802,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:42 UTC] TNPOI DEBUG: Found place: "City View" | Types: [locality, political] | Address: City View | Strategy: food establishments only
 [05-Jul-2025 03:38:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5837,7 +5837,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5873,7 +5873,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:43 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:43 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5906,7 +5906,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 )
 
-[05-Jul-2025 03:38:44 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=REMOVED&type=food&pagetoken=ATKogpdy1NGM8PRtFy_F7-_gt0Cwx7ZMqiVaNL0vMo65mXmma1Av6D9zLUcm4gLfKuFvZglT5dNTA2HiNs1qCm2C_gw3NwMfRoyQFum_CPzzGw5FL84CZB6jB2sJ8KcaQs37lTmJ0EmvmZeXVld5GEMlj0E0lfo7LU2ZDutXCkHLs3aIFxm_6mcqr6GK5Q15CWdVg7nGMfLXTv7rQJQWW_9xk7RFdNGgxRw6_mw99qSLGPi_pPDMmRT_K5Tv7GtRqS5uj1KELhyI9wQIhRj05YGfTXFK-2fxa4P9u5Qlixy-AHOqkgyyEf3Q9UeGpcmjLO5iQvobGVmnkWu_z_xJYB8A3C1yBtQw3Kjhks3d3M4I335arFk4wF9-ez2rswAH7mejF-TfigggJSm8rM704n6cEnXmRLJ-bTxDotXnfbBslmgR
+[05-Jul-2025 03:38:44 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.866411%2C-82.416257&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food&pagetoken=ATKogpdy1NGM8PRtFy_F7-_gt0Cwx7ZMqiVaNL0vMo65mXmma1Av6D9zLUcm4gLfKuFvZglT5dNTA2HiNs1qCm2C_gw3NwMfRoyQFum_CPzzGw5FL84CZB6jB2sJ8KcaQs37lTmJ0EmvmZeXVld5GEMlj0E0lfo7LU2ZDutXCkHLs3aIFxm_6mcqr6GK5Q15CWdVg7nGMfLXTv7rQJQWW_9xk7RFdNGgxRw6_mw99qSLGPi_pPDMmRT_K5Tv7GtRqS5uj1KELhyI9wQIhRj05YGfTXFK-2fxa4P9u5Qlixy-AHOqkgyyEf3Q9UeGpcmjLO5iQvobGVmnkWu_z_xJYB8A3C1yBtQw3Kjhks3d3M4I335arFk4wF9-ez2rswAH7mejF-TfigggJSm8rM704n6cEnXmRLJ-bTxDotXnfbBslmgR
 [05-Jul-2025 03:38:44 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 3
 [05-Jul-2025 03:38:44 UTC] TNPOI DEBUG: Found place: "Cripple Creek Grocery" | Types: [grocery_or_supermarket, store, food, point_of_interest, establishment] | Address: 1319 Hampton Avenue Extension, Greenville | Strategy: food establishments only
 [05-Jul-2025 03:38:44 UTC] TNPOI DEBUG: Found place: "Isomer Project Group" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Suite 14, Greenville | Strategy: food establishments only
@@ -5914,7 +5914,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:44 UTC] TNPOI DEBUG: Strategy "food establishments only" found 23 places
 [05-Jul-2025 03:38:45 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5949,7 +5949,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:45 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -5985,7 +5985,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:45 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:45 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6030,7 +6030,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:45 UTC] TNPOI DEBUG: Saved POI: Escape Artist Greenville - Hampton Station (ChIJDdLW_-IxWIgR581vqPHZXFw)
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6065,7 +6065,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6101,7 +6101,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6136,7 +6136,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6173,7 +6173,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Syncing trail point at 34.867107,-82.415467 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=REMOVED
+[05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 7
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Found place: "The Noble Dog Hotel" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #8, Greenville | Strategy: all types
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: all types
@@ -6184,7 +6184,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Found place: "Craft Axe Throwing" | Types: [tourist_attraction, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #5a, Greenville | Strategy: all types
 [05-Jul-2025 03:38:47 UTC] TNPOI DEBUG: Strategy "all types" found 7 places
 [05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 7
 [05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Found place: "The Noble Dog Hotel" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #8, Greenville | Strategy: establishments only
 [05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: establishments only
@@ -6196,7 +6196,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:48 UTC] TNPOI DEBUG: Strategy "establishments only" found 7 places
 [05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6231,7 +6231,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6267,7 +6267,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6301,7 +6301,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:38:49 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:38:50 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 7
 [05-Jul-2025 03:38:50 UTC] TNPOI DEBUG: Found place: "The Noble Dog Hotel" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #8, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:38:50 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: points of interest only
@@ -6313,7 +6313,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:50 UTC] TNPOI DEBUG: Strategy "points of interest only" found 7 places
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6348,7 +6348,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6384,7 +6384,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6418,7 +6418,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 7
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Found place: "The Noble Dog Hotel" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #8, Greenville | Strategy: businesses only
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: businesses only
@@ -6429,7 +6429,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Found place: "Craft Axe Throwing" | Types: [tourist_attraction, bar, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #5a, Greenville | Strategy: businesses only
 [05-Jul-2025 03:38:51 UTC] TNPOI DEBUG: Strategy "businesses only" found 7 places
 [05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 4
 [05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Found place: "Liz Daly Designs" | Types: [art_gallery, jewelry_store, store, point_of_interest, establishment] | Address: 1320 Hampton Avenue Ext. Bay, 205 Hampton Avenue Extension 2, Space, Greenville | Strategy: stores only
 [05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Found place: "Pedego Electric Bikes Greenville" | Types: [bicycle_store, store, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #11A, Greenville | Strategy: stores only
@@ -6438,7 +6438,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:52 UTC] TNPOI DEBUG: Strategy "stores only" found 4 places
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6473,7 +6473,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6509,7 +6509,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6543,7 +6543,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867107,-82.415467&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 7
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Found place: "The Noble Dog Hotel" | Types: [point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension #8, Greenville | Strategy: food establishments only
 [05-Jul-2025 03:38:53 UTC] TNPOI DEBUG: Found place: "Escape Artist Greenville - Hampton Station" | Types: [tourist_attraction, point_of_interest, establishment] | Address: 1320 Hampton Avenue Extension Bay 11C, Greenville | Strategy: food establishments only
@@ -6556,7 +6556,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:54 UTC] TNPOI DEBUG: Summary - Found 7 total places with 8 unique types: art_gallery, bar, bicycle_store, establishment, jewelry_store, point_of_interest, store, tourist_attraction
 [05-Jul-2025 03:38:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6591,7 +6591,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6627,7 +6627,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:55 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:55 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6668,7 +6668,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:55 UTC] TNPOI DEBUG: Saved POI: The Noble Dog Hotel (ChIJtx6O1b0xWIgRCb0qpTaTVh0)
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6703,7 +6703,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6739,7 +6739,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6774,7 +6774,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6811,18 +6811,18 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Syncing trail point at 34.867921,-82.415337 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=REMOVED
+[05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: all types
 [05-Jul-2025 03:38:57 UTC] TNPOI DEBUG: Strategy "all types" found 1 places
 [05-Jul-2025 03:38:58 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:38:58 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:38:58 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:38:58 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:38:58 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: establishments only
 [05-Jul-2025 03:38:58 UTC] TNPOI DEBUG: Strategy "establishments only" found 1 places
 [05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6857,7 +6857,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6893,7 +6893,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6927,14 +6927,14 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:38:59 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:39:00 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:39:00 UTC] TNPOI DEBUG: Strategy "points of interest only" found 0 places
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -6969,7 +6969,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7005,7 +7005,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7042,12 +7042,12 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: businesses only
 [05-Jul-2025 03:39:01 UTC] TNPOI DEBUG: Strategy "businesses only" found 1 places
 [05-Jul-2025 03:39:02 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:39:02 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:39:02 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:39:02 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:39:02 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7082,7 +7082,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7118,7 +7118,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7152,7 +7152,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.867921,-82.415337&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: food establishments only
 [05-Jul-2025 03:39:03 UTC] TNPOI DEBUG: Strategy "food establishments only" found 1 places
@@ -7165,7 +7165,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:05 UTC] TNPOI DEBUG: Saved POI: Sans Souci (ChIJf7A3D4cxWIgRfybOWgzujuI)
 [05-Jul-2025 03:39:05 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7200,7 +7200,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:05 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7236,7 +7236,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:05 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:05 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7271,7 +7271,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7306,7 +7306,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7342,7 +7342,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7377,7 +7377,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7414,20 +7414,20 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Syncing trail point at 34.868959,-82.415042 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=REMOVED
+[05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: all types
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: all types
 [05-Jul-2025 03:39:07 UTC] TNPOI DEBUG: Strategy "all types" found 2 places
 [05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: establishments only
 [05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: establishments only
 [05-Jul-2025 03:39:08 UTC] TNPOI DEBUG: Strategy "establishments only" found 2 places
 [05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7462,7 +7462,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7498,7 +7498,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7532,13 +7532,13 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:39:09 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:39:10 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:39:10 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:39:10 UTC] TNPOI DEBUG: Strategy "points of interest only" found 1 places
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7573,7 +7573,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7609,7 +7609,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7643,18 +7643,18 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: businesses only
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: businesses only
 [05-Jul-2025 03:39:11 UTC] TNPOI DEBUG: Strategy "businesses only" found 2 places
 [05-Jul-2025 03:39:12 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:39:12 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:39:12 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:39:12 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:39:12 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7689,7 +7689,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7725,7 +7725,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7759,7 +7759,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.868959,-82.415042&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: food establishments only
 [05-Jul-2025 03:39:13 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: food establishments only
@@ -7767,7 +7767,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:14 UTC] TNPOI DEBUG: Summary - Found 2 total places with 5 unique types: establishment, locality, park, point_of_interest, political
 [05-Jul-2025 03:39:15 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7802,7 +7802,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:15 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7838,7 +7838,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:15 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:15 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7880,7 +7880,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:15 UTC] TNPOI DEBUG: Saved POI: “Orange Line of the Prisma (ChIJmZ-MN28xWIgRu-gVNsF3cW8)
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7915,7 +7915,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7951,7 +7951,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -7986,7 +7986,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8023,20 +8023,20 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Syncing trail point at 34.869974,-82.414665 | Zone: hot | Search Radius: 112m
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: TEMPORARILY FORCING SEARCH ALL TYPES FOR DEBUGGING
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Trying search strategy: all types
-[05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=REMOVED
+[05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: all types
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: all types
 [05-Jul-2025 03:39:17 UTC] TNPOI DEBUG: Strategy "all types" found 2 places
 [05-Jul-2025 03:39:18 UTC] TNPOI DEBUG: Trying search strategy: establishments only
-[05-Jul-2025 03:39:18 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=REMOVED&type=establishment
+[05-Jul-2025 03:39:18 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=establishment
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: establishments only
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: establishments only
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Strategy "establishments only" found 2 places
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8071,7 +8071,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8107,7 +8107,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:19 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8141,13 +8141,13 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:20 UTC] TNPOI DEBUG: Trying search strategy: points of interest only
-[05-Jul-2025 03:39:20 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=REMOVED&type=point_of_interest
+[05-Jul-2025 03:39:20 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=point_of_interest
 [05-Jul-2025 03:39:20 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 1
 [05-Jul-2025 03:39:20 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: points of interest only
 [05-Jul-2025 03:39:20 UTC] TNPOI DEBUG: Strategy "points of interest only" found 1 places
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8182,7 +8182,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8218,7 +8218,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8252,18 +8252,18 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Trying search strategy: businesses only
-[05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=REMOVED&type=business
+[05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=business
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: businesses only
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: businesses only
 [05-Jul-2025 03:39:21 UTC] TNPOI DEBUG: Strategy "businesses only" found 2 places
 [05-Jul-2025 03:39:22 UTC] TNPOI DEBUG: Trying search strategy: stores only
-[05-Jul-2025 03:39:22 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=REMOVED&type=store
+[05-Jul-2025 03:39:22 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=store
 [05-Jul-2025 03:39:22 UTC] TNPOI DEBUG: Google Places API response status: ZERO_RESULTS | results: 0
 [05-Jul-2025 03:39:22 UTC] TNPOI DEBUG: Strategy "stores only" found 0 places
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8298,7 +8298,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8334,7 +8334,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8368,7 +8368,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 )
 
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Trying search strategy: food establishments only
-[05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=REMOVED&type=food
+[05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Google Places API request URL: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.869974,-82.414665&radius=112&key=AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M&type=food
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Google Places API response status: OK | results: 2
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Found place: "Sans Souci" | Types: [locality, political] | Address: Sans Souci | Strategy: food establishments only
 [05-Jul-2025 03:39:23 UTC] TNPOI DEBUG: Found place: "“Orange Line of the Prisma" | Types: [park, point_of_interest, establishment] | Address: 10894 Buncombe St, Greenville | Strategy: food establishments only
@@ -8376,7 +8376,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:24 UTC] TNPOI DEBUG: Summary - Found 2 total places with 5 unique types: establishment, locality, park, point_of_interest, political
 [05-Jul-2025 03:39:25 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8411,7 +8411,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:25 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8447,7 +8447,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:25 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:25 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8489,7 +8489,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:25 UTC] TNPOI DEBUG: Saved POI: “Orange Line of the Prisma (ChIJmZ-MN28xWIgRu-gVNsF3cW8)
 [05-Jul-2025 03:39:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8524,7 +8524,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8560,7 +8560,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:27 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8595,7 +8595,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:27 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8631,7 +8631,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:27 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:29 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8666,7 +8666,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:29 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8702,7 +8702,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:29 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:29 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8737,7 +8737,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8772,7 +8772,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 
 [05-Jul-2025 03:39:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1
@@ -8808,7 +8808,7 @@ text/plain debug.log ( ASCII text, with very long lines )
 [05-Jul-2025 03:39:40 UTC] TNPOI DEBUG: Loaded Google Places API key (first 8 chars): AIzaSyCc
 [05-Jul-2025 03:39:40 UTC] TNPOI DEBUG: Loaded settings: Array
 (
-    [google_places_api_key] => REMOVED
+    [google_places_api_key] => AIzaSyCcWANI2D_pTN-FBglRD4VKxGx6hu8f40M
     [ridewithgps_api_key] => 81c8a1eb
     [max_pois_per_sync] => 100
     [auto_assign_categories] => 1

@@ -70,6 +70,13 @@ export const AppContent: React.FC = () => {
   const { data: wpConfig, isLoading: wpLoading, error: wpError } = useWordPressConfig();
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Debug: Monitor location changes
+  useEffect(() => {
+    // console.log('Pathname changed to:', location.pathname);
+    // console.log('Search params:', location.search);
+  }, [location.pathname, location.search]);
+  
   const { currentLocation, entryPoint } = useGeoLocation();
   const { isDevMode } = useDevMode();
 
@@ -181,6 +188,11 @@ export const AppContent: React.FC = () => {
       : location.pathname === '/list' ? 'list'
       : 'map';
   }
+  
+  // console.log('Current pathname:', location.pathname);
+  // console.log('Current view determined as:', currentView);
+  // console.log('isDevMode:', isDevMode);
+  // console.log('devTab:', devTab);
 
   // Get map center and zoom from navigation state if present
   const state = location.state as { center?: [number, number], zoom?: number } | undefined;
@@ -233,20 +245,37 @@ export const AppContent: React.FC = () => {
   }
 
   const handleViewChange = (view: ViewMode) => {
-    if (view === 'dev' && !isDevMode) return;
+    // console.log('Attempting to change to view:', view);
+    // console.log('Current location pathname:', location.pathname);
+    // console.log('Current search params:', location.search);
+    
+    if (view === 'dev' && !isDevMode) {
+      // console.log('Blocked: dev view requested but not in dev mode');
+      return;
+    }
+    
     // Preserve ?mode=sim if present
     const searchParams = new URLSearchParams(location.search);
     const modeParam = searchParams.get('mode');
     const devQuery = modeParam === 'sim' ? '?mode=sim' : '';
+    
+    // console.log('Mode param:', modeParam);
+    // console.log('Dev query:', devQuery);
+    
     if (isDevMode && view === 'dev') {
+      // console.log('Navigating to dev panel');
       setDevTab(true);
-      navigate('/simconfig' + devQuery);
+      const targetPath = '/simconfig' + devQuery;
+      // console.log('Target path:', targetPath);
+      navigate(targetPath);
       return;
     } else {
       setDevTab(false);
     }
     switch(view) {
       case 'map':
+        // console.log('Navigating to map:', '/map' + devQuery);
+        // console.log('About to call navigate()');
         navigate('/map' + devQuery, { 
           state: { 
             center: mapCenter,
@@ -255,12 +284,18 @@ export const AppContent: React.FC = () => {
         });
         break;
       case 'nav':
+        // console.log('Navigating to nav:', '/nav' + devQuery);
+        // console.log('About to call navigate()');
         navigate('/nav' + devQuery);
         break;
       case 'list':
+        // console.log('Navigating to list:', '/list' + devQuery);
+        // console.log('About to call navigate()');
         navigate('/list' + devQuery);
         break;
     }
+    
+    // console.log('Navigation call completed');
   };
 
   return (

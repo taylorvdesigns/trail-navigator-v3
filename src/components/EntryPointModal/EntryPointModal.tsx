@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, List, ListItem, ListItemText, ListItemButton, CircularProgress } from '@mui/material';
 import { Modal } from '../Modal/Modal';
-import { useLocation } from '../../hooks/useLocation';
+import { useLocation } from '../../contexts/LocationContext';
 import { EntryPointMapPicker } from './EntryPointMapPicker';
 import { TRAIL_ROUTES } from '../../config/routes.config';
 import { POI, TrailConfig } from '../../types';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Box, Typography, Paper, List, ListItem, ListItemText, Chip, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import { useLocation } from '../../hooks/useLocation';
+import { useLocation } from '../../contexts/LocationContext';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { usePOIs } from '../../hooks/usePOIs';
 import { useWordPressConfig } from '../../hooks/useWordPressConfig';

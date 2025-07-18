@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Divider, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
-import { useLocation } from '../../hooks/useLocation';
+import { useLocation as useRouterLocation } from 'react-router-dom';
+import { useLocation } from '../../contexts/LocationContext';
 import { TEST_LOCATIONS } from '../../config/appSettings';
 import { TRAIL_ROUTES } from '../../config/routes.config';
 import { useTrailsData } from '../../hooks/useTrailsData';
@@ -11,12 +12,6 @@ import ReplayIcon from '@mui/icons-material/Replay';
 
 const SPEED_MULTIPLIERS = [1, 2, 4];
 const SPEED_LABELS = { 1: '1x', 2: '2x', 4: '4x' };
-const BASE_SPEEDS = {
-  walking: 1.4,
-  running: 3.0,
-  biking: 4.5,
-  accessible: 1.0
-};
 
 export const DevPanel: React.FC = () => {
   const { 
@@ -35,11 +30,14 @@ export const DevPanel: React.FC = () => {
     setSimSpeedMultiplier,
     simIndex,
     setSimIndex,
-    setSimTrailPoints
+    setSimTrailPoints,
+    simLoop,
+    setSimLoop
   } = useLocation();
   const [selectedLocation, setSelectedLocation] = useState(0);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
+  const routerLocation = useRouterLocation();
 
   // Automatically enable simulation mode when DevPanel mounts
   useEffect(() => {
@@ -49,11 +47,10 @@ export const DevPanel: React.FC = () => {
   // Update selectedLocation when test location changes
   useEffect(() => {
     if (currentLocation) {
-      // Use a small tolerance for floating-point comparison
       const TOL = 1e-5;
       const idx = TEST_LOCATIONS.findIndex(loc =>
-        Math.abs(loc.coordinates[0] - currentLocation[0]) < TOL &&
-        Math.abs(loc.coordinates[1] - currentLocation[1]) < TOL
+        Math.abs(loc.coordinates[0] - currentLocation[1]) < TOL &&
+        Math.abs(loc.coordinates[1] - currentLocation[0]) < TOL
       );
       if (idx !== -1) setSelectedLocation(idx);
     }
@@ -64,13 +61,14 @@ export const DevPanel: React.FC = () => {
 
   // Find the closest trail point index to currentLocation
   useEffect(() => {
-    if (!currentLocation || !trailPoints.length) return;
+    if (!currentLocation || !trailPoints.length || isSimPlaying) return;
+    
     let minDist = Infinity;
     let minIdx = 0;
     for (let i = 0; i < trailPoints.length; i++) {
       const d = Math.hypot(
-        trailPoints[i].latitude - currentLocation[0],
-        trailPoints[i].longitude - currentLocation[1]
+        trailPoints[i].latitude - currentLocation[1],
+        trailPoints[i].longitude - currentLocation[0]
       );
       if (d < minDist) {
         minDist = d;
@@ -80,48 +78,29 @@ export const DevPanel: React.FC = () => {
     if (simIndex !== minIdx) {
       setSimIndex(minIdx);
     }
-  }, [currentLocation, trailPoints, simIndex, setSimIndex]);
+  }, [currentLocation, trailPoints, simIndex, isSimPlaying]);
 
   // Keep simulation trail points in sync with context
   useEffect(() => {
-    setSimTrailPoints(trailPoints);
-  }, [trailPoints, setSimTrailPoints]);
-
-  // Simulation movement logic
-  useEffect(() => {
-    if (!isSimPlaying || !trailPoints.length || simIndex == null) return;
-    const baseSpeed = BASE_SPEEDS[locomotionMode] || 1.4;
-    const speed = baseSpeed * simSpeedMultiplier; // meters per second
-    const intervalMs = 1000 / simSpeedMultiplier; // faster updates for higher speeds
-    let idx = simIndex;
-    function step() {
-      // Move forward or backward depending on simDirection
-      let nextIdx = simDirection === 'top' ? idx + 1 : idx - 1;
-      if (nextIdx < 0 || nextIdx >= trailPoints.length) {
-        setIsSimPlaying(false);
-        return;
-      }
-      idx = nextIdx;
-      setSimIndex(idx);
-      // Update currentLocation to this trail point
-      const pt = trailPoints[idx];
-      if (pt) {
-        console.log('[SimLocomotion] index:', idx, 'coords:', [pt.latitude, pt.longitude], 'playing:', isSimPlaying);
-        setCurrentLocation([pt.latitude, pt.longitude]);
-      }
+    if (!isSimPlaying) {
+      setSimTrailPoints(trailPoints);
     }
-    const timer = setInterval(step, intervalMs);
-    return () => clearInterval(timer);
-  }, [isSimPlaying, simSpeedMultiplier, locomotionMode, simDirection, trailPoints, simIndex, setCurrentLocation, setIsSimPlaying]);
+  }, [trailPoints, isSimPlaying]);
 
-  // Play, Pause, Reset handlers
-  const handlePlay = () => setIsSimPlaying(true);
+  // Simple control handlers
+  const handlePlay = () => {
+    console.log('[DevPanel] Starting simulation');
+    setIsSimPlaying(true);
+  };
+
   const handlePause = () => {
+    console.log('[DevPanel] Pausing simulation');
     setIsSimPlaying(false);
   };
+
   const handleReset = () => {
+    console.log('[DevPanel] Resetting simulation');
     setIsSimPlaying(false);
-    // Reset to selected test location
     setTestLocation(selectedLocation);
   };
 
@@ -137,7 +116,7 @@ export const DevPanel: React.FC = () => {
     if (![1, 2, 4].includes(simSpeedMultiplier)) {
       setSimSpeedMultiplier(1);
     }
-  }, []);
+  }, [simSpeedMultiplier, setSimSpeedMultiplier]);
 
   return (
     <Box sx={{ 
@@ -177,8 +156,8 @@ export const DevPanel: React.FC = () => {
           Development Mode
         </Typography>
         <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
-        {/* Removed Current Location section */}
-        {/* Vertical ToggleButtonGroup for locations */}
+        
+        {/* Test Location Selection */}
         <Box sx={{ mt: 2, mb: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Select Test Location:
@@ -218,6 +197,8 @@ export const DevPanel: React.FC = () => {
             ))}
           </ToggleButtonGroup>
         </Box>
+
+        {/* Direction Control */}
         <Box sx={{ mb: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Direction:
@@ -245,7 +226,9 @@ export const DevPanel: React.FC = () => {
             sx={{ mt: 1, mb: 1, ml: 1 }}
           />
         </Box>
+
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+
         {/* Entry Point Selection */}
         <Box sx={{ mb: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
@@ -297,23 +280,49 @@ export const DevPanel: React.FC = () => {
             Reset Entry Point
           </Button>
         </Box>
+
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
-        {/* Simulated Locomotion Controls */}
+
+        {/* Simulation Controls */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
-            Simulated Locomotion:
+            Simulation Controls:
           </Typography>
+          
+          {/* Play/Pause/Reset Buttons */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Button onClick={handlePlay} disabled={isSimPlaying} startIcon={<PlayArrowIcon />} variant="contained" color="success" sx={{ borderRadius: 2, minWidth: 90 }}>
+            <Button 
+              onClick={handlePlay} 
+              disabled={isSimPlaying} 
+              startIcon={<PlayArrowIcon />} 
+              variant="contained" 
+              color="success" 
+              sx={{ borderRadius: 2, minWidth: 90 }}
+            >
               Play
             </Button>
-            <Button onClick={handlePause} disabled={!isSimPlaying} startIcon={<PauseIcon />} variant="contained" color="warning" sx={{ borderRadius: 2, minWidth: 90 }}>
+            <Button 
+              onClick={handlePause} 
+              disabled={!isSimPlaying} 
+              startIcon={<PauseIcon />} 
+              variant="contained" 
+              color="warning" 
+              sx={{ borderRadius: 2, minWidth: 90 }}
+            >
               Pause
             </Button>
-            <Button onClick={handleReset} startIcon={<ReplayIcon />} variant="contained" color="secondary" sx={{ borderRadius: 2, minWidth: 90 }}>
+            <Button 
+              onClick={handleReset} 
+              startIcon={<ReplayIcon />} 
+              variant="contained" 
+              color="secondary" 
+              sx={{ borderRadius: 2, minWidth: 90 }}
+            >
               Reset
             </Button>
           </Box>
+
+          {/* Speed Control */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Typography variant="body2" sx={{ color: '#fff' }}>Speed:</Typography>
             <ToggleButtonGroup
@@ -325,14 +334,46 @@ export const DevPanel: React.FC = () => {
               sx={{ gap: 1 }}
             >
               {SPEED_MULTIPLIERS.map(mult => (
-                <ToggleButton key={mult} value={mult} sx={{ color: '#fff', borderColor: '#39FF14', borderRadius: 2, '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' } }}>
+                <ToggleButton 
+                  key={mult} 
+                  value={mult} 
+                  sx={{ 
+                    color: '#fff', 
+                    borderColor: '#39FF14', 
+                    borderRadius: 2, 
+                    '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' } 
+                  }}
+                >
                   {SPEED_LABELS[mult as keyof typeof SPEED_LABELS]}
                 </ToggleButton>
               ))}
             </ToggleButtonGroup>
           </Box>
+
+          {/* Loop Toggle */}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={simLoop}
+                onChange={e => setSimLoop(e.target.checked)}
+                sx={{
+                  '& .MuiSwitch-track': {
+                    backgroundColor: '#666666'
+                  },
+                  '& .MuiSwitch-thumb': {
+                    backgroundColor: '#FFFFFF'
+                  },
+                  mr: 2
+                }}
+              />
+            }
+            label={<Typography sx={{ color: '#FFFFFF', fontSize: '0.9rem' }}>Loop Simulation</Typography>}
+            sx={{ mt: 1, mb: 1, ml: 1 }}
+          />
+
+          {/* Status Display */}
           <Typography variant="body2" sx={{ color: '#fff', mt: 1 }}>
-            State: {isSimPlaying ? 'Playing' : 'Paused'} | Speed: {simSpeedMultiplier}x | Mode: {locomotionMode}
+            State: {isSimPlaying ? 'Playing' : 'Paused'} | Speed: {simSpeedMultiplier}x | Mode: {locomotionMode} | Loop: {simLoop ? 'On' : 'Off'}
           </Typography>
         </Box>
       </Box>

@@ -616,10 +616,7 @@ export function calculatePreciseNetworkDistance(
   const startProj = projectPointOntoGraphEdge(graph, startPoint);
   const endProj = projectPointOntoGraphEdge(graph, endPoint);
   
-  console.log('[trailGraph] startProj:', startProj, 'endProj:', endProj);
-
   if (!startProj || !endProj) {
-    console.warn('[trailGraph] Could not project start or end point onto graph edge.');
     return null;
   }
 
@@ -629,7 +626,6 @@ export function calculatePreciseNetworkDistance(
     (startProj.from === endProj.to && startProj.to === endProj.from)
   ) {
     const distance = Math.abs(startProj.distanceFromStart - endProj.distanceFromStart);
-    console.log('[trailGraph] Both points on same edge. Distance:', distance);
     return distance;
   }
 
@@ -647,16 +643,12 @@ export function calculatePreciseNetworkDistance(
   // Use the existing findShortestPath (returns { path, distance })
   const pathResult = findShortestPath(graph, startNearestNode, endNearestNode);
   
-  console.log('[trailGraph] Path result:', pathResult, 'startPartial:', startPartial, 'endPartial:', endPartial);
-
   const pathDistance = pathResult && typeof pathResult.distance === 'number' ? pathResult.distance : null;
   if (pathDistance === null) {
-    console.warn('[trailGraph] No path found between nodes:', startNearestNode, endNearestNode);
     return null;
   }
 
   const totalDistance = startPartial + pathDistance + endPartial;
-  console.log('[trailGraph] Total network distance:', totalDistance);
   return totalDistance;
 } 
 
