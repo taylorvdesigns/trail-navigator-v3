@@ -1,3 +1,6 @@
+require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env' });
+
 const axios = require('axios');
 const NodeCache = require('node-cache');
 

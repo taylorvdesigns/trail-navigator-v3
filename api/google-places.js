@@ -1,3 +1,6 @@
+require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env' });
+
 const axios = require('axios');
 
 module.exports = async (req, res) => {
@@ -39,61 +42,59 @@ module.exports = async (req, res) => {
   try {
     console.log('DEBUG: Making Google Places API request for placeId:', placeId);
     
-    // Fetch place details from Google Places API
-    const response = await axios.get('https://maps.googleapis.com/maps/api/place/details/json', {
-      params: {
-        place_id: placeId,
-        key: googleApiKey,
-        fields: 'name,formatted_address,formatted_phone_number,website,rating,user_ratings_total,opening_hours,photos,reviews,price_level,types,business_status'
+    // Use the NEW Google Places API endpoint
+    const response = await axios.get(`https://places.googleapis.com/v1/places/${placeId}`, {
+      headers: {
+        'X-Goog-Api-Key': googleApiKey,
+        'X-Goog-FieldMask': 'name,displayName,formattedAddress,rating,userRatingCount,priceLevel,types,businessStatus,regularOpeningHours,websiteUri,reviews,photos,reviewSummary'
       },
       timeout: 10000
     });
     
-    console.log('DEBUG: Google Places API response status:', response.data.status);
+    console.log('DEBUG: Google Places API response status:', response.status);
+    console.log('DEBUG: Google Places API response data:', JSON.stringify(response.data, null, 2));
 
-    if (response.data.status !== 'OK') {
-      return res.status(400).json({ 
-        error: 'Failed to fetch place details', 
-        status: response.data.status,
-        message: response.data.error_message || 'Unknown error'
-      });
-    }
+    const placeDetails = response.data;
 
-    const placeDetails = response.data.result;
-
-    // Transform the response to include only necessary fields
+    // Transform the response to match the expected format
     const transformedDetails = {
-      name: placeDetails.name,
-      formatted_address: placeDetails.formatted_address,
-      formatted_phone_number: placeDetails.formatted_phone_number,
-      website: placeDetails.website,
+      name: (placeDetails.displayName && placeDetails.displayName.text) ? placeDetails.displayName.text : (placeDetails.displayName || placeDetails.name),
+      formatted_address: placeDetails.formattedAddress,
+      formatted_phone_number: null, // Not available in new API
+      website: placeDetails.websiteUri,
       rating: placeDetails.rating,
-      user_ratings_total: placeDetails.user_ratings_total,
-      price_level: placeDetails.price_level,
+      user_ratings_total: placeDetails.userRatingCount,
+      price_level: placeDetails.priceLevel,
       types: placeDetails.types,
-      business_status: placeDetails.business_status,
-      opening_hours: placeDetails.opening_hours ? {
-        open_now: placeDetails.opening_hours.open_now,
-        periods: placeDetails.opening_hours.periods,
-        weekday_text: placeDetails.opening_hours.weekday_text
+      business_status: placeDetails.businessStatus,
+      opening_hours: placeDetails.regularOpeningHours ? {
+        open_now: placeDetails.regularOpeningHours.openNow,
+        periods: placeDetails.regularOpeningHours.periods,
+        weekday_text: placeDetails.regularOpeningHours.weekdayDescriptions
       } : null,
-      photos: placeDetails.photos ? placeDetails.photos.slice(0, 5).map(photo => ({
-        photo_reference: photo.photo_reference,
-        height: photo.height,
-        width: photo.width,
-        html_attributions: photo.html_attributions
-      })) : [],
-      reviews: placeDetails.reviews ? placeDetails.reviews.slice(0, 3).map(review => ({
-        author_name: review.author_name,
-        rating: review.rating,
-        relative_time_description: review.relative_time_description,
-        text: review.text
-      })) : []
+      photos: placeDetails.photos || [],
+      reviews: placeDetails.reviews || [],
+      review_summary: placeDetails.reviewSummary ? {
+        text: placeDetails.reviewSummary.text?.text || '',
+        disclosure: placeDetails.reviewSummary.disclosureText?.text || ''
+      } : null
     };
 
     res.json(transformedDetails);
   } catch (error) {
     console.error('Error fetching Google Places details:', error);
+    
+    // Handle the new API error format
+    if (error.response) {
+      console.log('DEBUG: Google Places API error response:', error.response.data);
+      console.log('DEBUG: Google Places API error details:', JSON.stringify(error.response.data, null, 2));
+      return res.status(400).json({ 
+        error: 'Failed to fetch place details', 
+        status: error.response.status,
+        message: error.response.data.error?.message || error.response.data.message || 'Unknown error'
+      });
+    }
+    
     res.status(500).json({ 
       error: 'Failed to fetch place details',
       message: error.message 

@@ -46,11 +46,19 @@ interface GooglePlacesDetails {
     html_attributions: string[];
   }>;
   reviews?: Array<{
-    author_name: string;
+    author_name?: string;
     rating: number;
-    relative_time_description: string;
-    text: string;
+    relative_time_description?: string;
+    relativePublishTimeDescription?: string;
+    text: string | { text: string; languageCode: string };
+    authorAttribution?: {
+      displayName: string;
+    };
   }>;
+  review_summary?: {
+    text: string;
+    disclosure: string;
+  };
 }
 
 interface GooglePlacesModalProps {
@@ -168,6 +176,20 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
               </Box>
             )}
 
+            {/* Review Summary */}
+            {details.review_summary && details.review_summary.text && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ mb: 1, fontStyle: 'italic' }}>
+                  {details.review_summary.text}
+                </Typography>
+                {details.review_summary.disclosure && (
+                  <Typography variant="caption" color="text.secondary">
+                    {details.review_summary.disclosure}
+                  </Typography>
+                )}
+              </Box>
+            )}
+
             {/* Rating and Price Level */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               {details.rating && (
@@ -189,7 +211,13 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
                 <Chip 
                   label={details.business_status.replace('_', ' ')} 
                   size="small" 
-                  color={getBusinessStatusColor(details.business_status) as any}
+                  sx={{
+                    bgcolor: 'grey.700',
+                    color: 'common.white',
+                    '& .MuiChip-label': {
+                      color: 'common.white'
+                    }
+                  }}
                 />
               )}
             </Box>
@@ -261,22 +289,35 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
             {details.reviews && details.reviews.length > 0 && (
               <Box>
                 <Typography variant="subtitle1" sx={{ mb: 1 }}>Recent Reviews</Typography>
-                {details.reviews.map((review, index) => (
-                  <Box key={index} sx={{ mb: 2, p: 2, bgcolor: 'grey.800', borderRadius: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                      <Rating value={review.rating} readOnly size="small" />
-                      <Typography variant="body2" color="text.secondary">
-                        by {review.author_name} • {review.relative_time_description}
+                {details.reviews.map((review, index) => {
+                  // Handle new API text structure
+                  const reviewText = typeof review.text === 'string' 
+                    ? review.text 
+                    : review.text?.text || '';
+                  
+                  // Handle new API author structure
+                  const authorName = review.author_name || review.authorAttribution?.displayName || 'Anonymous';
+                  
+                  // Handle new API time structure
+                  const timeDescription = review.relative_time_description || review.relativePublishTimeDescription || '';
+                  
+                  return (
+                    <Box key={index} sx={{ mb: 2, p: 2, bgcolor: 'grey.800', borderRadius: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <Rating value={review.rating} readOnly size="small" />
+                        <Typography variant="body2" color="text.secondary">
+                          by {authorName} • {timeDescription}
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2">
+                        {reviewText.length > 200 
+                          ? `${reviewText.substring(0, 200)}...` 
+                          : reviewText
+                        }
                       </Typography>
                     </Box>
-                    <Typography variant="body2">
-                      {review.text.length > 200 
-                        ? `${review.text.substring(0, 200)}...` 
-                        : review.text
-                      }
-                    </Typography>
-                  </Box>
-                ))}
+                  );
+                })}
               </Box>
             )}
           </Box>

@@ -1,3 +1,6 @@
+require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env' });
+
 // API endpoint to build and return the trail network graph using real trail geometry
 
 const TRAIL_ROUTES = [

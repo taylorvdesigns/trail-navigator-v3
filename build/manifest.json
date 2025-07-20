@@ -1,0 +1,19 @@
+{
+  "short_name": "Trail Navigator",
+  "name": "Trail Navigator",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "permissions": [],
+  "prefer_related_applications": false
+}
