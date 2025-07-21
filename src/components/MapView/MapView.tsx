@@ -337,13 +337,21 @@ export const MapView: React.FC<MapViewProps> = ({
   }, [highlightPOI]);
 
   // Listen for map move/zoom to hide buttons if user pans/zooms away
+  // (Auto-reset logic removed; focused group is only cleared by Zoom Out button)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const onMove = () => {
       if (focusedGroup && lastBounds.length > 0) {
         const bounds = L.latLngBounds(lastBounds);
-        if (!map.getBounds().contains(bounds)) {
+        const mapCenter = map.getCenter();
+        const boundsCenter = bounds.getCenter();
+        // Only clear if map center is far from group center (not just zoomed in/out)
+        const dist = Math.sqrt(
+          Math.pow(mapCenter.lat - boundsCenter.lat, 2) +
+          Math.pow(mapCenter.lng - boundsCenter.lng, 2)
+        );
+        if (dist > 0.01) { // ~1km, adjust as needed
           setShowViewList(false);
           setShowZoomOut(false);
           setFocusedGroup(null);
@@ -435,8 +443,8 @@ export const MapView: React.FC<MapViewProps> = ({
         />
         <GrayscaleMapLayer />
         <Pane name="group-labels" style={{ zIndex: 1000 }} />
-        {/* Always fit bounds to all trails if shouldFitBounds is true */}
-        {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && (
+        {/* Always fit bounds to all trails if shouldFitBounds is true and no group is focused */}
+        {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup && (
           <FitBounds coordinates={allTrailCoords} />
         )}
         
@@ -486,52 +494,34 @@ export const MapView: React.FC<MapViewProps> = ({
                   }
                 }}
               />
-              {/* Centered group label */}
-              <Marker
-                position={centroidLatLng}
-                pane="group-labels"
-                icon={L.divIcon({
-                  className: 'group-label-marker',
-                  iconAnchor: [0, 16],
-                  html: `<div class='group-label-box' style='z-index:1000; position:relative;'>${groupName}</div>`
-                })}
-                eventHandlers={{
-                  click: () => {
-                    if (mapRef.current) {
-                      const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
-                      const map = mapRef.current;
-                      const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
-                      map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
-                      setTimeout(() => {
-                        const afterZoom = map.getZoom();
-                        if (afterZoom < 16) {
-                          const center = boundsObj.getCenter();
-                          map.setView(center, 16);
-                        }
-                      }, 500);
-                      setFocusedGroup(groupName);
-                      setShowViewList(true);
-                      setShowZoomOut(true);
-                      setLastBounds(latLngBounds as [number, number][]);
-                    }
-                  }
-                }}
-              />
-              {/* View List button below label */}
-              {focusedGroup === groupName && showViewList && (
+              {/* Show group label marker only when not focused on this group */}
+              {focusedGroup !== groupName && (
                 <Marker
-                  position={[centroidLatLng[0] - 0.00015, centroidLatLng[1]]}
+                  position={centroidLatLng}
                   pane="group-labels"
                   icon={L.divIcon({
-                    className: 'view-list-btn',
-                    iconAnchor: [60, -10],
-                    html: `<button style='background:#1976d2;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:15px;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.15);cursor:pointer;'>View List</button>`
+                    className: 'group-label-marker',
+                    iconAnchor: [0, 16],
+                    html: `<div class='group-label-box' style='z-index:1000; position:relative;'>${groupName}</div>`
                   })}
                   eventHandlers={{
                     click: () => {
-                      const tag = getGroupTag(groupName);
-                      if (tag) {
-                        navigate('/list', { state: { group: groupName, tag } });
+                      if (mapRef.current) {
+                        const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
+                        const map = mapRef.current;
+                        const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
+                        map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
+                        setTimeout(() => {
+                          const afterZoom = map.getZoom();
+                          if (afterZoom < 16) {
+                            const center = boundsObj.getCenter();
+                            map.setView(center, 16);
+                          }
+                        }, 500);
+                        setFocusedGroup(groupName);
+                        setShowViewList(true);
+                        setShowZoomOut(true);
+                        setLastBounds(latLngBounds as [number, number][]);
                       }
                     }
                   }}
@@ -662,6 +652,66 @@ export const MapView: React.FC<MapViewProps> = ({
           </Box>
         )}
       </MapContainer>
+      {/* Absolutely positioned POI Group label and View List button at top quarter of map when focused */}
+      {focusedGroup && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '6%',
+            left: 0,
+            right: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            zIndex: 2000,
+            pointerEvents: 'none',
+          }}
+        >
+          <Box
+            sx={{
+              background: 'none',
+              color: '#fff',
+              borderRadius: 0,
+              px: 0,
+              py: 0,
+              fontSize: 28,
+              fontWeight: 900,
+              letterSpacing: 1,
+              textShadow: '0 2px 8px rgba(0,0,0,0.45)',
+              pointerEvents: 'auto',
+              mb: 1,
+              lineHeight: 1.2,
+            }}
+          >
+            {focusedGroup}
+          </Box>
+          {showViewList && (
+            <button
+              style={{
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 28px',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginBottom: 8,
+              }}
+              onClick={() => {
+                const tag = getGroupTag(focusedGroup);
+                if (tag) {
+                  navigate('/list', { state: { group: focusedGroup, tag } });
+                }
+              }}
+            >
+              View List
+            </button>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };
