@@ -9,7 +9,7 @@ import { NavViewV2 } from './NavViewV2';
 import { ListView } from './ListView/ListView';
 import { TrailView } from '../views/TrailView';
 import { NotFoundView } from '../views/NotFoundView';
-import { ViewMode, LocomotionMode, WordPressTrailConfig, TrailConfig } from '../types/index';
+import { ViewMode, LocomotionMode, WordPressTrailConfig, TrailConfig, POI } from '../types/index';
 import { usePOIs } from '../hooks/usePOIs';
 import { useLocation as useGeoLocation } from '../hooks/useLocation';
 import { useDevMode } from '../contexts/DevContext';
@@ -22,6 +22,7 @@ import { useNavViewV3 } from '../hooks/useNavViewV3';
 import DebugTrailStructure from './Simulation/DebugTrailStructure';
 import { getPOIsByTag, slugToTagName } from '../utils/poi';
 import LoadingScreen from './LoadingScreen';
+import { GooglePlacesModal } from './GooglePlacesModal/GooglePlacesModal';
 
 // Convert WordPress trail config to TrailConfig
 export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
@@ -118,6 +119,24 @@ export const AppContent: React.FC = () => {
   // State for simulation modal
   const [showSimModal, setShowSimModal] = useState(false);
   const [hasChosenSimulationMode, setHasChosenSimulationMode] = useState(false);
+
+  // State for POI modals
+  const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
+  const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
+  const [selectedPoiName, setSelectedPoiName] = useState<string>('');
+
+  const handlePoiClick = (poi: POI) => {
+    if (poi.google_place_id) {
+      // Open Google Places modal
+      setSelectedPlaceId(poi.google_place_id);
+      setSelectedPoiName(poi.title.rendered);
+      setGooglePlacesModalOpen(true);
+    } else {
+      // Open regular POI modal
+      setSelectedPOI(poi);
+    }
+  };
 
   // Show entry point modal if no entry point is set and not in dev mode and user hasn't chosen simulation mode
   useEffect(() => {
@@ -304,7 +323,8 @@ export const AppContent: React.FC = () => {
   };
 
   return (
-    <AppLayout currentView={currentView} onViewChange={handleViewChange}>
+    <>
+      <AppLayout currentView={currentView} onViewChange={handleViewChange}>
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <SimulationModeModal open={showSimModal} onClose={() => setShowSimModal(false)} onSimulate={handleSimulate} />
         <EntryPointModal open={entryModalOpen} onClose={() => setEntryModalOpen(false)} />
@@ -322,7 +342,7 @@ export const AppContent: React.FC = () => {
         ) : (
           <Routes>
             <Route path="/" element={<Navigate to="/map" replace />} />
-            <Route path="/map" element={<MapView trails={trails} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} />} />
+            <Route path="/map" element={<MapView trails={trails} pois={pois} center={mapCenter} zoom={mapZoom} currentLocation={currentLocation || undefined} onPoiClick={handlePoiClick} />} />
             <Route path="/places/:placeName" element={<PlacesMapView trails={trails} pois={pois} currentLocation={currentLocation || undefined} />} />
             <Route path="/nav" element={
               <NavViewV2 
@@ -355,7 +375,55 @@ export const AppContent: React.FC = () => {
           </Routes>
         )}
       </Box>
+      
     </AppLayout>
+    
+    {/* POI Modal */}
+    <Dialog
+      open={!!selectedPOI}
+      onClose={() => setSelectedPOI(null)}
+      maxWidth="sm"
+      fullWidth
+      sx={{
+        zIndex: 9999999,
+        '& .MuiDialog-paper': {
+          zIndex: 9999999
+        },
+        '& .MuiBackdrop-root': {
+          zIndex: 9999998
+        }
+      }}
+    >
+      <DialogTitle>
+        {selectedPOI?.title.rendered}
+      </DialogTitle>
+      <DialogContent>
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          {selectedPOI?.content.rendered || selectedPOI?.description}
+        </Typography>
+        {selectedPOI?.featured_image && (
+          <Box sx={{ mt: 2 }}>
+            <img 
+              src={selectedPOI.featured_image} 
+              alt={selectedPOI.title.rendered}
+              style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+            />
+          </Box>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setSelectedPOI(null)}>Close</Button>
+      </DialogActions>
+    </Dialog>
+
+    {/* Google Places Modal */}
+    <GooglePlacesModal
+      open={googlePlacesModalOpen}
+      onClose={() => setGooglePlacesModalOpen(false)}
+      placeId={selectedPlaceId}
+      poiName={selectedPoiName}
+    />
+    </>
   );
 }; 
 

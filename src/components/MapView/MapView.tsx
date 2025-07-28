@@ -770,21 +770,10 @@ export const MapView: React.FC<MapViewProps> = ({
               key={`poi-${index}`}
               position={[poi.coordinates[1], poi.coordinates[0]]}
               icon={markerIcon}
-              eventHandlers={{
-                click: () => onPoiClick?.(poi)
-              }}
-            >
-              <Popup>
-                <Box sx={{ p: 1 }}>
-                  <Typography variant="h6" component="div" sx={{ mb: 1 }}>
-                    {poi.title.rendered}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {poi.content.rendered}
-                  </Typography>
-                </Box>
-              </Popup>
-            </Marker>
+                                          eventHandlers={{
+                              click: () => onPoiClick?.(poi)
+                            }}
+            />
           );
         })}
 

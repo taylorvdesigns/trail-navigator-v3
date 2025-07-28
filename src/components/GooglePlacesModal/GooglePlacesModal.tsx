@@ -134,10 +134,17 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      sx={{
+        zIndex: 9999999,
+        '& .MuiBackdrop-root': {
+          zIndex: 9999998
+        }
+      }}
       PaperProps={{
         sx: {
           bgcolor: 'grey.900',
-          color: 'common.white'
+          color: 'common.white',
+          zIndex: 9999999
         }
       }}
     >
