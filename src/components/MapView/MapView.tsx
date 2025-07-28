@@ -897,7 +897,19 @@ export const MapView: React.FC<MapViewProps> = ({
               onClick={() => {
                 const tag = getGroupTag(focusedGroup);
                 if (tag) {
-                  navigate('/list', { state: { group: focusedGroup, tag } });
+                  // Preserve simulation mode query parameter if present
+                  const searchParams = new URLSearchParams(location.search);
+                  const modeParam = searchParams.get('mode');
+                  
+                  // Create new search params with mode parameter
+                  const newSearchParams = new URLSearchParams();
+                  if (modeParam === 'sim') {
+                    newSearchParams.set('mode', 'sim');
+                  }
+                  
+                  const newSearch = newSearchParams.toString();
+                  const listUrl = `/list${newSearch ? '?' + newSearch : ''}`;
+                  navigate(listUrl, { state: { group: focusedGroup, tag } });
                 }
               }}
             >
