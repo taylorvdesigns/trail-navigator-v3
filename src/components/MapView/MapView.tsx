@@ -35,7 +35,9 @@ const FitBounds: React.FC<{ coordinates: [number, number][] }> = ({ coordinates 
   React.useEffect(() => {
     if (coordinates.length > 0) {
       const bounds = L.latLngBounds(coordinates);
-      map.fitBounds(bounds, { padding: [50, 50] });
+      // Use responsive padding that works better on mobile
+      const padding: [number, number] = [20, 20]; // Reduced padding for better mobile fit
+      map.fitBounds(bounds, { padding, maxZoom: 15 });
     }
   }, [coordinates, map]);
 
@@ -214,6 +216,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showViewList, setShowViewList] = useState(false);
   const [showZoomOut, setShowZoomOut] = useState(false);
   const [lastBounds, setLastBounds] = useState<[number, number][]>([]);
+  const [showPOIGroupLabels, setShowPOIGroupLabels] = useState(true);
 
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
 
@@ -392,6 +395,32 @@ export const MapView: React.FC<MapViewProps> = ({
     return colorMap;
   }, [pois, trailsData]);
 
+  // Helper: Get the trail color for a POI group by majority
+  const getGroupTrailColor = (groupPOIs: any[]): string => {
+    if (!groupPOIs || groupPOIs.length === 0 || !trails) return '#84d2cf'; // fallback accent
+    // Count trailId occurrences
+    const trailIdCounts: Record<string, number> = {};
+    groupPOIs.forEach((poi: any) => {
+      const trailId = poi.trailId || poi.trail_id || poi.trail_id_main || poi.trail_id_spur; // try common fields
+      if (trailId) {
+        trailIdCounts[trailId] = (trailIdCounts[trailId] || 0) + 1;
+      }
+    });
+    // Find the most common trailId
+    let maxCount = 0;
+    let majorityTrailId: string | null = null;
+    for (const [trailId, count] of Object.entries(trailIdCounts)) {
+      const countNum = typeof count === 'number' ? count : Number(count);
+      if (countNum > maxCount) {
+        maxCount = countNum;
+        majorityTrailId = trailId;
+      }
+    }
+    // Find the color for the majority trail
+    const trail = trails.find(t => t.id === majorityTrailId || t.routeId === majorityTrailId);
+    return trail?.color || '#84d2cf';
+  };
+
   useEffect(() => {
     if (fitBounds && mapRef.current) {
       const map = mapRef.current;
@@ -423,7 +452,44 @@ export const MapView: React.FC<MapViewProps> = ({
   }
 
   return (
-    <Box sx={{ height: '100vh', width: '100%', position: 'relative' }}>
+    <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
+      {/* POI Group Labels Toggle */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 16,
+          right: 16,
+          zIndex: 1000,
+          bgcolor: 'rgba(0, 0, 0, 0.8)',
+          borderRadius: 2,
+          p: 1,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: 500,
+        }}
+      >
+        <Box
+          component="label"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            gap: 1,
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={showPOIGroupLabels}
+            onChange={(e) => setShowPOIGroupLabels(e.target.checked)}
+            style={{ margin: 0 }}
+          />
+          Hub Names
+        </Box>
+      </Box>
+      
       <MapContainer
         center={safeCenter}
         zoom={highlightZoom || (shouldFitBounds ? 13 : zoom)} // fallback zoom if no bounds
@@ -432,10 +498,19 @@ export const MapView: React.FC<MapViewProps> = ({
           if (mapRef.current) {
             if (highlightPOI) {
               mapRef.current.setView(safeCenter, highlightZoom || 16);
+            } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup) {
+              // Fallback: ensure bounds fitting happens on initial load
+              setTimeout(() => {
+                if (mapRef.current && allTrailCoords.length > 0) {
+                  const bounds = L.latLngBounds(allTrailCoords);
+                  mapRef.current.fitBounds(bounds, { padding: [20, 20] as [number, number], maxZoom: 15 });
+                }
+              }, 100);
             }
           }
         }}
         ref={mapRef}
+        zoomControl={false}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -462,6 +537,8 @@ export const MapView: React.FC<MapViewProps> = ({
           centroidLngLat[1] /= expandedHullLngLat.length;
           // For rendering, convert centroid to [lat, lng]
           const centroidLatLng: [number, number] = [centroidLngLat[1], centroidLngLat[0]];
+          // Get the group color by majority trail
+          const groupColor = getGroupTrailColor(groupPOIs);
           return (
             <React.Fragment key={groupName}>
               <Polygon
@@ -478,7 +555,7 @@ export const MapView: React.FC<MapViewProps> = ({
                       const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
                       const map = mapRef.current;
                       const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
-                      map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
+                      map.fitBounds(latLngBounds as [number, number][], { padding: [80, 80], maxZoom: 17 });
                       setTimeout(() => {
                         const afterZoom = map.getZoom();
                         if (afterZoom < 16) {
@@ -495,14 +572,14 @@ export const MapView: React.FC<MapViewProps> = ({
                 }}
               />
               {/* Show group label marker only when not focused on this group */}
-              {focusedGroup !== groupName && (
+              {focusedGroup !== groupName && showPOIGroupLabels && (
                 <Marker
                   position={centroidLatLng}
                   pane="group-labels"
                   icon={L.divIcon({
                     className: 'group-label-marker',
                     iconAnchor: [0, 16],
-                    html: `<div class='group-label-box' style='z-index:1000; position:relative;'>${groupName}</div>`
+                    html: `<div class='group-label-box' style='z-index:1000; position:relative; color: #636363;'>${groupName}</div>`
                   })}
                   eventHandlers={{
                     click: () => {
@@ -635,11 +712,107 @@ export const MapView: React.FC<MapViewProps> = ({
           />
         )}
 
-        {/* Zoom Out button at bottom center */}
-        {showZoomOut && (
-          <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: 80, display: 'flex', justifyContent: 'center', zIndex: 1200 }}>
+        {/* Absolutely positioned POI Group label at top quarter of map when focused */}
+        {focusedGroup && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 'env(safe-area-inset-top, 0px)',
+              left: 0,
+              right: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              zIndex: 2000,
+              pointerEvents: 'none',
+              px: 2,
+              pt: 1.5,
+            }}
+          >
+            <Box
+              sx={{
+                background: '#ffffff', // White background
+                color: '#3d3d3d', // Dark gray text
+                borderRadius: 2, // Rounded corners
+                width: '100%', // Full width
+                px: 0,
+                py: 2,
+                fontSize: 20,
+                fontWeight: 900,
+                letterSpacing: 1,
+                pointerEvents: 'auto',
+                mb: 1,
+                lineHeight: 1.2,
+                textAlign: 'center',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                whiteSpace: 'normal',
+              }}
+            >
+              {focusedGroup}
+            </Box>
+          </Box>
+        )}
+
+        {/* Fixed bottom action bar for View List and Zoom Out when focused on a group */}
+        {focusedGroup && (
+          <Box
+            sx={{
+              position: 'fixed',
+              left: 0,
+              right: 0,
+              bottom: 'calc(56px + env(safe-area-inset-bottom, 0px))', // 56px for bottom nav height
+              zIndex: 2100,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 2,
+              px: 3,
+              pb: 2,
+              pointerEvents: 'none',
+            }}
+          >
             <button
-              style={{ background: '#fff', color: '#1976d2', border: '2px solid #1976d2', borderRadius: 8, padding: '10px 28px', fontSize: 16, fontWeight: 'bold', boxShadow: '0 2px 8px rgba(0,0,0,0.10)', cursor: 'pointer' }}
+              style={{
+                width: '48%',
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginRight: '2%',
+                marginLeft: 2,
+              }}
+              onClick={() => {
+                const tag = getGroupTag(focusedGroup);
+                if (tag) {
+                  navigate('/list', { state: { group: focusedGroup, tag } });
+                }
+              }}
+            >
+              View List
+            </button>
+            <button
+              style={{
+                width: '48%',
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginLeft: '2%',
+                marginRight: 2,
+              }}
               onClick={() => {
                 fitTrail();
                 setShowViewList(false);
@@ -652,66 +825,6 @@ export const MapView: React.FC<MapViewProps> = ({
           </Box>
         )}
       </MapContainer>
-      {/* Absolutely positioned POI Group label and View List button at top quarter of map when focused */}
-      {focusedGroup && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '6%',
-            left: 0,
-            right: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            zIndex: 2000,
-            pointerEvents: 'none',
-          }}
-        >
-          <Box
-            sx={{
-              background: 'none',
-              color: '#fff',
-              borderRadius: 0,
-              px: 0,
-              py: 0,
-              fontSize: 28,
-              fontWeight: 900,
-              letterSpacing: 1,
-              textShadow: '0 2px 8px rgba(0,0,0,0.45)',
-              pointerEvents: 'auto',
-              mb: 1,
-              lineHeight: 1.2,
-            }}
-          >
-            {focusedGroup}
-          </Box>
-          {showViewList && (
-            <button
-              style={{
-                background: '#fff',
-                color: '#1976d2',
-                border: '2px solid #1976d2',
-                borderRadius: 8,
-                padding: '10px 28px',
-                fontSize: 16,
-                fontWeight: 'bold',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-                cursor: 'pointer',
-                pointerEvents: 'auto',
-                marginBottom: 8,
-              }}
-              onClick={() => {
-                const tag = getGroupTag(focusedGroup);
-                if (tag) {
-                  navigate('/list', { state: { group: focusedGroup, tag } });
-                }
-              }}
-            >
-              View List
-            </button>
-          )}
-        </Box>
-      )}
     </Box>
   );
 };

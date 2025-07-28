@@ -4,7 +4,7 @@ export const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#43D633', // Green trail color
+      main: '#63686e', // Updated accent color
     },
     secondary: {
       main: '#6995E8', // Blue trail color
@@ -44,7 +44,7 @@ export const theme = createTheme({
 });
 
 export const trailColors = {
-  green: '#43D633',
+  green: '#63686e', // Updated accent color for consistency
   blue: '#6995E8',
   orange: '#FFB134',
   grey: '#6B7280',

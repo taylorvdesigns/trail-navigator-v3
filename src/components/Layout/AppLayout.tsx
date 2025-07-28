@@ -27,7 +27,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      <Box sx={{ 
+        flex: 1, 
+        minHeight: 0, 
+        overflow: 'hidden',
+        pb: 'calc(56px + env(safe-area-inset-bottom, 0px))', // Account for fixed bottom nav
+      }}>
         {children}
       </Box>
 
@@ -37,7 +42,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
         sx={{
           bgcolor: 'background.paper',
           borderTop: 1,
-          borderColor: 'divider'
+          borderColor: 'divider',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          pb: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
         <BottomNavigationAction
