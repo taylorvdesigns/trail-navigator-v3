@@ -907,9 +907,10 @@ export const MapView: React.FC<MapViewProps> = ({
                     newSearchParams.set('mode', 'sim');
                   }
                   
+                  newSearchParams.set('group', focusedGroup);
                   const newSearch = newSearchParams.toString();
-                  const listUrl = `/list${newSearch ? '?' + newSearch : ''}`;
-                  navigate(listUrl, { state: { group: focusedGroup, tag } });
+                  const listUrl = `/list?${newSearch}`;
+                  navigate(listUrl);
                 }
               }}
             >

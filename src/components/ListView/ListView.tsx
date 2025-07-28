@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   List, 
@@ -60,7 +60,10 @@ export const ListView: React.FC<ListViewProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { graph } = useTrailGraph();
-  const groupNameFromNav = location.state?.groupName || null;
+  const searchParams = new URLSearchParams(location.search);
+  const urlGroupParam = searchParams.get('group');
+  const groupNameFromNav = urlGroupParam || location.state?.groupName || null;
+  const focusedGroupRef = React.useRef<HTMLDivElement>(null);
   const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
@@ -74,10 +77,38 @@ export const ListView: React.FC<ListViewProps> = ({
   }, [pois, activeTrailId]);
 
   const [selectedTag, setSelectedTag] = useState<string | null>(groupNameFromNav);
+  
+  // Handle URL parameter changes for focused groups
+  useEffect(() => {
+    if (urlGroupParam && urlGroupParam !== selectedTag) {
+      setSelectedTag(urlGroupParam);
+      
+      // Scroll to the focused group after a short delay to ensure rendering
+      setTimeout(() => {
+        if (focusedGroupRef.current) {
+          focusedGroupRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
+    }
+  }, [urlGroupParam, selectedTag]);
+  
   // If groupNameFromNav changes, update selectedTag and potentially open POI modal
   React.useEffect(() => {
     if (groupNameFromNav) {
       setSelectedTag(groupNameFromNav);
+      
+      // Scroll to the focused group after a short delay to ensure rendering
+      setTimeout(() => {
+        if (focusedGroupRef.current) {
+          focusedGroupRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
       
       console.log('ListView: groupNameFromNav received:', groupNameFromNav);
       console.log('ListView: trailPois count:', trailPois.length);
@@ -217,7 +248,10 @@ export const ListView: React.FC<ListViewProps> = ({
             )
           )
           .map(([groupName, groupPois]) => (
-            <Box key={groupName}>
+            <Box 
+              key={groupName} 
+              ref={groupName === groupNameFromNav ? focusedGroupRef : null}
+            >
               <Box sx={{ display: 'flex', alignItems: 'center', p: 2, color: 'text.secondary', bgcolor: 'background.paper' }}>
                 <Typography
                   variant="h6"
