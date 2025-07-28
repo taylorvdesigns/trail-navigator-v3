@@ -228,12 +228,20 @@ export const ListView: React.FC<ListViewProps> = ({
                 <IconButton
                   aria-label={`View ${groupName} on map`}
                   onClick={() => {
-                    const slug = tagNameToSlug(groupName);
-                    // Get all coordinates for this group
-                    const coords = groupPois
-                      .filter(poi => poi.coordinates)
-                      .map(poi => [poi.coordinates[1], poi.coordinates[0]]);
-                    navigate(`/places/${slug}`, { state: { fitBounds: coords } });
+                    // Navigate to map view with URL parameter for focused group
+                    // Preserve simulation mode query parameter if present
+                    const searchParams = new URLSearchParams(window.location.search);
+                    const modeParam = searchParams.get('mode');
+                    
+                    // Create new search params with group parameter
+                    const newSearchParams = new URLSearchParams();
+                    if (modeParam === 'sim') {
+                      newSearchParams.set('mode', 'sim');
+                    }
+                    newSearchParams.set('group', groupName);
+                    
+                    const newSearch = newSearchParams.toString();
+                    navigate(`/map?${newSearch}`);
                   }}
                   size="small"
                   sx={{ color: 'primary.main', ml: 1 }}

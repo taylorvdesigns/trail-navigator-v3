@@ -15,6 +15,7 @@ import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
 import { useContext } from 'react';
+import { slugToTagName } from '../../utils/poi';
 
 interface MapViewProps {
   trails: TrailConfig[];
@@ -242,7 +243,68 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Get highlightPOI from navigation state
   const { highlightPOI, highlightZoom } = location.state || {};
+ 
 
+ 
+  // Get focusedGroup from URL parameter
+  const searchParams = new URLSearchParams(location.search);
+  const urlGroupParam = searchParams.get('group');
+  
+  // Convert URL group parameter to group name if it's a slug
+  const urlGroupName = useMemo(() => {
+    if (!urlGroupParam || !pois) return null;
+    
+    // First try to find by original tag name
+    if (pois.some(poi => poi.post_tags.some(tag => tag.name === urlGroupParam))) {
+      return urlGroupParam;
+    }
+    
+    // If not found, try to convert from slug
+    const foundTagName = slugToTagName(pois, urlGroupParam);
+    return foundTagName;
+  }, [urlGroupParam, pois]);
+ 
+  // Handle URL parameter changes - exit focused mode if group parameter is removed
+  useEffect(() => {
+    if (!urlGroupParam && focusedGroup) {
+      setFocusedGroup(null);
+      setShowViewList(false);
+      setShowZoomOut(false);
+    }
+  }, [urlGroupParam, focusedGroup]);
+
+  // Handle URL parameter changes for focused groups
+  useEffect(() => {
+    if (urlGroupName && !focusedGroup && mapRef.current && pois) {
+      const currentGroupPOIs = pois.filter(poi => poi.post_tags[0]?.name === urlGroupName) || [];
+      
+      if (currentGroupPOIs.length >= 3) {
+        // Calculate hull and bounds (same logic as whenReady callback)
+        const pointsLngLat = currentGroupPOIs.map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
+        const hullLngLat = mapUtils.convexHull(pointsLngLat);
+        const expandedHullLngLat = mapUtils.expandHullFromCentroid(hullLngLat, 0.0005);
+        
+        // Fix: expandedHullLngLat is already in [lat, lng] format, so use as-is
+        const latLngBounds = expandedHullLngLat;
+        const map = mapRef.current;
+        const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
+        map.fitBounds(latLngBounds as [number, number][], { padding: [80, 80], maxZoom: 17 });
+        setTimeout(() => {
+          const afterZoom = map.getZoom();
+          if (afterZoom < 16) {
+            const center = boundsObj.getCenter();
+            map.setView(center, 16);
+          }
+        }, 500);
+        
+        setFocusedGroup(urlGroupName);
+        setShowViewList(true);
+        setShowZoomOut(true);
+        setLastBounds(latLngBounds as [number, number][]);
+      }
+    }
+  }, [urlGroupName, focusedGroup, pois]);
+ 
   // Group POIs by their first post tag
   const groupedPOIs = useMemo(() => {
     const groups: Record<string, Array<{ coordinates: [number, number], name: string }>> = {};
@@ -495,19 +557,53 @@ export const MapView: React.FC<MapViewProps> = ({
         zoom={highlightZoom || (shouldFitBounds ? 13 : zoom)} // fallback zoom if no bounds
         style={{ height: '100%', width: '100%' }}
         whenReady={() => {
-          if (mapRef.current) {
-            if (highlightPOI) {
-              mapRef.current.setView(safeCenter, highlightZoom || 16);
-            } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup) {
-              // Fallback: ensure bounds fitting happens on initial load
-              setTimeout(() => {
-                if (mapRef.current && allTrailCoords.length > 0) {
-                  const bounds = L.latLngBounds(allTrailCoords);
-                  mapRef.current.fitBounds(bounds, { padding: [20, 20] as [number, number], maxZoom: 15 });
+          // Add a small delay to ensure map is fully ready
+          setTimeout(() => {
+            if (mapRef.current) {
+              if (highlightPOI) {
+                mapRef.current.setView(safeCenter, highlightZoom || 16);
+
+              } else if (urlGroupName && !focusedGroup) {
+                // Handle focused group from URL parameter
+                const currentGroupPOIs = pois?.filter(poi => poi.post_tags[0]?.name === urlGroupName) || [];
+                
+                if (currentGroupPOIs.length >= 3) {
+                  // Calculate hull and bounds (same logic as MapView click handler)
+                  const pointsLngLat = currentGroupPOIs.map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
+                  const hullLngLat = mapUtils.convexHull(pointsLngLat);
+                  const expandedHullLngLat = mapUtils.expandHullFromCentroid(hullLngLat, 0.0005);
+                  
+                  // Fix: expandedHullLngLat is already in [lat, lng] format, so use as-is
+                  const latLngBounds = expandedHullLngLat;
+
+                  const map = mapRef.current;
+                  const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
+                  map.fitBounds(latLngBounds as [number, number][], { padding: [80, 80], maxZoom: 17 });
+                  setTimeout(() => {
+                    const afterZoom = map.getZoom();
+                    if (afterZoom < 16) {
+                      const center = boundsObj.getCenter();
+                      map.setView(center, 16);
+                    }
+                  }, 500);
+                  
+                  setFocusedGroup(urlGroupName);
+                  setShowViewList(true);
+                  setShowZoomOut(true);
+                  setLastBounds(latLngBounds as [number, number][]);
                 }
-              }, 100);
+                console.log('MapView whenReady: URL parameter handling - urlGroupName:', urlGroupName, 'focusedGroup:', focusedGroup);
+              } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup) {
+                // Fallback: ensure bounds fitting happens on initial load
+                setTimeout(() => {
+                  if (mapRef.current && allTrailCoords.length > 0) {
+                    const bounds = L.latLngBounds(allTrailCoords);
+                    mapRef.current.fitBounds(bounds, { padding: [20, 20] as [number, number], maxZoom: 15 });
+                  }
+                }, 100);
+              }
             }
-          }
+          }, 100);
         }}
         ref={mapRef}
         zoomControl={false}
@@ -515,6 +611,11 @@ export const MapView: React.FC<MapViewProps> = ({
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          eventHandlers={{
+            loading: () => {},
+            load: () => {},
+            tileerror: (e: any) => {},
+          }}
         />
         <GrayscaleMapLayer />
         <Pane name="group-labels" style={{ zIndex: 1000 }} />
@@ -552,21 +653,24 @@ export const MapView: React.FC<MapViewProps> = ({
                 eventHandlers={{
                   click: () => {
                     if (mapRef.current) {
-                      const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
+                      // Fix: expandedHullLngLat is already in [lat, lng] format, so use as-is
+                      const latLngBounds = expandedHullLngLat;
+
                       const map = mapRef.current;
                       const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
-                      map.fitBounds(latLngBounds as [number, number][], { padding: [80, 80], maxZoom: 17 });
-                      setTimeout(() => {
-                        const afterZoom = map.getZoom();
-                        if (afterZoom < 16) {
-                          const center = boundsObj.getCenter();
-                          map.setView(center, 16);
+
+                                              // Update URL to include group parameter (let URL parameter handling do the work)
+                        const searchParams = new URLSearchParams(location.search);
+                        const modeParam = searchParams.get('mode');
+                        
+                        const newSearchParams = new URLSearchParams();
+                        if (modeParam === 'sim') {
+                          newSearchParams.set('mode', 'sim');
                         }
-                      }, 500);
-                      setFocusedGroup(groupName);
-                      setShowViewList(true);
-                      setShowZoomOut(true);
-                      setLastBounds(latLngBounds as [number, number][]);
+                        newSearchParams.set('group', groupName);
+                        
+                        const newSearch = newSearchParams.toString();
+                        navigate(`/map?${newSearch}`, { replace: true });
                     }
                   }
                 }}
@@ -584,21 +688,23 @@ export const MapView: React.FC<MapViewProps> = ({
                   eventHandlers={{
                     click: () => {
                       if (mapRef.current) {
-                        const latLngBounds = expandedHullLngLat.map(([lng, lat]) => [lat, lng]);
+                        // Fix: expandedHullLngLat is already in [lat, lng] format, so use as-is
+                        const latLngBounds = expandedHullLngLat;
                         const map = mapRef.current;
                         const boundsObj = L.latLngBounds(latLngBounds as [number, number][]);
-                        map.fitBounds(latLngBounds as [number, number][], { padding: [20, 20], maxZoom: 18 });
-                        setTimeout(() => {
-                          const afterZoom = map.getZoom();
-                          if (afterZoom < 16) {
-                            const center = boundsObj.getCenter();
-                            map.setView(center, 16);
-                          }
-                        }, 500);
-                        setFocusedGroup(groupName);
-                        setShowViewList(true);
-                        setShowZoomOut(true);
-                        setLastBounds(latLngBounds as [number, number][]);
+
+                        // Update URL to include group parameter (let URL parameter handling do the work)
+                        const searchParams = new URLSearchParams(location.search);
+                        const modeParam = searchParams.get('mode');
+                        
+                        const newSearchParams = new URLSearchParams();
+                        if (modeParam === 'sim') {
+                          newSearchParams.set('mode', 'sim');
+                        }
+                        newSearchParams.set('group', groupName);
+                        
+                        const newSearch = newSearchParams.toString();
+                        navigate(`/map?${newSearch}`, { replace: true });
                       }
                     }
                   }}
@@ -818,6 +924,12 @@ export const MapView: React.FC<MapViewProps> = ({
                 setShowViewList(false);
                 setShowZoomOut(false);
                 setFocusedGroup(null);
+                // Remove group parameter from URL
+                const searchParams = new URLSearchParams(location.search);
+                searchParams.delete('group');
+                const newSearch = searchParams.toString();
+                const newUrl = `/map${newSearch ? '?' + newSearch : ''}`;
+                navigate(newUrl, { replace: true });
               }}
             >
               Zoom Out

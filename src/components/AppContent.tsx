@@ -222,12 +222,17 @@ export const AppContent: React.FC = () => {
 
   // Show simulation modal if not on trail and not in dev mode
   useEffect(() => {
-    if (!isOnTrail && !isDevMode && !hasChosenSimulationMode) {
+    // Check if simulation mode is in URL
+    const searchParams = new URLSearchParams(location.search);
+    const modeParam = searchParams.get('mode');
+    const isSimulationModeInURL = modeParam === 'sim';
+    
+    if (!isOnTrail && !isDevMode && !hasChosenSimulationMode && !isSimulationModeInURL) {
       setShowSimModal(true);
     } else {
       setShowSimModal(false);
     }
-  }, [isOnTrail, isDevMode, hasChosenSimulationMode]);
+  }, [isOnTrail, isDevMode, hasChosenSimulationMode, location.search]);
 
   // Handler for simulation mode
   const handleSimulate = () => {
