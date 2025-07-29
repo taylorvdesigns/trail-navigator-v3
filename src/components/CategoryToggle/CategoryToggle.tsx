@@ -17,22 +17,40 @@ export const CategoryToggle: React.FC = () => {
     event: React.MouseEvent<HTMLElement>,
     newCategories: string[]
   ) => {
-    if (newCategories.length > 0) {
-      // If a new category is selected, toggle it
-      const lastSelected = newCategories[newCategories.length - 1];
-      toggleCategory(lastSelected);
+    // Find which category was toggled by comparing the new selection with the current selection
+    const currentCategories = new Set(selectedCategories);
+    const newCategoriesSet = new Set(newCategories);
+    
+    // Find the category that was added or removed
+    let toggledCategory: string | null = null;
+    
+    // Check if a category was added
+    for (const category of newCategories) {
+      if (!currentCategories.has(category)) {
+        toggledCategory = category;
+        break;
+      }
+    }
+    
+    // Check if a category was removed
+    if (!toggledCategory) {
+      for (const category of selectedCategories) {
+        if (!newCategoriesSet.has(category)) {
+          toggledCategory = category;
+          break;
+        }
+      }
+    }
+    
+    if (toggledCategory) {
+      toggleCategory(toggledCategory);
     }
   };
 
   return (
     <Box sx={{ 
-      position: 'absolute', 
-      top: 16, 
-      right: 16, 
-      zIndex: 1000,
-      bgcolor: 'white',
+      bgcolor: 'background.paper',
       borderRadius: 1,
-      boxShadow: 1,
       p: 1
     }}>
       <ToggleButtonGroup
@@ -46,6 +64,21 @@ export const CategoryToggle: React.FC = () => {
             key={category}
             value={category}
             aria-label={category}
+            sx={{
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'primary.dark'
+                }
+              },
+              '&:not(.Mui-selected)': {
+                color: 'text.secondary',
+                '&:hover': {
+                  bgcolor: 'action.hover'
+                }
+              }
+            }}
           >
             {getCategoryIcon(category, 20)}
           </ToggleButton>

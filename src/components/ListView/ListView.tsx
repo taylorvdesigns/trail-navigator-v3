@@ -29,6 +29,8 @@ import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { getNetworkDistanceBetweenPoints } from '../../utils/trailGraph';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
+import { CategoryToggle } from '../CategoryToggle/CategoryToggle';
+import { useUser } from '../../contexts/UserContext';
 
 interface ListViewProps {
   pois: POI[];
@@ -60,6 +62,7 @@ export const ListView: React.FC<ListViewProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { graph } = useTrailGraph();
+  const { selectedCategories } = useUser();
   const searchParams = new URLSearchParams(location.search);
   const urlGroupParam = searchParams.get('group');
   const groupNameFromNav = urlGroupParam || location.state?.groupName || null;
@@ -70,11 +73,34 @@ export const ListView: React.FC<ListViewProps> = ({
   const [selectedPoiName, setSelectedPoiName] = useState<string>('');
 
   const trailPois = React.useMemo(() => {
-    // Show all POIs for the active trail, or all if no trail is selected
-    if (!activeTrailId) return pois;
-    // If you have a field to assign POIs to trails, filter here. Otherwise, show all.
-    return pois;
-  }, [pois, activeTrailId]);
+    // Start with all POIs
+    let filteredPois = pois;
+    
+    // Filter by active trail if specified
+    if (activeTrailId) {
+      // If you have a field to assign POIs to trails, filter here. Otherwise, show all.
+      // filteredPois = pois.filter(poi => poi.trailId === activeTrailId);
+    }
+    
+    // Filter by selected categories
+    if (selectedCategories.length > 0) {
+      filteredPois = filteredPois.filter(poi => {
+        if (!poi.post_category || !Array.isArray(poi.post_category)) {
+          return false;
+        }
+        
+        // Check if any of the POI's categories match the selected categories
+        return poi.post_category.some(category => {
+          if (!category.name) return false;
+          // Clean up category name (same logic as extractUniqueCategories)
+          const cleanName = category.name.split('-').pop()?.trim() || category.name;
+          return selectedCategories.includes(cleanName);
+        });
+      });
+    }
+    
+    return filteredPois;
+  }, [pois, activeTrailId, selectedCategories]);
 
   const [selectedTag, setSelectedTag] = useState<string | null>(groupNameFromNav);
   
@@ -236,9 +262,62 @@ export const ListView: React.FC<ListViewProps> = ({
         </Box>
       </Box>
 
+      {/* Category Filter */}
+      <Box sx={{ p: 2, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
+          Filter by Category
+        </Typography>
+        <CategoryToggle />
+        {selectedCategories.length > 0 && (
+          <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="caption" color="text.secondary">
+              Showing {trailPois.length} POIs in categories:
+            </Typography>
+            {selectedCategories.map(category => (
+              <Chip
+                key={category}
+                label={category}
+                size="small"
+                color="primary"
+                variant="filled"
+                sx={{
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'primary.dark'
+                  }
+                }}
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
+
       {/* POI List */}
       <Box sx={{ flex: 1, overflow: 'auto', bgcolor: 'background.default' }}>
-        {Object.entries(groupedPois)
+        {trailPois.length === 0 ? (
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            height: '100%', 
+            p: 4,
+            textAlign: 'center'
+          }}>
+            <PlaceIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+              No POIs Found
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {selectedCategories.length > 0 
+                ? `No POIs match the selected categories: ${selectedCategories.join(', ')}`
+                : 'No POIs available for the current filters.'
+              }
+            </Typography>
+          </Box>
+        ) : (
+          Object.entries(groupedPois)
           .filter(([groupName]) => 
             !selectedTag || 
             groupName === selectedTag || 
@@ -340,7 +419,8 @@ export const ListView: React.FC<ListViewProps> = ({
                   })}
               </List>
             </Box>
-          ))}
+          ))
+        )}
       </Box>
 
       {/* POI Detail Dialog */}
