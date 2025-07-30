@@ -72,6 +72,10 @@ export const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
+  // Get focused group from URL parameters
+  const searchParams = new URLSearchParams(location.search);
+  const focusedGroup = searchParams.get('group');
+  
   // Debug: Monitor location changes
   useEffect(() => {
     // console.log('Pathname changed to:', location.pathname);
@@ -324,7 +328,11 @@ export const AppContent: React.FC = () => {
 
   return (
     <>
-      <AppLayout currentView={currentView} onViewChange={handleViewChange}>
+      <AppLayout 
+        currentView={currentView} 
+        onViewChange={handleViewChange}
+        title={focusedGroup || undefined}
+      >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <SimulationModeModal open={showSimModal} onClose={() => setShowSimModal(false)} onSimulate={handleSimulate} />
         <EntryPointModal open={entryModalOpen} onClose={() => setEntryModalOpen(false)} />

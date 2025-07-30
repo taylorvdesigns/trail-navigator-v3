@@ -8,10 +8,13 @@ interface AppLayoutProps {
   children: React.ReactNode;
   currentView: ViewMode;
   onViewChange: (view: ViewMode) => void;
+  title?: string;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onViewChange }) => {
+export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onViewChange, title }) => {
   const { isDevMode } = useDevMode();
+  const defaultTitle = "SWAMP RABBIT TRAIL NAVIGATOR";
+  const displayTitle = title || defaultTitle;
   return (
     <Box sx={{ 
       height: '100vh', 
@@ -22,7 +25,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
       <AppBar position="sticky" sx={{ bgcolor: 'background.paper' }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', color: 'white' }}>
-            SWAMP RABBIT TRAIL NAVIGATOR
+            {displayTitle}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -47,7 +50,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
           bottom: 0,
           left: 0,
           right: 0,
-          zIndex: 1000,
+          zIndex: 4000,
           pb: 'env(safe-area-inset-bottom, 0px)',
         }}
       >

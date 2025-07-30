@@ -1,6 +1,11 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { MapContainer, TileLayer, Polyline, Marker, Polygon, useMap, Popup, Pane } from 'react-leaflet';
 import { Box, CircularProgress, Typography } from '@mui/material';
+import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
+import './MapView.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark, faMapPin } from '@fortawesome/free-solid-svg-icons';
 import { POI, TrailConfig, TrailPoint } from '../../types/index';
 import L from 'leaflet';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
@@ -32,15 +37,17 @@ interface MapViewProps {
 // Custom hook to fit bounds to trail
 const FitBounds: React.FC<{ coordinates: [number, number][] }> = ({ coordinates }) => {
   const map = useMap();
+  const [hasInitialFit, setHasInitialFit] = React.useState(false);
   
   React.useEffect(() => {
-    if (coordinates.length > 0) {
+    if (coordinates.length > 0 && !hasInitialFit) {
       const bounds = L.latLngBounds(coordinates);
       // Use responsive padding that works better on mobile
       const padding: [number, number] = [20, 20]; // Reduced padding for better mobile fit
       map.fitBounds(bounds, { padding, maxZoom: 15 });
+      setHasInitialFit(true);
     }
-  }, [coordinates, map]);
+  }, [coordinates, map, hasInitialFit]);
 
   return null;
 };
@@ -202,7 +209,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
   const locationContext = useContext(LocationContext);
-  const { locomotionMode } = useUser();
+  const { locomotionMode, selectedCategories } = useUser();
   const navigate = useNavigate();
   
   // Use the location from context if available, otherwise fall back to prop
@@ -218,6 +225,8 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showZoomOut, setShowZoomOut] = useState(false);
   const [lastBounds, setLastBounds] = useState<[number, number][]>([]);
   const [showPOIGroupLabels, setShowPOIGroupLabels] = useState(true);
+  const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
+  const [hasInitialLoad, setHasInitialLoad] = useState(false);
 
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
 
@@ -364,14 +373,33 @@ export const MapView: React.FC<MapViewProps> = ({
     shadowSize: [41, 41]
   });
 
+  // Create a custom React component for the user location marker
+  const UserLocationMarker = () => (
+    <div style={{
+      position: 'relative',
+      width: '24px',
+      height: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <FontAwesomeIcon 
+        icon={faCircleXmark} 
+        style={{ 
+          color: 'white', 
+          fontSize: '20px',
+          zIndex: 1000,
+          filter: 'drop-shadow(0 0 2px #1976d2) drop-shadow(0 0 4px #1976d2)'
+        }} 
+      />
+    </div>
+  );
+
   const userLocationIcon = new L.DivIcon({
     className: 'pulse-marker',
     iconSize: [24, 24],
     iconAnchor: [12, 12],
-    html: `
-      <div class="pulse-marker-inner"></div>
-      <div class="pulse-marker-outer"></div>
-    `
+    html: ReactDOMServer.renderToString(<UserLocationMarker />)
   });
 
   const poiIcon = L.divIcon({
@@ -402,30 +430,7 @@ export const MapView: React.FC<MapViewProps> = ({
   }, [highlightPOI]);
 
   // Listen for map move/zoom to hide buttons if user pans/zooms away
-  // (Auto-reset logic removed; focused group is only cleared by Zoom Out button)
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const onMove = () => {
-      if (focusedGroup && lastBounds.length > 0) {
-        const bounds = L.latLngBounds(lastBounds);
-        const mapCenter = map.getCenter();
-        const boundsCenter = bounds.getCenter();
-        // Only clear if map center is far from group center (not just zoomed in/out)
-        const dist = Math.sqrt(
-          Math.pow(mapCenter.lat - boundsCenter.lat, 2) +
-          Math.pow(mapCenter.lng - boundsCenter.lng, 2)
-        );
-        if (dist > 0.01) { // ~1km, adjust as needed
-          setShowViewList(false);
-          setShowZoomOut(false);
-          setFocusedGroup(null);
-        }
-      }
-    };
-    map.on('moveend', onMove);
-    return () => { map.off('moveend', onMove); };
-  }, [focusedGroup, lastBounds]);
+  // Auto-reset logic removed - focused group is only cleared by Zoom Out button
 
   // Listen for zoom changes to update onZoomChange prop
   useEffect(() => {
@@ -484,7 +489,7 @@ export const MapView: React.FC<MapViewProps> = ({
   };
 
   useEffect(() => {
-    if (fitBounds && mapRef.current) {
+    if (fitBounds && mapRef.current && !hasInitialLoad) {
       const map = mapRef.current;
       if (fitBounds.length > 0) {
         // Add a small delay to ensure this runs after any FitBounds component effects
@@ -495,7 +500,7 @@ export const MapView: React.FC<MapViewProps> = ({
         }, 100);
       }
     }
-  }, [fitBounds]);
+  }, [fitBounds, hasInitialLoad]);
 
   if (isLoading) {
     return (
@@ -559,7 +564,7 @@ export const MapView: React.FC<MapViewProps> = ({
         whenReady={() => {
           // Add a small delay to ensure map is fully ready
           setTimeout(() => {
-            if (mapRef.current) {
+            if (mapRef.current && !hasInitialLoad) {
               if (highlightPOI) {
                 mapRef.current.setView(safeCenter, highlightZoom || 16);
 
@@ -602,11 +607,12 @@ export const MapView: React.FC<MapViewProps> = ({
                   }
                 }, 100);
               }
+              setHasInitialLoad(true);
             }
           }, 100);
         }}
         ref={mapRef}
-        zoomControl={false}
+        zoomControl={true}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -737,7 +743,7 @@ export const MapView: React.FC<MapViewProps> = ({
               html: `<div style="
                 background-color: white;
                 border: 2px solid #666;
-                border-radius: 50%;
+                border-radius: 2px;
                 width: 12px;
                 height: 12px;
                 margin-left: -6px;
@@ -753,7 +759,22 @@ export const MapView: React.FC<MapViewProps> = ({
           </Marker>
         ))}
 
-        {pois?.map((poi, index) => {
+        {/* Filter POIs based on selected categories */}
+        {pois?.filter(poi => {
+          if (!selectedCategories || selectedCategories.length === 0) {
+            return true; // Show all POIs if no categories selected
+          }
+          
+          if (!poi.post_category || !Array.isArray(poi.post_category)) {
+            return false;
+          }
+          
+          return poi.post_category.some(category => {
+            if (!category.name) return false;
+            const cleanName = category.name.split('-').pop()?.trim() || category.name;
+            return selectedCategories.includes(cleanName);
+          });
+        }).map((poi, index) => {
           // Only show marker, not always-visible label
           const isHighlighted = (highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1]) ||
                                (highlightedPOIs && highlightedPOIs.some(highlightedPoi => highlightedPoi.id === poi.id));
@@ -796,58 +817,30 @@ export const MapView: React.FC<MapViewProps> = ({
             position={[entryPoint[0], entryPoint[1]]}
             icon={L.divIcon({
               className: 'entry-point-marker',
-              iconAnchor: [8, 8],
+              iconAnchor: [12, 12],
               html: `
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                  <div style="width:16px;height:16px;background:#e91e63;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:2;"></div>
-                  <div style="margin-top:4px;background:#fff;color:#e91e63;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Starting Point</div>
+                  <div style="position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                    ${ReactDOMServer.renderToString(
+                      <FontAwesomeIcon 
+                        icon={faMapPin} 
+                        style={{ 
+                          color: 'white', 
+                          fontSize: '20px', 
+                          zIndex: 1000, 
+                          filter: 'drop-shadow(0 0 2px #1976d2) drop-shadow(0 0 4px #1976d2)' 
+                        }} 
+                      />
+                    )}
+                  </div>
+                  <!-- <div style="margin-top:4px;background:#fff;color:#4CAF50;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Starting Point</div> -->
                 </div>
               `
             })}
           />
         )}
 
-        {/* Absolutely positioned POI Group label at top quarter of map when focused */}
-        {focusedGroup && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 'env(safe-area-inset-top, 0px)',
-              left: 0,
-              right: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              zIndex: 2000,
-              pointerEvents: 'none',
-              px: 2,
-              pt: 1.5,
-            }}
-          >
-            <Box
-              sx={{
-                background: '#ffffff', // White background
-                color: '#3d3d3d', // Dark gray text
-                borderRadius: 2, // Rounded corners
-                width: '100%', // Full width
-                px: 0,
-                py: 2,
-                fontSize: 20,
-                fontWeight: 900,
-                letterSpacing: 1,
-                pointerEvents: 'auto',
-                mb: 1,
-                lineHeight: 1.2,
-                textAlign: 'center',
-                wordBreak: 'break-word',
-                overflowWrap: 'break-word',
-                whiteSpace: 'normal',
-              }}
-            >
-              {focusedGroup}
-            </Box>
-          </Box>
-        )}
+
 
         {/* Fixed bottom action bar for View List and Zoom Out when focused on a group */}
         {focusedGroup && (
@@ -855,8 +848,8 @@ export const MapView: React.FC<MapViewProps> = ({
             sx={{
               position: 'fixed',
               left: 0,
-              right: 0,
-              bottom: 'calc(56px + env(safe-area-inset-bottom, 0px))', // 56px for bottom nav height
+              right: '80px', // Leave space for filter button on the right
+              bottom: 'calc(56px + env(safe-area-inset-bottom, 0px) + 16px)', // Match filter button position
               zIndex: 2100,
               display: 'flex',
               justifyContent: 'center',
@@ -869,7 +862,7 @@ export const MapView: React.FC<MapViewProps> = ({
           >
             <button
               style={{
-                width: '48%',
+                width: '45%',
                 background: '#fff',
                 color: '#1976d2',
                 border: '2px solid #1976d2',
@@ -907,7 +900,7 @@ export const MapView: React.FC<MapViewProps> = ({
             </button>
             <button
               style={{
-                width: '48%',
+                width: '45%',
                 background: '#fff',
                 color: '#1976d2',
                 border: '2px solid #1976d2',
@@ -938,6 +931,14 @@ export const MapView: React.FC<MapViewProps> = ({
             </button>
           </Box>
         )}
+
+        {/* Filter Bottom Sheet */}
+        <FilterBottomSheet
+          open={filterBottomSheetOpen}
+          onClose={() => setFilterBottomSheetOpen(false)}
+          onToggle={() => setFilterBottomSheetOpen(!filterBottomSheetOpen)}
+          title="Map Filters"
+        />
       </MapContainer>
     </Box>
   );

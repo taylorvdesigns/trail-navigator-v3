@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { Box, Button, CircularProgress } from '@mui/material';
 import { MapContainer, TileLayer, Polyline, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+
 import { TrailConfig } from '../../types/index';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { GrayscaleMapLayer } from '../MapView/GrayscaleMapLayer';
@@ -12,9 +14,24 @@ interface EntryPointMapPickerProps {
   onCancel: () => void;
 }
 
-const pinkIcon = new L.DivIcon({
+// Create a simple entry point marker
+const EntryPointMarker = () => (
+  <div style={{
+    width: '16px',
+    height: '16px',
+    background: '#4CAF50',
+    border: '2px solid #fff',
+    borderRadius: '50%',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+    zIndex: 2
+  }} />
+);
+
+const startIcon = new L.DivIcon({
   className: 'entry-point-marker',
-  html: `<div style="width:24px;height:24px;background:#e91e63;border:3px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);"></div>`
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+  html: ReactDOMServer.renderToString(<EntryPointMarker />)
 });
 
 export const EntryPointMapPicker: React.FC<EntryPointMapPickerProps> = ({ trails, onConfirm, onCancel }) => {
@@ -69,14 +86,14 @@ export const EntryPointMapPicker: React.FC<EntryPointMapPickerProps> = ({ trails
             <Polyline positions={allTrailPoints} color="#39FF14" weight={5} />
           )}
           {selected && (
-            <Marker position={selected} icon={pinkIcon}>
+            <Marker position={selected} icon={startIcon}>
               <div style={{
                 position: 'absolute',
                 left: '50%',
                 top: '100%',
                 transform: 'translate(-50%, 8px)',
                 background: '#fff',
-                color: '#e91e63',
+                color: '#4CAF50',
                 fontWeight: 700,
                 borderRadius: 8,
                 padding: '2px 8px',

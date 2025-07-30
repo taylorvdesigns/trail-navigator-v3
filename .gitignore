@@ -4,3 +4,4 @@ RIDEWITHGPS_AUTH_TOKEN=5cc5e4b222670322422e8a3fb7324379
 
 .env
 .env.*
+.vercel

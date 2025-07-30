@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { Box, Button, Typography, List, ListItem, ListItemText, ListItemButton, CircularProgress } from '@mui/material';
 import { Modal } from '../Modal/Modal';
 import { useLocation } from '../../contexts/LocationContext';
@@ -7,6 +8,7 @@ import { TRAIL_ROUTES } from '../../config/routes.config';
 import { POI, TrailConfig } from '../../types';
 import { MapContainer, TileLayer, Polyline, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+
 import { GrayscaleMapLayer } from '../MapView/GrayscaleMapLayer';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { findNearestTrailPoint } from '../../utils/trail';
@@ -64,9 +66,24 @@ const DistanceTrackingMapPicker: React.FC<{
     return null;
   };
 
+  // Create a simple entry point marker
+  const EntryPointMarker = () => (
+    <div style={{
+      width: '16px',
+      height: '16px',
+      background: '#4CAF50',
+      border: '2px solid #fff',
+      borderRadius: '50%',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+      zIndex: 2
+    }} />
+  );
+
   const startIcon = new L.DivIcon({
     className: 'start-point-marker',
-    html: `<div style="width:24px;height:24px;background:#4CAF50;border:3px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);"></div>`
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    html: ReactDOMServer.renderToString(<EntryPointMarker />)
   });
 
   if (isLoading) {

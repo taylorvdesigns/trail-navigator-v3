@@ -6,7 +6,7 @@ import { extractUniqueCategories } from '../../utils/poi';
 import { getCategoryIcon } from '../../utils/categoryIcons';
 
 export const CategoryToggle: React.FC = () => {
-  const { pois } = usePOIs();
+  const { pois, loading } = usePOIs();
   const { selectedCategories, toggleCategory } = useUser();
   
   const categories = React.useMemo(() => {
@@ -46,6 +46,47 @@ export const CategoryToggle: React.FC = () => {
       toggleCategory(toggledCategory);
     }
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ 
+        bgcolor: 'background.paper',
+        borderRadius: 1,
+        p: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 40,
+        '@keyframes pulse': {
+          '0%, 100%': {
+            opacity: 0.4,
+          },
+          '50%': {
+            opacity: 1,
+          },
+        },
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 1,
+          opacity: 0.6
+        }}>
+          {[1, 2, 3, 4].map((i) => (
+            <Box
+              key={i}
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: 1,
+                bgcolor: 'grey.300',
+                animation: 'pulse 1.5s ease-in-out infinite'
+              }}
+            />
+          ))}
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ 

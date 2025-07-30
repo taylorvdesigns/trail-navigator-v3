@@ -31,6 +31,7 @@ import { getNetworkDistanceBetweenPoints } from '../../utils/trailGraph';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { CategoryToggle } from '../CategoryToggle/CategoryToggle';
 import { useUser } from '../../contexts/UserContext';
+import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
 
 interface ListViewProps {
   pois: POI[];
@@ -71,6 +72,7 @@ export const ListView: React.FC<ListViewProps> = ({
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
   const [selectedPoiName, setSelectedPoiName] = useState<string>('');
+  const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
 
   const trailPois = React.useMemo(() => {
     // Start with all POIs
@@ -262,14 +264,10 @@ export const ListView: React.FC<ListViewProps> = ({
         </Box>
       </Box>
 
-      {/* Category Filter */}
-      <Box sx={{ p: 2, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
-        <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>
-          Filter by Category
-        </Typography>
-        <CategoryToggle />
-        {selectedCategories.length > 0 && (
-          <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+      {/* Category Filter Summary */}
+      {selectedCategories.length > 0 && (
+        <Box sx={{ p: 2, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="caption" color="text.secondary">
               Showing {trailPois.length} POIs in categories:
             </Typography>
@@ -290,8 +288,8 @@ export const ListView: React.FC<ListViewProps> = ({
               />
             ))}
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
 
       {/* POI List */}
       <Box sx={{ flex: 1, overflow: 'auto', bgcolor: 'background.default' }}>
@@ -509,6 +507,14 @@ export const ListView: React.FC<ListViewProps> = ({
         onClose={() => setGooglePlacesModalOpen(false)}
         placeId={selectedPlaceId}
         poiName={selectedPoiName}
+      />
+
+      {/* Filter Bottom Sheet */}
+      <FilterBottomSheet
+        open={filterBottomSheetOpen}
+        onClose={() => setFilterBottomSheetOpen(false)}
+        onToggle={() => setFilterBottomSheetOpen(!filterBottomSheetOpen)}
+        title="List Filters"
       />
     </Box>
   );
