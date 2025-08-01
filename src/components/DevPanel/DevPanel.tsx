@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Divider, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
-import { useLocation as useRouterLocation } from 'react-router-dom';
+
 import { useLocation } from '../../contexts/LocationContext';
 import { TEST_LOCATIONS } from '../../config/appSettings';
 import { TRAIL_ROUTES } from '../../config/routes.config';
@@ -16,10 +16,7 @@ const SPEED_LABELS = { 1: '1x', 2: '2x', 4: '4x' };
 export const DevPanel: React.FC = () => {
   const { 
     currentLocation, 
-    setCurrentLocation, 
     setTestLocation, 
-    simDirection, 
-    setSimDirection, 
     setSimulationMode, 
     clearEntryPoint, 
     setEntryPoint, 
@@ -37,7 +34,6 @@ export const DevPanel: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState(0);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
-  const routerLocation = useRouterLocation();
 
   // Automatically enable simulation mode when DevPanel mounts
   useEffect(() => {
@@ -89,17 +85,17 @@ export const DevPanel: React.FC = () => {
 
   // Simple control handlers
   const handlePlay = () => {
-    console.log('[DevPanel] Starting simulation');
+    // Starting simulation
     setIsSimPlaying(true);
   };
 
   const handlePause = () => {
-    console.log('[DevPanel] Pausing simulation');
+    // Pausing simulation
     setIsSimPlaying(false);
   };
 
   const handleReset = () => {
-    console.log('[DevPanel] Resetting simulation');
+    // Resetting simulation
     setIsSimPlaying(false);
     setTestLocation(selectedLocation);
   };
@@ -206,25 +202,7 @@ export const DevPanel: React.FC = () => {
           <Typography variant="body2" sx={{ mb: 1, color: '#ccc', fontSize: '0.8rem' }}>
             Change the direction you are headed on the trail.
           </Typography>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={simDirection === 'top'}
-                onChange={e => setSimDirection(e.target.checked ? 'top' : 'bottom')}
-                sx={{
-                  '& .MuiSwitch-track': {
-                    backgroundColor: '#666666'
-                  },
-                  '& .MuiSwitch-thumb': {
-                    backgroundColor: '#FFFFFF'
-                  },
-                  mr: 2
-                }}
-              />
-            }
-            label={<Typography sx={{ color: '#FFFFFF', fontSize: '0.9rem' }}>Top / Bottom</Typography>}
-            sx={{ mt: 1, mb: 1, ml: 1 }}
-          />
+
         </Box>
 
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />

@@ -1,6 +1,7 @@
-// @ts-nocheck
+// Main application content component
+// Handles routing, view management, and global state coordination
 import React, { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation as useRouterLocation, useParams } from 'react-router-dom';
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Place as PlaceIcon } from '@mui/icons-material';
 import { AppLayout } from './Layout/AppLayout';
@@ -11,7 +12,7 @@ import { TrailView } from '../views/TrailView';
 import { NotFoundView } from '../views/NotFoundView';
 import { ViewMode, LocomotionMode, WordPressTrailConfig, TrailConfig, POI } from '../types/index';
 import { usePOIs } from '../hooks/usePOIs';
-import { useLocation as useGeoLocation } from '../hooks/useLocation';
+import { useLocation } from '../contexts/LocationContext';
 import { useDevMode } from '../contexts/DevContext';
 import { DevPanel } from './DevPanel/DevPanel';
 import { EntryPointModal } from './EntryPointModal/EntryPointModal';
@@ -33,7 +34,7 @@ export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: 
     id: wpTrail.routeId,
     endpoint1: trailData?.endpoints.start || [0, 0],
     endpoint2: trailData?.endpoints.end || [0, 0],
-    endpointNames: [wpTrail.endpoint1_name, wpTrail.endpoint2_name]
+    endpointNames: [`${wpTrail.name} Start`, `${wpTrail.name} End`]
   };
 };
 
@@ -72,19 +73,19 @@ export const AppContent: React.FC = () => {
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
   const { data: wpConfig, isLoading: wpLoading, error: wpError } = useWordPressConfig();
   const navigate = useNavigate();
-  const location = useLocation();
+  const routerLocation = useRouterLocation();
   
   // Get focused group from URL parameters
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = new URLSearchParams(routerLocation.search);
   const focusedGroup = searchParams.get('group');
   
   // Debug: Monitor location changes
   useEffect(() => {
-    // console.log('Pathname changed to:', location.pathname);
-    // console.log('Search params:', location.search);
-  }, [location.pathname, location.search]);
+    // console.log('Pathname changed to:', routerLocation.pathname);
+    // console.log('Search params:', routerLocation.search);
+  }, [routerLocation.pathname, routerLocation.search]);
   
-  const { currentLocation, entryPoint } = useGeoLocation();
+  const { currentLocation, entryPoint } = useLocation();
   const { isDevMode } = useDevMode();
 
   // Memoize the trails configuration
@@ -150,9 +151,9 @@ export const AppContent: React.FC = () => {
   // Show entry point modal if no entry point is set and not in dev mode and user hasn't chosen simulation mode
   useEffect(() => {
     // Check if we're on the dev route (additional check for timing issues)
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
-    const isOnDevRoute = modeParam === 'dev' || location.pathname.startsWith('/dev/');
+    const isOnDevRoute = modeParam === 'dev' || routerLocation.pathname.startsWith('/dev/');
     const isSimulationModeInURL = modeParam === 'sim';
     
 
@@ -168,12 +169,12 @@ export const AppContent: React.FC = () => {
     } else {
       setEntryModalOpen(true);
     }
-  }, [entryPoint, isDevMode, hasChosenSimulationMode, location.pathname, location.search]);
+  }, [entryPoint, isDevMode, hasChosenSimulationMode, routerLocation.pathname, routerLocation.search]);
 
   // Show distance tracking modal if user is on trail but no distance tracking entry point is set
   useEffect(() => {
     // Check if simulation mode is in URL
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
     const isSimulationModeInURL = modeParam === 'sim';
     
@@ -189,12 +190,12 @@ export const AppContent: React.FC = () => {
       setDistanceTrackingModalOpen(false);
       return;
     }
-    if ((isDevMode || location.pathname === '/nav') && !hasConfirmedEntryPointThisSession) {
+    if ((isDevMode || routerLocation.pathname === '/nav') && !hasConfirmedEntryPointThisSession) {
       setDistanceTrackingModalOpen(true);
     } else {
       setDistanceTrackingModalOpen(false);
     }
-  }, [currentLocation, entryPoint, isDevMode, location.pathname, hasConfirmedEntryPointThisSession, hasChosenSimulationMode]);
+  }, [currentLocation, entryPoint, isDevMode, routerLocation.pathname, hasConfirmedEntryPointThisSession, hasChosenSimulationMode]);
 
   // For testing: allow resetting the distance tracking modal
   React.useEffect(() => {
@@ -209,11 +210,11 @@ export const AppContent: React.FC = () => {
 
   // Determine current view
   let currentView: ViewMode;
-  if (isDevMode && (devTab || location.pathname === '/dev' || location.pathname === '/simconfig')) {
+  if (isDevMode && (devTab || routerLocation.pathname === '/dev' || routerLocation.pathname === '/simconfig')) {
     currentView = 'dev';
   } else {
-    currentView = location.pathname === '/nav' ? 'nav'
-      : location.pathname === '/list' ? 'list'
+    currentView = routerLocation.pathname === '/nav' ? 'nav'
+      : routerLocation.pathname === '/list' ? 'list'
       : 'map';
   }
   
@@ -223,7 +224,7 @@ export const AppContent: React.FC = () => {
   // console.log('devTab:', devTab);
 
   // Get map center and zoom from navigation state if present
-  const state = location.state as { center?: [number, number], zoom?: number } | undefined;
+  const state = routerLocation.state as { center?: [number, number], zoom?: number } | undefined;
   const mapCenter: [number, number] = (state && Array.isArray(state.center) && state.center.length === 2)
     ? [Number(state.center[0]), Number(state.center[1])] as [number, number]
     : [34.8526, -82.3940];
@@ -251,7 +252,7 @@ export const AppContent: React.FC = () => {
   // Show simulation modal if not on trail and not in dev mode
   useEffect(() => {
     // Check if simulation mode is in URL
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
     const isSimulationModeInURL = modeParam === 'sim';
     
@@ -260,7 +261,7 @@ export const AppContent: React.FC = () => {
     } else {
       setShowSimModal(false);
     }
-  }, [isOnTrail, isDevMode, hasChosenSimulationMode, location.search]);
+  }, [isOnTrail, isDevMode, hasChosenSimulationMode, routerLocation.search]);
 
   // Handler for simulation mode
   const handleSimulate = () => {
@@ -284,7 +285,7 @@ export const AppContent: React.FC = () => {
     }
     
     // Preserve ?mode=sim if present
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
     const devQuery = modeParam === 'sim' ? '?mode=sim' : '';
     
@@ -450,7 +451,7 @@ export const AppContent: React.FC = () => {
 const PlacesMapView: React.FC<{ trails: TrailConfig[], pois: POI[], currentLocation?: [number, number] }> = ({ trails, pois, currentLocation }) => {
   const { placeName } = useParams<{ placeName: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
+  const routerLocation = useRouterLocation();
   const [mapZoom, setMapZoom] = React.useState<number>(15);
   const [fitBounds, setFitBounds] = React.useState<[number, number][] | null>(null);
 
@@ -463,19 +464,19 @@ const PlacesMapView: React.FC<{ trails: TrailConfig[], pois: POI[], currentLocat
   const hasProcessedState = React.useRef(false);
 
   React.useEffect(() => {
-    if (!hasProcessedState.current && location.state && location.state.fitBounds) {
-      setFitBounds(location.state.fitBounds);
+    if (!hasProcessedState.current && routerLocation.state && routerLocation.state.fitBounds) {
+      setFitBounds(routerLocation.state.fitBounds);
       // Remove fitBounds from state after using it (so it doesn't re-trigger on re-render)
-      navigate(location.pathname, { replace: true, state: {} });
+      navigate(routerLocation.pathname, { replace: true, state: {} });
       hasProcessedState.current = true;
     } else if (placePOIs.length > 0 && !fitBounds) {
       // If no fitBounds in state, but we have POIs, fit to their bounds
       const coords = placePOIs
         .filter(poi => poi.coordinates)
-        .map(poi => [poi.coordinates[1], poi.coordinates[0]]);
+        .map(poi => [poi.coordinates[1], poi.coordinates[0]] as [number, number]);
       setFitBounds(coords);
     }
-  }, [placePOIs, navigate, location.state, fitBounds]);
+  }, [placePOIs, navigate, routerLocation.state, fitBounds]);
   
   // Get the original tag name for display
   const originalPlaceName = React.useMemo(() => {

@@ -1,13 +1,11 @@
 import React from 'react';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { usePOIs } from '../../hooks/usePOIs';
 import { useUser } from '../../contexts/UserContext';
 import { useCategories } from '../../hooks/useCategories';
-import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
+import { parseFontAwesomeIcon } from '../../utils/fontAwesomeParser';
 
 export const CategoryToggle: React.FC = () => {
-  const { pois } = usePOIs();
   const { selectedCategories, toggleCategory } = useUser();
   const { categories: wpCategories, loading } = useCategories();
 
@@ -109,7 +107,6 @@ export const CategoryToggle: React.FC = () => {
       >
         {wpCategories.map((category) => {
           const iconComponent = parseFontAwesomeIcon(category.fa_icon);
-          const iconColor = parseFontAwesomeColor(category.fa_icon_color);
           
           return (
             <ToggleButton

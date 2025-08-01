@@ -19,13 +19,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { POI, TrailPoint } from '../../types/index';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { calculateDistance } from '../../utils/distance';
-import { getUniqueTags, tagNameToSlug } from '../../utils/poi';
-
-import { findNearestTrailPoint } from '../../utils/trail';
 import { getNetworkDistanceBetweenPoints } from '../../utils/trailGraph';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
-import { CategoryToggle } from '../CategoryToggle/CategoryToggle';
 import { useUser } from '../../contexts/UserContext';
 import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
 import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
@@ -50,6 +45,17 @@ function isFeaturedPOI(poi: POI): boolean {
   return poi.post_category?.some(category => 
     category.name?.toLowerCase() === 'featured'
   ) || false;
+}
+
+function shouldShowGooglePlaceIdWarning(poi: POI): boolean {
+  // Don't show warning if Google Place ID is explicitly set to "none"
+  // This indicates the POI doesn't need a Google Place ID
+  if (poi.google_place_id === 'none') {
+    return false;
+  }
+  
+  // Show warning for POIs that don't have a Google Place ID but should have one
+  return true;
 }
 
 export const ListView: React.FC<ListViewProps> = ({ 
@@ -137,9 +143,6 @@ export const ListView: React.FC<ListViewProps> = ({
         }
       }, 100);
       
-      console.log('ListView: groupNameFromNav received:', groupNameFromNav);
-      console.log('ListView: trailPois count:', trailPois.length);
-      
       // Check if this is an individual POI (ungrouped or single POI in a group)
       const matchingPOI = trailPois.find(poi => poi.title.rendered === groupNameFromNav);
       
@@ -153,18 +156,7 @@ export const ListView: React.FC<ListViewProps> = ({
           ))
       );
       
-      console.log('ListView: matchingPOI found:', !!matchingPOI);
-      console.log('ListView: isIndividualPOI:', isIndividualPOI);
-      if (matchingPOI) {
-        console.log('ListView: matchingPOI details:', {
-          title: matchingPOI.title.rendered,
-          post_tags: matchingPOI.post_tags,
-          post_tags_length: matchingPOI.post_tags.length
-        });
-      }
-      
       if (isIndividualPOI && matchingPOI) {
-        console.log('ListView: Navigating to map for POI:', matchingPOI.title.rendered);
         // Navigate to map view and zoom to the POI
         handleShowOnMap(matchingPOI);
       }
@@ -197,18 +189,14 @@ export const ListView: React.FC<ListViewProps> = ({
 
   const getDistance = (poi: POI): number | null => {
     if (!graph || !currentLocation || !poi.coordinates) return null;
-    // currentLocation is [lng, lat] format, but we need [lat, lng] for distance calculation
-    const userCoords: [number, number] = [currentLocation[1], currentLocation[0]];
-    const poiCoords: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
+    // Both currentLocation and poi.coordinates are already in [lng, lat] format
+    const userCoords: [number, number] = [currentLocation[0], currentLocation[1]];
+    const poiCoords: [number, number] = [poi.coordinates[0], poi.coordinates[1]];
     const distance = getNetworkDistanceBetweenPoints(graph, userCoords, poiCoords);
-    console.log('[ListView] POI:', poi.title?.rendered || poi.title, 'UserCoords:', userCoords, 'POICoords:', poiCoords, 'Distance:', distance);
     return distance;
   };
 
-  const handlePoiClick = (poi: POI) => {
-    // Navigate to map view and zoom to the POI
-    handleShowOnMap(poi);
-  };
+
 
   const handleShowOnMap = (poi: POI) => {
     // Navigate to map with POI parameter for shareable URL
@@ -220,7 +208,6 @@ export const ListView: React.FC<ListViewProps> = ({
     searchParams.set('poi', poi.id.toString());
     
     const url = `/map?${searchParams.toString()}`;
-    console.log('🗺️ Navigating to map with POI:', poi.title.rendered, 'URL:', url);
     navigate(url);
   };
 
@@ -375,7 +362,7 @@ export const ListView: React.FC<ListViewProps> = ({
                           }}
                           secondaryAction={
                             <Box sx={{ display: 'flex', gap: 0.5 }}>
-                              {poi.google_place_id && (
+                              {poi.google_place_id && poi.google_place_id !== 'none' && (
                                 <IconButton
                                   edge="end"
                                   onClick={(e) => {
@@ -442,7 +429,7 @@ export const ListView: React.FC<ListViewProps> = ({
                                     </Typography>
                                   </Box>
                                 )}
-                                {!poi.google_place_id && (
+                                {!poi.google_place_id && shouldShowGooglePlaceIdWarning(poi) && (
                                   <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
                                     <InfoIcon sx={{ fontSize: 14, color: 'warning.main' }} />
                                     <Typography component="span" variant="body2" color="warning.main" sx={{ fontSize: '0.75rem' }}>

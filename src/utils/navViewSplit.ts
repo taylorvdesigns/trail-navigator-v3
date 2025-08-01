@@ -1,6 +1,6 @@
 import { Stop, TrailConfig, TrailPoint } from '../types/index';
 import { getDirectionalStops } from './directional';
-import { calculateDistance } from './distance';
+
 
 export interface Junction {
   id: string;

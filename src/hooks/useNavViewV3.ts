@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation } from '../contexts/LocationContext';
-import { POI, Stop, TrailConfig, LocomotionMode, TrailPoint } from '../types';
+import { POI, Stop, TrailConfig, TrailPoint } from '../types';
 import { Junction } from '../utils/navViewSplit';
-import { useTrailsData } from './useTrailsData';
 import { findNearestTrailPoint } from '../utils/trail';
 import { getPOIsForTrail } from '../utils/poi';
 import { calculateDistance } from '../utils/distance';

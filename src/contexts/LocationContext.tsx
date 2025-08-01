@@ -83,7 +83,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           navigator.geolocation.clearWatch(watchId);
         };
       } else {
-        console.log('Geolocation is not supported by this browser');
+        // Geolocation not supported by this browser
         setSimulationMode(true);
       }
     }
@@ -124,13 +124,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return;
     }
 
-    console.log('[Simulation] Starting simple simulation:', {
-      isSimPlaying,
-      trailPointsLength: simTrailPoints.length,
-      simIndex,
-      simLoop,
-      simSpeedMultiplier
-    });
+    // Starting simple simulation
 
     // Calculate interval based on speed (faster speed = shorter interval)
     const intervalMs = 1000 / simSpeedMultiplier;
@@ -145,10 +139,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         if (simLoop) {
           // Loop back to the beginning/end
           nextIdx = simDirection === 'top' ? 0 : simTrailPoints.length - 1;
-          console.log('[Simulation] Looping back to index:', nextIdx);
+          // Looping back to index
         } else {
           // Stop simulation
-          console.log('[Simulation] Reached end of trail, stopping');
+          // Reached end of trail, stopping
           setIsSimPlaying(false);
           return;
         }

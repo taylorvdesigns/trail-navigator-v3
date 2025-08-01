@@ -6,16 +6,14 @@ import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
 import './MapView.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faMapPin } from '@fortawesome/free-solid-svg-icons';
-import { POI, TrailConfig, TrailPoint } from '../../types/index';
+import { POI, TrailConfig } from '../../types/index';
 import L from 'leaflet';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import { LocationContext } from '../../contexts/LocationContext';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useTrailJunctions } from '../../hooks/useTrailJunctions';
-import { findNearestTrailPoint } from '../../utils/trail';
-import { metersToMiles } from '../../utils/distance';
-import { calculateETA } from '../../utils/eta';
+
 import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
@@ -38,41 +36,7 @@ interface MapViewProps {
   fitBounds?: [number, number][] | null;
 }
 
-// Custom hook to fit bounds to trail
-const FitBounds: React.FC<{ coordinates: [number, number][] }> = ({ coordinates }) => {
-  const map = useMap();
-  const [hasInitialFit, setHasInitialFit] = React.useState(false);
-  
-  React.useEffect(() => {
-    if (coordinates.length > 0 && !hasInitialFit) {
-      const bounds = L.latLngBounds(coordinates);
-      // Use generous padding - plenty of space from edges
-      const padding: [number, number] = [60, 60]; // Much more generous padding from edges
-      map.fitBounds(bounds, { 
-        padding, 
-        maxZoom: 17, // Allow higher zoom for better trail detail
-        animate: true,
-        duration: 1.5
-      });
-      
-      // After fitting, zoom in more aggressively for better trail visibility
-      setTimeout(() => {
-        const currentZoom = map.getZoom();
-        const boundsZoom = map.getBoundsZoom(bounds);
-        
-        // Zoom in more aggressively for better trail detail
-        const targetZoom = Math.min(boundsZoom + 1, 16); // Zoom in 1 level more than bounds suggest
-        if (currentZoom < targetZoom) {
-          map.setZoom(targetZoom, { animate: true, duration: 1 });
-        }
-      }, 100);
-      
-      setHasInitialFit(true);
-    }
-  }, [coordinates, map, hasInitialFit]);
 
-  return null;
-};
 
 // Helper: Check if a point is inside a polygon (ray-casting algorithm)
 function pointInPolygon(point: [number, number], polygon: [number, number][]) {
@@ -119,16 +83,7 @@ function pointNearPolyline(point: [number, number], polyline: [number, number][]
   return minDist < threshold;
 }
 
-// Helper: Estimate label width in pixels (font size 14px, bold, padding 2px 8px)
-function estimateLabelSize(text: string) {
-  const charWidth = 8; // average width for bold 14px font
-  const padding = 16; // 8px left + 8px right
-  const height = 20; // 14px font + padding
-  return {
-    width: text.length * charWidth + padding,
-    height
-  };
-}
+
 
 // Helper: Convert pixel size to map degrees (approximate, latitude only)
 function pixelsToLatLng(width: number, height: number, lat: number, zoom: number) {
@@ -141,81 +96,11 @@ function pixelsToLatLng(width: number, height: number, lat: number, zoom: number
   };
 }
 
-// Helper: Check if label bounding box overlaps hull or is near trail
-function labelBoxOverlaps(labelPos: [number, number], size: {width: number, height: number}, hull: [number, number][], trail: [number, number][], zoom: number) {
-  // Get box corners (anchor is left-middle)
-  const { dLat, dLng } = pixelsToLatLng(size.width, size.height, labelPos[0], zoom);
-  const boxCorners: [number, number][] = [
-    [labelPos[0] - dLat/2, labelPos[1]], // left-middle
-    [labelPos[0] - dLat/2, labelPos[1] + dLng], // right-middle
-    [labelPos[0] + dLat/2, labelPos[1] + dLng], // right-bottom
-    [labelPos[0] + dLat/2, labelPos[1]], // left-bottom
-  ];
-  // Check if any corner is inside hull or near trail
-  return boxCorners.some(corner => pointInPolygon(corner, hull) || pointNearPolyline(corner, trail));
-}
 
-// Helper: Check if a pixel box overlaps a pixel polygon or is near a pixel polyline
-function pixelBoxOverlaps(box: {x: number, y: number, width: number, height: number}, hullPx: {x: number, y: number}[], trailPx: {x: number, y: number}[]) {
-  // Check if any box corner is inside hull polygon
-  const corners = [
-    {x: box.x, y: box.y},
-    {x: box.x + box.width, y: box.y},
-    {x: box.x + box.width, y: box.y + box.height},
-    {x: box.x, y: box.y + box.height}
-  ];
-  if (corners.some(corner => pointInPolygonPx(corner, hullPx))) return true;
-  // Check if any box edge is near trail polyline
-  for (let i = 0; i < corners.length; i++) {
-    const a = corners[i], b = corners[(i+1)%corners.length];
-    if (polylineNearSegment(trailPx, a, b, 8)) return true; // 8px threshold
-  }
-  return false;
-}
 
-// Helper: Point-in-polygon in pixel space
-function pointInPolygonPx(point: {x: number, y: number}, polygon: {x: number, y: number}[]) {
-  let {x, y} = point;
-  let inside = false;
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    let xi = polygon[i].x, yi = polygon[i].y;
-    let xj = polygon[j].x, yj = polygon[j].y;
-    let intersect = ((yi > y) !== (yj > y)) &&
-      (x < (xj - xi) * (y - yi) / (yj - yi + 1e-12) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
 
-// Helper: Check if a polyline is near a segment (in px)
-function polylineNearSegment(polyline: {x: number, y: number}[], a: {x: number, y: number}, b: {x: number, y: number}, threshold: number) {
-  for (let i = 0; i < polyline.length - 1; i++) {
-    if (segmentsClose(a, b, polyline[i], polyline[i+1], threshold)) return true;
-  }
-  return false;
-}
 
-// Helper: Check if two segments are closer than threshold (in px)
-function segmentsClose(a1: {x: number, y: number}, a2: {x: number, y: number}, b1: {x: number, y: number}, b2: {x: number, y: number}, threshold: number) {
-  // Check endpoints and midpoints
-  const points = [a1, a2, b1, b2, midpoint(a1, a2), midpoint(b1, b2)];
-  for (let p of points) {
-    if (pointToSegmentDist(p, a1, a2) < threshold || pointToSegmentDist(p, b1, b2) < threshold) return true;
-  }
-  return false;
-}
 
-function midpoint(a: {x: number, y: number}, b: {x: number, y: number}) {
-  return {x: (a.x + b.x)/2, y: (a.y + b.y)/2};
-}
-
-function pointToSegmentDist(p: {x: number, y: number}, a: {x: number, y: number}, b: {x: number, y: number}) {
-  const l2 = (a.x-b.x)**2 + (a.y-b.y)**2;
-  if (l2 === 0) return Math.hypot(p.x-a.x, p.y-a.y);
-  let t = ((p.x-a.x)*(b.x-a.x)+(p.y-a.y)*(b.y-a.y))/l2;
-  t = Math.max(0, Math.min(1, t));
-  return Math.hypot(p.x-(a.x+t*(b.x-a.x)), p.y-(a.y+t*(b.y-a.y)));
-}
 
 export const MapView: React.FC<MapViewProps> = ({
   trails,
@@ -233,7 +118,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
   const locationContext = useContext(LocationContext);
-  const { locomotionMode, selectedCategories } = useUser();
+  const { selectedCategories } = useUser();
   const navigate = useNavigate();
   
   // Use the location from context if available, otherwise fall back to prop
@@ -338,32 +223,26 @@ export const MapView: React.FC<MapViewProps> = ({
         }, 500);
         
         setFocusedGroup(urlGroupName);
-        setShowViewList(true);
-        setShowZoomOut(true);
-        setLastBounds(latLngBounds as [number, number][]);
       }
     }
   }, [urlGroupName, focusedGroup, pois]);
 
   // Handle URL parameter changes for POI selection
   useEffect(() => {
-    console.log('POI zoom useEffect triggered:', { urlPoiParam, poisLength: pois?.length, hasMapRef: !!mapRef.current, selectedPOI: !!selectedPOI, hasInitialLoad });
+
     
     if (urlPoiParam && pois && pois.length > 0 && mapRef.current && hasInitialLoad) {
       const targetPOI = pois.find(poi => poi.id.toString() === urlPoiParam);
-      console.log('Found target POI:', targetPOI);
       
       if (targetPOI) {
         // Check if coordinates are valid
         if (!targetPOI.coordinates || targetPOI.coordinates.length !== 2 || 
             isNaN(targetPOI.coordinates[0]) || isNaN(targetPOI.coordinates[1])) {
-          console.log('Invalid POI coordinates:', targetPOI.coordinates);
           return;
         }
         
         // Only set selectedPOI if it's different from current
         if (!selectedPOI || selectedPOI.id !== targetPOI.id) {
-          console.log('Setting selected POI and zooming to:', targetPOI.title.rendered);
           setSelectedPOI(targetPOI);
           setHasShownInitialZoom(true);
           
@@ -374,7 +253,6 @@ export const MapView: React.FC<MapViewProps> = ({
           // Add a longer delay to ensure the map is fully ready and no other zoom operations are running
           setTimeout(() => {
             if (mapRef.current) {
-              console.log('Zooming to POI coordinates:', poiCoords);
               mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
             }
           }, 300);
@@ -505,8 +383,7 @@ export const MapView: React.FC<MapViewProps> = ({
       const bounds = L.latLngBounds(allTrailCoords as [number, number][]);
       const center = bounds.getCenter();
       
-      console.log('fitTrail called - center:', center);
-      console.log('Current zoom before setView:', mapRef.current.getZoom());
+
       
       // Use setView with center and specific zoom level
       mapRef.current.setView(center, 12, { 
@@ -515,7 +392,7 @@ export const MapView: React.FC<MapViewProps> = ({
       });
       
       setTimeout(() => {
-        console.log('Zoom after setView:', mapRef.current?.getZoom());
+
       }, 2000);
     }
   };
@@ -705,10 +582,8 @@ export const MapView: React.FC<MapViewProps> = ({
         zoom={highlightZoom || (shouldFitBounds ? 13 : zoom)} // fallback zoom if no bounds
         style={{ height: '100%', width: '100%' }}
         whenReady={() => {
-          console.log('Map whenReady callback triggered');
           // Add a small delay to ensure map is fully ready
-          setTimeout(() => {
-            console.log('whenReady timeout - hasInitialLoad:', hasInitialLoad, 'mapRef.current:', !!mapRef.current);
+                      setTimeout(() => {
             if (mapRef.current && !hasInitialLoad) {
               if (highlightPOI) {
                 mapRef.current.setView(safeCenter, highlightZoom || 16);
@@ -750,8 +625,7 @@ export const MapView: React.FC<MapViewProps> = ({
                     const bounds = L.latLngBounds(allTrailCoords);
                     const center = bounds.getCenter();
                     
-                    console.log('Initial load setView - center:', center);
-                    console.log('Current zoom before initial setView:', mapRef.current.getZoom());
+
                     
                     // Use setView with center and specific zoom level
                     mapRef.current.setView(center, 12, { 
@@ -760,13 +634,12 @@ export const MapView: React.FC<MapViewProps> = ({
                     });
                     
                     setTimeout(() => {
-                      console.log('Zoom after initial setView:', mapRef.current?.getZoom());
+
                     }, 2000);
                   }
                 }, 100);
               }
               // Always set hasInitialLoad to true, regardless of whether we zoomed or not
-              console.log('Setting hasInitialLoad to true');
               setHasInitialLoad(true);
             }
           }, 100);

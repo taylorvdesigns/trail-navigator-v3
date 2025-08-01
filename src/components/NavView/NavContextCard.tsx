@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Typography, Paper, useTheme } from '@mui/material';
-import { DirectionsWalk, DirectionsBike, Accessible, Restaurant, LocalCafe, Store, Wc } from '@mui/icons-material';
+import { Box, Typography, Paper } from '@mui/material';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking } from '@fortawesome/free-solid-svg-icons';
+
 import { LocomotionMode } from '../../types/index';
 
 interface NavContextCardProps {
@@ -28,27 +28,11 @@ const modeIconMap = {
   biking: faPersonBiking,
 };
 
-const fadedIconMap = {
-  walking: [<FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="bike" />],
-  running: [<FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="walk" />, <FontAwesomeIcon icon={faPersonBiking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginLeft: 16 }} key="bike" />],
-  biking: [<FontAwesomeIcon icon={faPersonWalking} style={{ fontSize: 32, color: '#888', opacity: 0.3, marginRight: 16 }} key="walk" />],
-};
 
-const amenityIconMap = {
-  food: <Restaurant sx={{ fontSize: 28 }} />,
-  water: <LocalCafe sx={{ fontSize: 28 }} />,
-  restroom: <Wc sx={{ fontSize: 28 }} />,
-  cafe: <LocalCafe sx={{ fontSize: 28 }} />,
-  store: <Store sx={{ fontSize: 28 }} />,
-};
 
-const CATEGORIES = [
-  { slug: 'food', icon: faUtensils, title: 'Food' },
-  { slug: 'drink', icon: faBeerMugEmpty, title: 'Drink' },
-  { slug: 'ice-cream', icon: faIceCream, title: 'Ice Cream' },
-  { slug: 'landmark', icon: faMapPin, title: 'Landmark' },
-  { slug: 'playground', icon: faChildReaching, title: 'Playground' }
-];
+
+
+
 
 export const NavContextCard: React.FC<NavContextCardProps> = ({
   destination,
@@ -65,7 +49,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
   highlightColor = '#39FF14',
   noCardBackground = false,
 }) => {
-  const theme = useTheme();
+
   return (
     <Paper
       elevation={4}

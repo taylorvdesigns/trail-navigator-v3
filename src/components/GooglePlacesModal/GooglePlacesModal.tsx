@@ -11,15 +11,13 @@ import {
   CircularProgress,
   Alert,
   IconButton,
-  Rating,
-  Divider
+  Rating
 } from '@mui/material';
 import {
   Close as CloseIcon,
   Phone as PhoneIcon,
   Language as WebsiteIcon,
   AccessTime as TimeIcon,
-  Star as StarIcon,
   LocationOn as LocationIcon
 } from '@mui/icons-material';
 import { api } from '../../services/api';
@@ -103,18 +101,7 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
     return '$'.repeat(level);
   };
 
-  const getBusinessStatusColor = (status?: string) => {
-    switch (status) {
-      case 'OPERATIONAL':
-        return 'success';
-      case 'CLOSED_TEMPORARILY':
-        return 'warning';
-      case 'CLOSED_PERMANENTLY':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
+
 
   const handlePhoneClick = () => {
     if (details?.formatted_phone_number) {

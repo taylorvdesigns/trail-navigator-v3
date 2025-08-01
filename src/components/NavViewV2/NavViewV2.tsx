@@ -1,10 +1,10 @@
-import React, { useMemo, useContext, useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React, { useMemo, useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { LocomotionMode, Stop, TrailConfig, POI, TrailPoint } from '../../types';
-import { Junction, getNavViewSplitData, NavViewSplitData } from '../../utils/navViewSplit';
+import { Junction, getNavViewSplitData } from '../../utils/navViewSplit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPersonWalking, faArrowUp, faPersonRunning, faPersonBiking, faUtensils, faBeerMugEmpty, faIceCream, faMapPin, faChildReaching, faRightLong } from '@fortawesome/free-solid-svg-icons';
-import { Restaurant, LocalCafe, Store, Wc } from '@mui/icons-material';
+import { faRightLong } from '@fortawesome/free-solid-svg-icons';
+
 import { useNavViewV3 } from '../../hooks/useNavViewV3';
 import { useLocation } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
@@ -49,14 +49,6 @@ const SubwayLine = styled(Box, {
   backgroundColor: color || theme.palette.primary.main
 }));
 
-const StopContainer = styled(Box)({
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  padding: '8px 0',
-  minHeight: 52,
-});
-
 const StopMarker = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color?: string }>(({ theme, color }) => ({
@@ -71,18 +63,6 @@ const StopMarker = styled(Box, {
   border: `2px solid ${theme.palette.background.default}`,
   zIndex: 1,
 }));
-
-const StopMetrics = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',
-  width: 50, // Fixed width for alignment
-  marginRight: 20 // Space between metrics and line
-});
-
-const StopDetails = styled(Box)({
-  paddingLeft: 80 // Space for metrics and line
-});
 
 const TrailEndCard = styled(Paper, {
   shouldForwardProp: (prop) => prop !== 'color'
@@ -107,63 +87,9 @@ const TrailEndMarker = styled(Box, {
   backgroundColor: color || '#242424',
 }));
 
-const StopInfo = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  width: '100%'
-}));
 
-const ContextCard = styled(Paper)(({ theme }) => ({
-  borderRadius: 32,
-  background: '#fff',
-  padding: theme.spacing(3),
-  margin: theme.spacing(2),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  position: 'relative',
-  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 12,
-    backgroundColor: '#39FF14',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32
-  }
-}));
 
-const CircularMode = styled(Box)(({ theme }) => ({
-  width: 110,
-  height: 110,
-  borderRadius: '50%',
-  backgroundColor: '#222',
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginBottom: theme.spacing(2)
-}));
 
-const AmenityIcon = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  color: theme.palette.text.secondary,
-  fontSize: '0.75rem'
-}));
-
-const StopTime = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  width: 50, // Fixed width for alignment
-  marginLeft: 20 // Space between line and time
-});
 
 // Add a new styled component for the 4-column layout
 const StopRow = styled(Box)({
@@ -195,13 +121,7 @@ interface NavViewV2Props {
   onChangeEntryPoint?: () => void;
 }
 
-const CATEGORIES = [
-  { slug: 'food', icon: faUtensils, title: 'Food' },
-  { slug: 'drink', icon: faBeerMugEmpty, title: 'Drink' },
-  { slug: 'ice-cream', icon: faIceCream, title: 'Ice Cream' },
-  { slug: 'landmark', icon: faMapPin, title: 'Landmark' },
-  { slug: 'playground', icon: faChildReaching, title: 'Playground' }
-];
+
 
 // Utility to classify elevation difference
 function getElevationDescription(delta: number, nextStopName: string): string {
@@ -215,15 +135,7 @@ function getElevationDescription(delta: number, nextStopName: string): string {
   return `Steep climb to ${nextStopName}`;
 }
 
-// Add this helper function near the top of the file
-function formatETA(minutes: number | null): string {
-  if (minutes === null || isNaN(minutes)) return '--';
-  const min = Math.round(minutes);
-  if (min < 60) return `${min} min`;
-  const hr = Math.floor(min / 60);
-  const rem = min % 60;
-  return rem === 0 ? `${hr} hr` : `${hr} hr ${rem} min`;
-}
+
 
 // Add SplitView component at the top (after imports, before NavViewV2)
 
@@ -274,30 +186,7 @@ const SplitView: React.FC<SplitViewProps> = ({
   }, [rightContent]);
 
   useLayoutEffect(() => {
-    if (splitViewRef.current) {
-      console.log('[DEBUG] SplitView', {
-        offsetHeight: splitViewRef.current.offsetHeight,
-        scrollHeight: splitViewRef.current.scrollHeight,
-        clientHeight: splitViewRef.current.clientHeight,
-      });
-    }
-    if (leftColRef.current) {
-      console.log('[DEBUG] SplitView LeftCol', {
-        offsetHeight: leftColRef.current.offsetHeight,
-        scrollHeight: leftColRef.current.scrollHeight,
-        clientHeight: leftColRef.current.clientHeight,
-      });
-    }
-    if (rightColRef.current) {
-      console.log('[DEBUG] SplitView RightCol', {
-        offsetHeight: rightColRef.current.offsetHeight,
-        scrollHeight: rightColRef.current.scrollHeight,
-        clientHeight: rightColRef.current.clientHeight,
-        offsetWidth: rightColRef.current.offsetWidth,
-        clientWidth: rightColRef.current.clientWidth,
-        scrollWidth: rightColRef.current.scrollWidth,
-      });
-    }
+    // Layout effect for split view dimensions
   });
   return (
     <div
@@ -424,13 +313,13 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const startSizesRef = useRef([60, 40]);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { stops, userStop, activeTrailId, loading, error, currentLocation: navViewCurrentLocation } = useNavViewV3({
+  const { stops, userStop, activeTrailId, currentLocation: navViewCurrentLocation } = useNavViewV3({
     allTrails,
     allTrailData,
     junctions,
     pois,
   });
-  const { graph, isLoading, error: trailGraphError } = useTrailGraph();
+  const { graph } = useTrailGraph();
   const { entryPoint, currentLocation, previousLocation, simDirection, isSimulationMode } = useLocation();
 
   // --- DEBUG REFS FOR WIDTHS ---
@@ -620,8 +509,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const aheadRef = useRef<HTMLDivElement>(null);
   const [aheadHeight, setAheadHeight] = useState(0);
   const MAX_AHEAD_HEIGHT = 400;
-  // Define MAX_BEHIND_HEIGHT near MAX_AHEAD_HEIGHT if not already
-  const MAX_BEHIND_HEIGHT = 400;
+  
   // Measure ahead section height on render and resize
   React.useLayoutEffect(() => {
     function updateAheadHeight() {
@@ -760,54 +648,21 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   const behindStickyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    function logHeight() {
-      if (behindStickyRef.current) {
-        console.log('[DEBUG] Behind section container height:', behindStickyRef.current.offsetHeight);
-      }
-    }
-    logHeight();
-    window.addEventListener('resize', logHeight);
-    return () => window.removeEventListener('resize', logHeight);
+    // Height logging for debugging (removed)
   }, []);
 
   useLayoutEffect(() => {
-    if (splitPaneRef.current) {
-      console.log('[DEBUG] splitPaneRef', splitPaneRef.current.offsetHeight, splitPaneRef.current.clientHeight);
-    }
+    // Split pane layout effect (removed debug logging)
   });
   useLayoutEffect(() => {
-    const el = document.querySelector('[data-behind-section]');
-    if (el) {
-      // @ts-ignore
-      console.log('[DEBUG] behind section', el.offsetHeight, el.clientHeight);
-    }
+    // Behind section layout effect (removed debug logging)
   });
 
   useLayoutEffect(() => {
-    if (behindStickyRef.current) {
-      console.log('[DEBUG] Behind section', {
-        offsetHeight: behindStickyRef.current.offsetHeight,
-        scrollHeight: behindStickyRef.current.scrollHeight,
-        clientHeight: behindStickyRef.current.clientHeight,
-      });
-    }
+    // Layout effect for behind section dimensions
   });
 
-  if (loading) {
-    return (
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography>Loading...</Typography>
-      </Box>
-    );
-  }
 
-  if (trailGraphError) {
-    return (
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography color="error">Error loading trail graph</Typography>
-      </Box>
-    );
-  }
 
   // Check if we have a current location
   if (!userStop) {
@@ -1003,7 +858,6 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   const renderStopList = (stops: Stop[], color?: string) => {
     const listColor = color || activeTrail.color;
-    console.log('[DEBUG] renderStopList called with:', { stops: stops.length, color: listColor });
     return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
   };
   

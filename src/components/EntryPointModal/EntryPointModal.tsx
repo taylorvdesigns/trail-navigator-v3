@@ -11,7 +11,7 @@ import L from 'leaflet';
 
 import { GrayscaleMapLayer } from '../MapView/GrayscaleMapLayer';
 import { useTrailsData } from '../../hooks/useTrailsData';
-import { findNearestTrailPoint } from '../../utils/trail';
+
 
 interface EntryPointModalProps {
   open: boolean;

@@ -4,9 +4,7 @@ import {
   Typography,
   IconButton,
   Divider,
-  Chip,
   useTheme,
-  useMediaQuery,
   Backdrop
 } from '@mui/material';
 import {
@@ -16,7 +14,6 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material';
 import { CategoryToggle } from '../CategoryToggle/CategoryToggle';
-import { useUser } from '../../contexts/UserContext';
 
 interface FilterBottomSheetProps {
   open: boolean;
@@ -34,8 +31,6 @@ export const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
   children
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { selectedCategories } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 

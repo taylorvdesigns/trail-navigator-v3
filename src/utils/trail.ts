@@ -1,4 +1,4 @@
-import { POI, TrailConfig, TrailPoint } from '../types/index';
+import { POI, TrailPoint } from '../types/index';
 
 interface SortedPOIs {
   ahead: POI[];
