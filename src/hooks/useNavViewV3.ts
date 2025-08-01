@@ -96,7 +96,9 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
   const { currentLocation } = useLocation();
 
   // Always convert currentLocation to [lat, lng] for trail calculations
-  const currentLocationLatLng = currentLocation ? [currentLocation[1], currentLocation[0]] as [number, number] : null;
+  const currentLocationLatLng = useMemo(() => {
+    return currentLocation ? [currentLocation[1], currentLocation[0]] as [number, number] : null;
+  }, [currentLocation]);
 
   const { activeTrailId, userPointOnTrail } = useMemo(() => {
     if (!currentLocationLatLng || !allTrailData) {
@@ -124,7 +126,7 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     });
 
     return { activeTrailId: closestMatch.trailId, userPointOnTrail: closestMatch.point };
-  }, [currentLocationLatLng, allTrailData, allTrails]);
+  }, [currentLocationLatLng, allTrailData]);
 
   const { stops, userStop } = useMemo(() => {
     if (!allTrailData || !activeTrailId) return { stops: [], userStop: null };

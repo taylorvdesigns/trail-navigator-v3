@@ -1,4 +1,19 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * ListView Component
+ * 
+ * Displays POIs (Points of Interest) in a scrollable list format with filtering,
+ * distance calculations, and interactive features like map navigation and Google Places integration.
+ * 
+ * Features:
+ * - Category-based filtering
+ * - Distance calculations using trail network
+ * - Google Places modal integration
+ * - Map navigation on POI selection
+ * - Featured POI highlighting
+ * - Google Place ID warning system
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Box, 
   List, 
@@ -25,28 +40,47 @@ import { useUser } from '../../contexts/UserContext';
 import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
 import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
 
+/**
+ * Props interface for ListView component
+ */
 interface ListViewProps {
-  pois: POI[];
-  selectedGroup?: string;
-  onPoiClick: (poi: POI) => void;
-  currentLocation?: [number, number] | null;
-  activeTrailId: string | null;
-  allTrailData: { id: string, points: TrailPoint[] }[] | null;
+  pois: POI[];                                    // Array of POIs to display
+  selectedGroup?: string;                        // Currently selected POI group
+  onPoiClick: (poi: POI) => void;               // Callback when POI is clicked
+  currentLocation?: [number, number] | null;    // User's current GPS coordinates
+  activeTrailId: string | null;                 // ID of the currently active trail
+  allTrailData: { id: string, points: TrailPoint[] }[] | null; // All trail data for distance calculations
 }
 
+/**
+ * Interface for grouping POIs by category or other criteria
+ */
 interface GroupedPOIs {
   [key: string]: POI[];
 }
 
-
-
-// Utility to check if a POI has the "Featured" category
+/**
+ * Utility function to check if a POI has the "Featured" category
+ * Used for highlighting special POIs in the list
+ * 
+ * @param poi - The POI to check
+ * @returns true if the POI has a "Featured" category, false otherwise
+ */
 function isFeaturedPOI(poi: POI): boolean {
   return poi.post_category?.some(category => 
     category.name?.toLowerCase() === 'featured'
   ) || false;
 }
 
+/**
+ * Determines whether to show the "Needs Google Place ID" warning for a POI
+ * 
+ * Some POIs (like water stations, parking lots, restrooms) don't need Google Place IDs
+ * and are explicitly marked with google_place_id = "none" in the WordPress backend
+ * 
+ * @param poi - The POI to check
+ * @returns true if warning should be shown, false if POI is exempt
+ */
 function shouldShowGooglePlaceIdWarning(poi: POI): boolean {
   // Don't show warning if Google Place ID is explicitly set to "none"
   // This indicates the POI doesn't need a Google Place ID
@@ -58,6 +92,9 @@ function shouldShowGooglePlaceIdWarning(poi: POI): boolean {
   return true;
 }
 
+/**
+ * Main ListView component that renders POIs in a list format
+ */
 export const ListView: React.FC<ListViewProps> = ({ 
   pois, 
   selectedGroup, 
@@ -66,19 +103,34 @@ export const ListView: React.FC<ListViewProps> = ({
   activeTrailId,
   allTrailData
 }) => {
+  // Navigation and routing hooks
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Trail graph for distance calculations
   const { graph } = useTrailGraph();
+  
+  // User preferences and state
   const { selectedCategories } = useUser();
+  
+  // URL parameters for group selection
   const searchParams = new URLSearchParams(location.search);
   const urlGroupParam = searchParams.get('group');
   const groupNameFromNav = urlGroupParam || location.state?.groupName || null;
+  
+  // Refs for scroll management
   const focusedGroupRef = React.useRef<HTMLDivElement>(null);
+  
+  // Modal state management
   const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
   const [selectedPoiName, setSelectedPoiName] = useState<string>('');
 
+  /**
+   * Filters POIs based on active trail and selected categories
+   * Uses React.useMemo for performance optimization
+   */
   const trailPois = React.useMemo(() => {
     // Start with all POIs
     let filteredPois = pois;
@@ -109,9 +161,32 @@ export const ListView: React.FC<ListViewProps> = ({
     return filteredPois;
   }, [pois, activeTrailId, selectedCategories]);
 
+  // State for tracking the currently selected tag/group
   const [selectedTag, setSelectedTag] = useState<string | null>(groupNameFromNav);
   
-  // Handle URL parameter changes for focused groups
+  /**
+   * Handles navigation to map view with POI focus
+   * Creates a shareable URL with POI parameter and preserves simulation mode if active
+   * 
+   * @param poi - The POI to focus on the map
+   */
+  const handleShowOnMap = useCallback((poi: POI) => {
+    // Navigate to map with POI parameter for shareable URL
+    const searchParams = new URLSearchParams();
+    const modeParam = location.search.match(/mode=([^&]+)/)?.[1];
+    if (modeParam === 'sim') {
+      searchParams.set('mode', 'sim');
+    }
+    searchParams.set('poi', poi.id.toString());
+    
+    const url = `/map?${searchParams.toString()}`;
+    navigate(url);
+  }, [location.search, navigate]);
+  
+  /**
+   * Handle URL parameter changes for focused groups
+   * Scrolls to the focused group when URL parameters change
+   */
   useEffect(() => {
     if (urlGroupParam && urlGroupParam !== selectedTag) {
       setSelectedTag(urlGroupParam);
@@ -128,7 +203,10 @@ export const ListView: React.FC<ListViewProps> = ({
     }
   }, [urlGroupParam, selectedTag]);
   
-  // If groupNameFromNav changes, update selectedTag and potentially open POI modal
+  /**
+   * Handle navigation-based group selection and individual POI handling
+   * If groupNameFromNav changes, update selectedTag and potentially open POI modal
+   */
   React.useEffect(() => {
     if (groupNameFromNav) {
       setSelectedTag(groupNameFromNav);
@@ -161,11 +239,12 @@ export const ListView: React.FC<ListViewProps> = ({
         handleShowOnMap(matchingPOI);
       }
     }
-  }, [groupNameFromNav, trailPois]);
+  }, [groupNameFromNav, trailPois, handleShowOnMap]);
 
-  // Debug: Log POI data to see what we're working with
-  // (Removed debug useEffect)
-
+  /**
+   * Groups POIs by their first tag for organized display
+   * Uses React.useMemo for performance optimization
+   */
   const groupedPois = React.useMemo(() => {
     return trailPois.reduce((acc: GroupedPOIs, poi) => {
       const groupName = poi.post_tags[0]?.name || 'Ungrouped';
@@ -177,6 +256,10 @@ export const ListView: React.FC<ListViewProps> = ({
     }, {});
   }, [trailPois]);
 
+  /**
+   * Extracts unique tags from all POIs for filtering and navigation
+   * Uses React.useMemo for performance optimization
+   */
   const uniqueTags = React.useMemo(() => {
     const tags = new Set<string>();
     trailPois.forEach(poi => {
@@ -187,6 +270,13 @@ export const ListView: React.FC<ListViewProps> = ({
     return Array.from(tags);
   }, [trailPois]);
 
+  /**
+   * Calculates the network distance from user's current location to a POI
+   * Uses the trail graph for accurate trail-based distance calculations
+   * 
+   * @param poi - The POI to calculate distance to
+   * @returns Distance in meters, or null if calculation is not possible
+   */
   const getDistance = (poi: POI): number | null => {
     if (!graph || !currentLocation || !poi.coordinates) return null;
     // Both currentLocation and poi.coordinates are already in [lng, lat] format
@@ -198,19 +288,12 @@ export const ListView: React.FC<ListViewProps> = ({
 
 
 
-  const handleShowOnMap = (poi: POI) => {
-    // Navigate to map with POI parameter for shareable URL
-    const searchParams = new URLSearchParams();
-    const modeParam = location.search.match(/mode=([^&]+)/)?.[1];
-    if (modeParam === 'sim') {
-      searchParams.set('mode', 'sim');
-    }
-    searchParams.set('poi', poi.id.toString());
-    
-    const url = `/map?${searchParams.toString()}`;
-    navigate(url);
-  };
-
+  /**
+   * Opens the Google Places modal for a POI
+   * Sets the selected place ID and POI name for the modal
+   * 
+   * @param poi - The POI to show Google Places information for
+   */
   const handleOpenGooglePlaces = (poi: POI) => {
     if (poi.google_place_id) {
       setSelectedPlaceId(poi.google_place_id);
@@ -222,7 +305,7 @@ export const ListView: React.FC<ListViewProps> = ({
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       
-      {/* Tags Filter */}
+      {/* Tags Filter Section - Allows filtering POIs by their tags */}
       <Box sx={{ p: 2, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
         <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
           <Chip
@@ -241,7 +324,7 @@ export const ListView: React.FC<ListViewProps> = ({
         </Box>
       </Box>
 
-      {/* Category Filter Summary */}
+      {/* Category Filter Summary - Shows active category filters and POI count */}
       {selectedCategories.length > 0 && (
         <Box sx={{ p: 2, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -268,7 +351,7 @@ export const ListView: React.FC<ListViewProps> = ({
         </Box>
       )}
 
-      {/* POI List */}
+      {/* Main POI List - Scrollable container for POI items */}
       <Box sx={{ flex: 1, overflow: 'auto', bgcolor: 'background.default' }}>
         {trailPois.length === 0 ? (
           <Box sx={{ 
@@ -453,7 +536,7 @@ export const ListView: React.FC<ListViewProps> = ({
 
 
 
-      {/* Filter Bottom Sheet */}
+      {/* Filter Bottom Sheet - Modal for category filtering */}
       <FilterBottomSheet
         open={filterBottomSheetOpen}
         onClose={() => setFilterBottomSheetOpen(false)}
@@ -461,7 +544,7 @@ export const ListView: React.FC<ListViewProps> = ({
         title="List Filters"
       />
 
-      {/* Google Places Modal */}
+      {/* Google Places Modal - Displays business information from Google Places API */}
       <GooglePlacesModal
         open={googlePlacesModalOpen}
         onClose={() => setGooglePlacesModalOpen(false)}

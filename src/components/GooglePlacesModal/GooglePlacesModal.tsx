@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -76,13 +76,7 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (open && placeId) {
-      fetchPlaceDetails();
-    }
-  }, [open, placeId]);
-
-  const fetchPlaceDetails = async () => {
+  const fetchPlaceDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -94,7 +88,13 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [placeId]);
+
+  useEffect(() => {
+    if (open && placeId) {
+      fetchPlaceDetails();
+    }
+  }, [open, placeId, fetchPlaceDetails]);
 
   const getPriceLevelText = (level?: number) => {
     if (!level) return '';

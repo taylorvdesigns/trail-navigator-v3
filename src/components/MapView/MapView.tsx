@@ -1,6 +1,24 @@
+/**
+ * MapView Component
+ * 
+ * Main map component that displays trails, POIs, and user location using Leaflet.
+ * Handles map interactions, POI clustering, trail visualization, and user navigation.
+ * 
+ * Features:
+ * - Interactive map with trail overlays
+ * - POI markers with category-based icons
+ * - User location tracking
+ * - POI clustering and grouping
+ * - Trail network visualization
+ * - Zoom and pan controls
+ * - POI focus and navigation
+ * - Category filtering
+ * - Distance calculations
+ */
+
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { MapContainer, TileLayer, Polyline, Marker, Polygon, useMap, Popup, Pane } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Marker, Polygon, Popup, Pane } from 'react-leaflet';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
 import './MapView.module.css';
@@ -24,76 +42,19 @@ import { useCategories } from '../../hooks/useCategories';
 import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
 import { POIDistanceModal } from '../POIDistanceModal';
 
+/**
+ * Props interface for MapView component
+ */
 interface MapViewProps {
-  trails: TrailConfig[];
-  pois?: POI[];
-  onPoiClick?: (poi: POI) => void;
-  center?: [number, number];
-  zoom?: number;
-  currentLocation?: [number, number];
-  highlightedPOIs?: POI[];
-  onZoomChange?: (zoom: number) => void;
-  fitBounds?: [number, number][] | null;
-}
-
-
-
-// Helper: Check if a point is inside a polygon (ray-casting algorithm)
-function pointInPolygon(point: [number, number], polygon: [number, number][]) {
-  let [x, y] = point;
-  let inside = false;
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    let xi = polygon[i][0], yi = polygon[i][1];
-    let xj = polygon[j][0], yj = polygon[j][1];
-    let intersect = ((yi > y) !== (yj > y)) &&
-      (x < (xj - xi) * (y - yi) / (yj - yi + 1e-12) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-// Helper: Check if a point is near a polyline (trail)
-function pointNearPolyline(point: [number, number], polyline: [number, number][], threshold = 0.0005) {
-  let minDist = Infinity;
-  for (let i = 0; i < polyline.length - 1; i++) {
-    const [x1, y1] = polyline[i];
-    const [x2, y2] = polyline[i + 1];
-    // Project point onto segment
-    const A = point[0] - x1;
-    const B = point[1] - y1;
-    const C = x2 - x1;
-    const D = y2 - y1;
-    const dot = A * C + B * D;
-    const len_sq = C * C + D * D;
-    let param = len_sq !== 0 ? dot / len_sq : -1;
-    let xx, yy;
-    if (param < 0) {
-      xx = x1; yy = y1;
-    } else if (param > 1) {
-      xx = x2; yy = y2;
-    } else {
-      xx = x1 + param * C;
-      yy = y1 + param * D;
-    }
-    const dx = point[0] - xx;
-    const dy = point[1] - yy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < minDist) minDist = dist;
-  }
-  return minDist < threshold;
-}
-
-
-
-// Helper: Convert pixel size to map degrees (approximate, latitude only)
-function pixelsToLatLng(width: number, height: number, lat: number, zoom: number) {
-  // 256 * 2^zoom pixels = 360 degrees
-  const scale = 256 * Math.pow(2, zoom) / 360;
-  const degPerPx = 1 / scale;
-  return {
-    dLat: degPerPx * height,
-    dLng: degPerPx * width / Math.cos(lat * Math.PI / 180)
-  };
+  trails: TrailConfig[];                           // Array of trail configurations to display
+  pois?: POI[];                                   // Array of POIs to display on the map
+  onPoiClick?: (poi: POI) => void;               // Callback when a POI is clicked
+  center?: [number, number];                     // Initial map center coordinates [lat, lng]
+  zoom?: number;                                 // Initial zoom level
+  currentLocation?: [number, number];           // User's current GPS coordinates
+  highlightedPOIs?: POI[];                      // POIs to highlight on the map
+  onZoomChange?: (zoom: number) => void;        // Callback when zoom level changes
+  fitBounds?: [number, number][] | null;        // Bounds to fit the map to
 }
 
 
@@ -102,50 +63,59 @@ function pixelsToLatLng(width: number, height: number, lat: number, zoom: number
 
 
 
+
+
+/**
+ * Main MapView component that renders the interactive map with trails and POIs
+ */
 export const MapView: React.FC<MapViewProps> = ({
   trails,
   pois,
   onPoiClick,
-  center = [34.8526, -82.3940],
+  center = [34.8526, -82.3940],  // Default center: Greenville, SC
   zoom = 13,
   currentLocation,
   highlightedPOIs,
   onZoomChange,
   fitBounds
 }) => {
-  const { categories } = useCategories(); // Add categories hook
-  const { trackTrailEvent } = useAnalytics();
-  const location = useRouterLocation();
-  const mapRef = useRef<L.Map | null>(null);
-  const locationContext = useContext(LocationContext);
-  const { selectedCategories } = useUser();
-  const navigate = useNavigate();
+  // Hooks for data and functionality
+  const { categories } = useCategories(); // Categories for POI filtering
+  const { trackTrailEvent } = useAnalytics(); // Analytics tracking
+  const location = useRouterLocation(); // React Router location
+  const mapRef = useRef<L.Map | null>(null); // Leaflet map reference
+  const locationContext = useContext(LocationContext); // Location context
+  const { selectedCategories } = useUser(); // User's selected categories
+  const navigate = useNavigate(); // Navigation function
   
-  // Use the location from context if available, otherwise fall back to prop
+  // Location state management
   const userLocation = locationContext?.currentLocation || currentLocation;
   const entryPoint = locationContext?.entryPoint;
   const isSimPlaying = locationContext?.isSimPlaying || false;
   const simAnimatedLocation = locationContext?.simAnimatedLocation;
   
+  // Component state management
+  const [focusedGroup, setFocusedGroup] = useState<string | null>(null); // Currently focused POI group
+  const [showViewList, setShowViewList] = useState(false); // Show list view toggle
+  const [showZoomOut, setShowZoomOut] = useState(false); // Show zoom out button
+  const [lastBounds, setLastBounds] = useState<[number, number][]>([]); // Previous map bounds
+  const [showPOIGroupLabels, setShowPOIGroupLabels] = useState(true); // Show POI group labels
+  const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false); // Filter modal state
+  const [hasInitialLoad, setHasInitialLoad] = useState(false); // Initial load flag
+  const [currentZoom, setCurrentZoom] = useState<number>(zoom); // Current zoom level
+  const [selectedPOI, setSelectedPOI] = useState<POI | null>(null); // Currently selected POI
+  const [hasShownInitialZoom, setHasShownInitialZoom] = useState(false); // Initial zoom shown flag
+  const [isProgrammaticZoom, setIsProgrammaticZoom] = useState(false); // Programmatic zoom flag
+  const [labelHighlightedPOI, setLabelHighlightedPOI] = useState<POI | null>(null); // POI with highlighted label
+  const [showDistanceModal, setShowDistanceModal] = useState(false); // Distance modal state
 
-  
-  const [focusedGroup, setFocusedGroup] = useState<string | null>(null);
-  const [showViewList, setShowViewList] = useState(false);
-  const [showZoomOut, setShowZoomOut] = useState(false);
-  const [lastBounds, setLastBounds] = useState<[number, number][]>([]);
-  const [showPOIGroupLabels, setShowPOIGroupLabels] = useState(true);
-  const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
-  const [hasInitialLoad, setHasInitialLoad] = useState(false);
-  const [currentZoom, setCurrentZoom] = useState<number>(zoom);
-  const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
-  const [hasShownInitialZoom, setHasShownInitialZoom] = useState(false);
-  const [isProgrammaticZoom, setIsProgrammaticZoom] = useState(false);
-  const [labelHighlightedPOI, setLabelHighlightedPOI] = useState<POI | null>(null);
-  const [showDistanceModal, setShowDistanceModal] = useState(false);
-
+  // Trail data and junction processing
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
 
-  // Find trail junctions with a higher threshold (20 meters)
+  /**
+   * Find trail junctions with a higher threshold (20 meters)
+   * Used for identifying intersection points between trails
+   */
   const junctions = useTrailJunctions(
     trailsData?.map(data => ({
       id: data.id,
@@ -154,7 +124,10 @@ export const MapView: React.FC<MapViewProps> = ({
     20 // Increased threshold from 10 to 20 meters
   );
 
-  // Transform trail data to include coordinates
+  /**
+   * Transform trail data to include coordinates for map rendering
+   * Converts trail points to [lat, lng] format for Leaflet
+   */
   const trailsWithCoordinates = useMemo(() => {
     return trails.map((trail, index) => {
       const trailData = trailsData[index];
@@ -165,17 +138,20 @@ export const MapView: React.FC<MapViewProps> = ({
     });
   }, [trails, trailsData]);
 
-  // Get highlightPOI from navigation state
+  // Get highlightPOI from navigation state for initial POI focus
   const { highlightPOI, highlightZoom } = location.state || {};
  
 
  
-  // Get focusedGroup and POI from URL parameters
+  // URL parameter handling for group and POI focus
   const searchParams = new URLSearchParams(location.search);
   const urlGroupParam = searchParams.get('group');
   const urlPoiParam = searchParams.get('poi');
   
-  // Convert URL group parameter to group name if it's a slug
+  /**
+   * Convert URL group parameter to group name if it's a slug
+   * Handles both direct tag names and slug-to-name conversion
+   */
   const urlGroupName = useMemo(() => {
     if (!urlGroupParam || !pois) return null;
     
@@ -276,7 +252,10 @@ export const MapView: React.FC<MapViewProps> = ({
   // Note: Removed automatic exit on zoom/move to allow users to explore context
   // Users can now zoom/pan freely without losing POI focus
  
-  // Group POIs by their first post tag
+  /**
+   * Group POIs by their first post tag for clustering and organization
+   * Creates a map of group names to arrays of POI coordinates and names
+   */
   const groupedPOIs = useMemo(() => {
     const groups: Record<string, Array<{ coordinates: [number, number], name: string }>> = {};
     pois?.forEach(poi => {
@@ -292,12 +271,18 @@ export const MapView: React.FC<MapViewProps> = ({
     return groups;
   }, [pois]);
 
-  // Get all trail coordinates for bounds fitting
+  /**
+   * Get all trail coordinates for bounds fitting
+   * Flattens all trail coordinates into a single array for map bounds calculation
+   */
   const allTrailCoords = useMemo(() => {
     return trailsWithCoordinates.flatMap(trail => trail.coordinates || []);
   }, [trailsWithCoordinates]);
 
-  // Determine if we should fit bounds
+  /**
+   * Determine if we should fit bounds to trails
+   * Prevents auto-fitting when specific bounds are provided (e.g., for POI groups)
+   */
   const shouldFitBounds = useMemo(() => {
     // Don't auto-fit to trails if we have specific fitBounds (like for POI groups)
     if (fitBounds && fitBounds.length > 0) {
@@ -315,25 +300,7 @@ export const MapView: React.FC<MapViewProps> = ({
     return center || [35.7796, -78.6382]; // Default to Raleigh
   }, [highlightPOI, center]);
 
-  // Create custom icons
-  const highlightIcon = new L.DivIcon({
-    className: 'highlight-poi-marker',
-    iconAnchor: [8, 8],
-    html: `<div style="display:flex;align-items:center;">
-      <div style='width:14px;height:14px;background:#e53935;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.15);'></div>
-      <div style='margin-left:8px;padding:2px 8px;background:#fff;border-radius:4px;font-size:14px;font-weight:bold;color:#333;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;'>POI_LABEL</div>
-    </div>`
-  });
 
-  const defaultIcon = new L.Icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
 
   // Create a custom React component for the user location marker
   const UserLocationMarker = () => (
@@ -364,12 +331,7 @@ export const MapView: React.FC<MapViewProps> = ({
     html: ReactDOMServer.renderToString(<UserLocationMarker />)
   });
 
-  const poiIcon = L.divIcon({
-    className: 'poi-marker',
-    iconSize: [12, 12],
-    iconAnchor: [6, 6],
-    html: `<div style='width:12px;height:12px;background:#00ff00;border-radius:50%;border:2px solid #fff;'></div>`
-  });
+
 
   // Helper to get group post_tag by name
   const getGroupTag = (groupName: string) => {
@@ -428,7 +390,7 @@ export const MapView: React.FC<MapViewProps> = ({
     return () => {
       map.off('zoomend', handleZoom);
     };
-  }, [mapRef.current]); // Run when mapRef.current changes (when map is created)
+  }, [onZoomChange]); // Run when onZoomChange changes
 
     // Function to determine marker size based on zoom level
   const getMarkerSize = (isHighlighted: boolean, zoomLevel: number): number => {
@@ -457,31 +419,7 @@ export const MapView: React.FC<MapViewProps> = ({
     return colorMap;
   }, [pois, trailsData]);
 
-  // Helper: Get the trail color for a POI group by majority
-  const getGroupTrailColor = (groupPOIs: any[]): string => {
-    if (!groupPOIs || groupPOIs.length === 0 || !trails) return '#84d2cf'; // fallback accent
-    // Count trailId occurrences
-    const trailIdCounts: Record<string, number> = {};
-    groupPOIs.forEach((poi: any) => {
-      const trailId = poi.trailId || poi.trail_id || poi.trail_id_main || poi.trail_id_spur; // try common fields
-      if (trailId) {
-        trailIdCounts[trailId] = (trailIdCounts[trailId] || 0) + 1;
-      }
-    });
-    // Find the most common trailId
-    let maxCount = 0;
-    let majorityTrailId: string | null = null;
-    for (const [trailId, count] of Object.entries(trailIdCounts)) {
-      const countNum = typeof count === 'number' ? count : Number(count);
-      if (countNum > maxCount) {
-        maxCount = countNum;
-        majorityTrailId = trailId;
-      }
-    }
-    // Find the color for the majority trail
-    const trail = trails.find(t => t.id === majorityTrailId || t.routeId === majorityTrailId);
-    return trail?.color || '#84d2cf';
-  };
+
 
   // Helper function to get category icon for a POI
   const getCategoryIcon = (poi: POI) => {
@@ -675,8 +613,6 @@ export const MapView: React.FC<MapViewProps> = ({
           centroidLngLat[1] /= expandedHullLngLat.length;
           // For rendering, convert centroid to [lat, lng]
           const centroidLatLng: [number, number] = [centroidLngLat[1], centroidLngLat[0]];
-          // Get the group color by majority trail
-          const groupColor = getGroupTrailColor(groupPOIs);
           return (
             <React.Fragment key={groupName}>
               <Polygon

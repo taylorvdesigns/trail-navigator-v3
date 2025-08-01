@@ -1,3 +1,21 @@
+/**
+ * AppContent Component
+ * 
+ * Main application content component that handles routing, view management, and global state coordination.
+ * This is the core component that manages the overall application flow and view switching.
+ * 
+ * Features:
+ * - Route management and navigation
+ * - View mode switching (Map, List, Nav)
+ * - POI and trail data management
+ * - Location tracking and simulation mode
+ * - WordPress configuration integration
+ * - Analytics tracking
+ * - Development mode features
+ * - Entry point selection
+ * - Trail network visualization
+ */
+
 // Main application content component
 // Handles routing, view management, and global state coordination
 import React, { useState, useEffect, useMemo } from 'react';
@@ -27,7 +45,14 @@ import { GooglePlacesModal } from './GooglePlacesModal/GooglePlacesModal';
 import { AnalyticsProvider } from '../contexts/AnalyticsContext';
 import { Analytics } from '@vercel/analytics/react';
 
-// Convert WordPress trail config to TrailConfig
+/**
+ * Convert WordPress trail config to TrailConfig format
+ * Transforms WordPress API data into the internal trail configuration format
+ * 
+ * @param wpTrail - WordPress trail configuration from API
+ * @param trailData - Optional trail data with endpoints
+ * @returns TrailConfig object for internal use
+ */
 export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
   return {
     ...wpTrail,
@@ -38,7 +63,15 @@ export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: 
   };
 };
 
-// Utility: Check if user is near any trail (within 100m)
+/**
+ * Utility function: Check if user is near any trail (within specified threshold)
+ * Used to determine if user should be prompted for simulation mode
+ * 
+ * @param currentLocation - User's current GPS coordinates
+ * @param allTrailData - Array of all trail data
+ * @param threshold - Distance threshold in meters (default: 100m)
+ * @returns true if user is within threshold distance of any trail
+ */
 function isUserNearAnyTrail(currentLocation: [number, number] | null, allTrailData: any[] | null, threshold = 100): boolean {
   if (!currentLocation || !allTrailData) return false;
   for (const trail of allTrailData) {
@@ -52,49 +85,60 @@ function isUserNearAnyTrail(currentLocation: [number, number] | null, allTrailDa
   return false;
 }
 
-// SimulationModeModal: prompts user to use simulation mode if not on trail
+/**
+ * SimulationModeModal: Prompts user to use simulation mode if not on trail
+ * Modal component that appears when user is not near any trail
+ */
 const SimulationModeModal: React.FC<{ open: boolean; onClose: () => void; onSimulate: () => void }> = ({ open, onClose, onSimulate }) => (
   <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
     <DialogTitle sx={{ color: 'white', bgcolor: '#222' }}>Not on the Trail</DialogTitle>
     <DialogContent sx={{ color: 'white', bgcolor: '#222' }}>
       <Typography variant="body1" sx={{ color: 'white' }}>
-        You’re not currently on the trail. Would you like to use Simulation Mode to test the app?
+        You're not currently on the trail. Would you like to use Simulation Mode to test the app?
       </Typography>
     </DialogContent>
     <DialogActions sx={{ bgcolor: '#222' }}>
       <Button onClick={onSimulate} color="success" variant="contained">Yes, use Simulation Mode</Button>
-      <Button onClick={onClose} color="inherit" variant="outlined">No, I’ll wait</Button>
+      <Button onClick={onClose} color="inherit" variant="outlined">No, I'll wait</Button>
     </DialogActions>
   </Dialog>
 );
 
+/**
+ * Main AppContent component that manages the overall application state and routing
+ */
 export const AppContent: React.FC = () => {
+  // State management
   const [locomotionMode, setLocomotionMode] = useState<LocomotionMode>('walking');
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
   const { data: wpConfig, isLoading: wpLoading, error: wpError } = useWordPressConfig();
   const navigate = useNavigate();
   const routerLocation = useRouterLocation();
   
-  // Get focused group from URL parameters
+  // Get focused group from URL parameters for navigation state
   const searchParams = new URLSearchParams(routerLocation.search);
   const focusedGroup = searchParams.get('group');
   
-  // Debug: Monitor location changes
+  // Debug: Monitor location changes (commented out for production)
   useEffect(() => {
     // console.log('Pathname changed to:', routerLocation.pathname);
     // console.log('Search params:', routerLocation.search);
   }, [routerLocation.pathname, routerLocation.search]);
   
+  // Location and development mode context
   const { currentLocation, entryPoint } = useLocation();
   const { isDevMode } = useDevMode();
 
-  // Memoize the trails configuration
+  /**
+   * Memoize the trails configuration to prevent unnecessary re-renders
+   * Converts WordPress trail configs to internal format
+   */
   const trailConfigs = useMemo(() => 
     wpConfig?.trails?.map(t => convertToTrailConfig(t)) || [],
     [wpConfig?.trails]
   );
 
-  // Get trail data from RideWithGPS
+  // Get trail data from RideWithGPS API
   const { data: trailData, isLoading: trailDataLoading } = useTrailsData(trailConfigs);
 
   // Convert WordPress trails to TrailConfig with endpoints

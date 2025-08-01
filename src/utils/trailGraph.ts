@@ -1,3 +1,20 @@
+/**
+ * Trail Graph Utilities
+ * 
+ * Utility module for building and using a trail network graph for navigation.
+ * This module does NOT fetch data; it only organizes and processes already-loaded 
+ * trail, POI, and junction data to create a navigable graph structure.
+ * 
+ * Features:
+ * - Graph construction from trail configurations
+ * - Pathfinding algorithms for trail navigation
+ * - Distance calculations using trail network
+ * - POI and junction integration
+ * - Network-based distance calculations
+ * - Point projection onto trail segments
+ * - Junction connectivity analysis
+ */
+
 // trailGraph.ts
 // Utility for building and using a trail network graph for navigation
 // This module does NOT fetch data; it only organizes and processes already-loaded trail, POI, and junction data.
@@ -7,21 +24,20 @@ import { Graph, GraphNode, GraphEdge } from '../types/graph';
 import { haversine } from './distance';
 
 /**
- * The full trail network graph
+ * The full trail network graph interface
+ * Represents the complete navigable trail system as a graph structure
  */
 export interface TrailGraph {
-  nodes: Record<string, GraphNode>;
-  edges: GraphEdge[];
+  nodes: Record<string, GraphNode>;  // All nodes in the graph (endpoints, junctions, POIs)
+  edges: GraphEdge[];                // All edges connecting nodes
 }
-
-
-
-
-
-
 
 /**
  * Builds a graph from trail configurations
+ * Creates a navigable graph structure from trail data including endpoints, junctions, and POIs
+ * 
+ * @param trails - Array of trail configurations to build the graph from
+ * @returns Graph object representing the trail network
  */
 export function buildTrailGraph(trails: TrailConfig[]): Graph {
   const nodes: Record<string, GraphNode> = {};
@@ -49,7 +65,7 @@ export function buildTrailGraph(trails: TrailConfig[]): Graph {
     nodes[endpoint2.id] = endpoint2;
   });
 
-  // Add junctions
+  // Add junctions (intersection points between trails)
   trails.forEach(trail => {
     trail.junctions.forEach(junction => {
       const junctionNode: GraphNode = {
@@ -64,7 +80,7 @@ export function buildTrailGraph(trails: TrailConfig[]): Graph {
     });
   });
 
-  // Add POIs
+  // Add POIs (Points of Interest) along trails
   trails.forEach(trail => {
     trail.pois.forEach(poi => {
       const poiNode: GraphNode = {
@@ -79,20 +95,20 @@ export function buildTrailGraph(trails: TrailConfig[]): Graph {
     });
   });
 
-  // Add edges
+  // Add edges (connections between nodes along trails)
   trails.forEach(trail => {
     const trailNodes = Object.values(nodes).filter(node => 
       node.trails?.includes(trail.id)
     );
 
-    // Sort nodes by distance along trail
+    // Sort nodes by distance along trail from start point
     trailNodes.sort((a, b) => {
       const distA = haversine(trail.start.coordinates, a.position);
       const distB = haversine(trail.start.coordinates, b.position);
       return distA - distB;
     });
 
-    // Add edges between consecutive nodes
+    // Add edges between consecutive nodes along the trail
     for (let i = 0; i < trailNodes.length - 1; i++) {
       const source = trailNodes[i];
       const target = trailNodes[i + 1];
@@ -499,6 +515,12 @@ export function projectPointOntoGraphEdge(
 /**
  * Calculates the true network distance between two arbitrary points along the trail graph,
  * using projection onto the nearest edges and Dijkstra for the path in between.
+ * This is the core function for accurate trail-based distance calculations.
+ * 
+ * @param graph - The trail network graph
+ * @param startPoint - Starting coordinates [lng, lat]
+ * @param endPoint - Ending coordinates [lng, lat]
+ * @returns Network distance in meters, or null if calculation is not possible
  */
 export function calculatePreciseNetworkDistance(
   graph: Graph,
@@ -546,9 +568,11 @@ export function calculatePreciseNetworkDistance(
 
 /**
  * Returns the network (along-trail) distance in meters between two points using the trail graph.
- * @param graph The trail network graph
- * @param fromCoords [lng, lat] of the starting point (e.g., user)
- * @param toCoords [lng, lat] of the destination (e.g., POI)
+ * This is the main public interface for network distance calculations.
+ * 
+ * @param graph - The trail network graph
+ * @param fromCoords - [lng, lat] of the starting point (e.g., user location)
+ * @param toCoords - [lng, lat] of the destination (e.g., POI location)
  * @returns Network distance in meters, or null if not computable
  */
 export function getNetworkDistanceBetweenPoints(

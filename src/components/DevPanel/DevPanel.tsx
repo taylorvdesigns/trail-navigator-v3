@@ -74,14 +74,14 @@ export const DevPanel: React.FC = () => {
     if (simIndex !== minIdx) {
       setSimIndex(minIdx);
     }
-  }, [currentLocation, trailPoints, simIndex, isSimPlaying]);
+  }, [currentLocation, trailPoints, simIndex, isSimPlaying, setSimIndex]);
 
   // Keep simulation trail points in sync with context
   useEffect(() => {
     if (!isSimPlaying) {
       setSimTrailPoints(trailPoints);
     }
-  }, [trailPoints, isSimPlaying]);
+  }, [trailPoints, isSimPlaying, setSimTrailPoints]);
 
   // Simple control handlers
   const handlePlay = () => {
