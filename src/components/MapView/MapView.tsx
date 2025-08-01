@@ -24,6 +24,7 @@ import { slugToTagName } from '../../utils/poi';
 import { useAnalytics } from '../../contexts/AnalyticsContext';
 import { useCategories } from '../../hooks/useCategories';
 import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
+import { POIDistanceModal } from '../POIDistanceModal';
 
 interface MapViewProps {
   trails: TrailConfig[];
@@ -237,6 +238,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const [hasShownInitialZoom, setHasShownInitialZoom] = useState(false);
   const [isProgrammaticZoom, setIsProgrammaticZoom] = useState(false);
   const [labelHighlightedPOI, setLabelHighlightedPOI] = useState<POI | null>(null);
+  const [showDistanceModal, setShowDistanceModal] = useState(false);
 
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
 
@@ -327,26 +329,13 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Handle URL parameter changes for POI selection
   useEffect(() => {
-    console.log('🔍 POI Navigation Debug:', {
-      urlPoiParam,
-      poisCount: pois?.length,
-      mapRefExists: !!mapRef.current,
-      selectedPOI: !!selectedPOI,
-      hasInitialLoad,
-      poisLoaded: !!pois
-    });
-    
     if (urlPoiParam && pois && pois.length > 0 && mapRef.current && !selectedPOI && hasInitialLoad) {
       const targetPOI = pois.find(poi => poi.id.toString() === urlPoiParam);
       
       if (targetPOI) {
-        console.log('🎯 Found target POI:', targetPOI.title.rendered, 'ID:', targetPOI.id);
-        console.log('📍 POI coordinates:', targetPOI.coordinates);
-        
         // Check if coordinates are valid
         if (!targetPOI.coordinates || targetPOI.coordinates.length !== 2 || 
             isNaN(targetPOI.coordinates[0]) || isNaN(targetPOI.coordinates[1])) {
-          console.log('❌ Invalid POI coordinates:', targetPOI.coordinates);
           return;
         }
         
@@ -355,24 +344,17 @@ export const MapView: React.FC<MapViewProps> = ({
         
         // Direct zoom to the POI with smooth animation
         const poiCoords: [number, number] = [targetPOI.coordinates[1], targetPOI.coordinates[0]]; // [latitude, longitude] for Leaflet
-        console.log('🎯 Zooming to coordinates:', poiCoords);
-        
-        console.log('🔍 Zooming directly to POI at level 18');
         setIsProgrammaticZoom(true);
         
         // Add a small delay to ensure the map is fully ready
         setTimeout(() => {
           if (mapRef.current) {
             mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
-            console.log('✅ Direct zoom completed');
           }
         }, 100);
         
         // Reset the flag after a short delay to allow the zoom to complete
         setTimeout(() => setIsProgrammaticZoom(false), 1000);
-      } else {
-        console.log('❌ POI not found for ID:', urlPoiParam);
-        console.log('Available POI IDs:', pois.map(p => p.id));
       }
     }
   }, [urlPoiParam, pois, selectedPOI, hasInitialLoad]);
@@ -386,31 +368,8 @@ export const MapView: React.FC<MapViewProps> = ({
   }, [urlPoiParam, selectedPOI]);
 
   // Clear selected POI on map interaction
-  useEffect(() => {
-    if (!mapRef.current || !selectedPOI) return;
-    
-    const map = mapRef.current;
-    const handleMapInteraction = () => {
-      // Don't clear selected POI if we're in the middle of a programmatic zoom
-      if (selectedPOI && !isProgrammaticZoom) {
-        setSelectedPOI(null);
-        setHasShownInitialZoom(false);
-        // Remove POI parameter from URL
-        const newSearchParams = new URLSearchParams(location.search);
-        newSearchParams.delete('poi');
-        const newSearch = newSearchParams.toString();
-        navigate(`/map?${newSearch}`, { replace: true });
-      }
-    };
-    
-    map.on('moveend', handleMapInteraction);
-    map.on('zoomend', handleMapInteraction);
-    
-    return () => {
-      map.off('moveend', handleMapInteraction);
-      map.off('zoomend', handleMapInteraction);
-    };
-  }, [selectedPOI, location.search, navigate, isProgrammaticZoom]);
+  // Note: Removed automatic exit on zoom/move to allow users to explore context
+  // Users can now zoom/pan freely without losing POI focus
  
   // Group POIs by their first post tag
   const groupedPOIs = useMemo(() => {
@@ -536,7 +495,6 @@ export const MapView: React.FC<MapViewProps> = ({
     const map = mapRef.current;
     const handleZoom = () => {
       const newZoom = map.getZoom();
-      console.log(`🗺️ Zoom changed to: ${newZoom}`);
       setCurrentZoom(newZoom);
       if (onZoomChange) {
         onZoomChange(newZoom);
@@ -545,7 +503,6 @@ export const MapView: React.FC<MapViewProps> = ({
     map.on('zoomend', handleZoom);
     // Call once on mount
     const initialZoom = map.getZoom();
-    console.log(`🗺️ Initial zoom: ${initialZoom}`);
     setCurrentZoom(initialZoom);
     if (onZoomChange) {
       onZoomChange(initialZoom);
@@ -561,11 +518,9 @@ export const MapView: React.FC<MapViewProps> = ({
 
     // If zoomed in (zoom level 15 or higher), make markers larger
     if (zoomLevel >= 15) {
-      console.log(`🔍 Zoom level ${zoomLevel}: Using large markers (${isHighlighted ? 28 : 24}px)`);
       return isHighlighted ? 28 : 24; // Increased from 24/20 to 28/24
     }
 
-    console.log(`🔍 Zoom level ${zoomLevel}: Using small markers (${baseSize}px)`);
     return baseSize; // Default size for zoomed out view
   };
 
@@ -744,7 +699,6 @@ export const MapView: React.FC<MapViewProps> = ({
                   setShowZoomOut(true);
                   setLastBounds(latLngBounds as [number, number][]);
                 }
-                console.log('MapView whenReady: URL parameter handling - urlGroupName:', urlGroupName, 'focusedGroup:', focusedGroup);
               } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup) {
                 // Fallback: ensure bounds fitting happens on initial load
                 setTimeout(() => {
@@ -754,7 +708,6 @@ export const MapView: React.FC<MapViewProps> = ({
                   }
                 }, 100);
               }
-              console.log('✅ Map initialized, setting hasInitialLoad to true');
               setHasInitialLoad(true);
             }
           }, 100);
@@ -830,8 +783,8 @@ export const MapView: React.FC<MapViewProps> = ({
                   }
                 }}
               />
-              {/* Show group label marker only when not focused on this group */}
-              {focusedGroup !== groupName && showPOIGroupLabels && (
+              {/* Show group label marker only when not focused on this group and no POI is selected */}
+              {focusedGroup !== groupName && showPOIGroupLabels && !selectedPOI && (
                 <Marker
                   position={centroidLatLng}
                   pane="group-labels"
@@ -1044,6 +997,78 @@ export const MapView: React.FC<MapViewProps> = ({
           </Box>
         )}
 
+        {/* Individual POI Focus Buttons - Same pattern as group focus */}
+        {selectedPOI && (
+          <Box
+            sx={{
+              position: 'fixed',
+              left: 0,
+              right: '80px', // Leave space for filter button on the right
+              bottom: 'calc(56px + env(safe-area-inset-bottom, 0px) + 16px)', // Match filter button position
+              zIndex: 2100,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 2,
+              px: 3,
+              pb: 2,
+              pointerEvents: 'none',
+            }}
+          >
+            <button
+              style={{
+                width: '45%',
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginRight: '2%',
+                marginLeft: 2,
+              }}
+              onClick={() => {
+                setShowDistanceModal(true);
+              }}
+            >
+              How Far?
+            </button>
+            <button
+              style={{
+                width: '45%',
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginLeft: '2%',
+                marginRight: 2,
+              }}
+              onClick={() => {
+                fitTrail();
+                setSelectedPOI(null);
+                setHasShownInitialZoom(false);
+                // Remove POI parameter from URL
+                const newSearchParams = new URLSearchParams(location.search);
+                newSearchParams.delete('poi');
+                const newSearch = newSearchParams.toString();
+                navigate(`/map?${newSearch}`, { replace: true });
+              }}
+            >
+              Zoom Out
+            </button>
+          </Box>
+        )}
+
         {/* Filter POIs based on selected categories - RENDERED LAST TO APPEAR ABOVE POLYGONS */}
         {pois?.filter(poi => {
           if (!selectedCategories || selectedCategories.length === 0) {
@@ -1072,13 +1097,9 @@ export const MapView: React.FC<MapViewProps> = ({
           // Get marker size based on zoom level
           const markerSize = getMarkerSize(isHighlighted, currentZoom);
           const iconAnchor = markerSize / 2; // Center the marker
-          console.log(`📍 Creating marker for ${poi.title.rendered}: size=${markerSize}px, zoom=${currentZoom}, highlighted=${isHighlighted}`);
           
           // Get category icon for this POI
           const categoryIcon = getCategoryIcon(poi);
-          if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
-            console.log(`🎯 Adding category icon to ${poi.title.rendered}: ${categoryIcon.iconComponent.iconName}, color: ${categoryIcon.iconColor}`);
-          }
           
           // Create marker HTML with category icon if available and zoomed in
           let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
@@ -1124,6 +1145,7 @@ export const MapView: React.FC<MapViewProps> = ({
                 position={[poi.coordinates[1], poi.coordinates[0]]}
                 icon={markerIcon}
                 pane={isSelected ? "selected-poi" : "markerPane"}
+                zIndexOffset={isSelected ? 1000 : 0}
                 eventHandlers={{
                   click: () => {
                     // Track POI interaction
@@ -1166,6 +1188,7 @@ export const MapView: React.FC<MapViewProps> = ({
                     ">${poi.title.rendered}</div>`
                   })}
                   pane="selected-poi"
+                  zIndexOffset={isSelected ? 1000 : 0}
                   eventHandlers={{
                     mouseover: () => {
                       setLabelHighlightedPOI(poi);
@@ -1187,6 +1210,32 @@ export const MapView: React.FC<MapViewProps> = ({
           onToggle={() => setFilterBottomSheetOpen(!filterBottomSheetOpen)}
           title="Map Filters"
         />
+
+        {/* POI Distance Modal */}
+                {showDistanceModal && selectedPOI && (
+          <>
+            <POIDistanceModal
+              poi={selectedPOI}
+              onClose={() => setShowDistanceModal(false)}
+              onStartNavigation={() => {
+                setShowDistanceModal(false);
+                // Navigate to Nav View with the POI as destination
+                const searchParams = new URLSearchParams();
+                searchParams.set('destination', selectedPOI.id);
+                
+                // Preserve simulation mode if present
+                const currentSearchParams = new URLSearchParams(location.search);
+                const modeParam = currentSearchParams.get('mode');
+                if (modeParam === 'sim') {
+                  searchParams.set('mode', 'sim');
+                }
+                
+                const navUrl = `/nav?${searchParams.toString()}`;
+                navigate(navUrl);
+              }}
+            />
+          </>
+        )}
       </MapContainer>
     </Box>
   );

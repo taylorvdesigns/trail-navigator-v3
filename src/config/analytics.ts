@@ -18,32 +18,18 @@ declare global {
 
 // Initialize Google Analytics or Google Tag Manager
 export const initGA = () => {
-  console.log('🔍 Initializing Analytics...');
-  console.log('📊 GA Tracking ID:', GA_TRACKING_ID);
-  console.log('🏷️ GTM Container ID:', GTM_CONTAINER_ID);
-  console.log('🔧 Using GTM:', isUsingGTM);
-  console.log('🌐 Window object available:', typeof window !== 'undefined');
-  console.log('🌍 Current URL:', typeof window !== 'undefined' ? window.location.href : 'N/A');
-  console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
-
   if (typeof window !== 'undefined' && trackingId) {
-    console.log('✅ Tracking ID found, setting up analytics...');
-    
     if (isUsingGTM) {
       // Initialize Google Tag Manager
-      console.log('🏷️ Initializing Google Tag Manager...');
       
       // Check if GTM script already exists
       const existingGTMScript = document.querySelector(`script[src*="googletagmanager.com/gtm.js"]`);
-      if (existingGTMScript) {
-        console.log('📜 GTM script already exists, skipping...');
-      } else {
+      if (!existingGTMScript) {
         // Load GTM script
         const script = document.createElement('script');
         script.async = true;
         script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`;
         document.head.appendChild(script);
-        console.log('📜 GTM script added to head');
       }
 
       // Initialize dataLayer
@@ -63,30 +49,22 @@ export const initGA = () => {
       iframe.style.visibility = 'hidden';
       noscript.appendChild(iframe);
       document.head.appendChild(noscript);
-      
-      console.log('✅ Google Tag Manager initialized successfully!');
-      console.log('📊 dataLayer length after init:', window.dataLayer.length);
     } else {
       // Initialize direct Google Analytics
-      console.log('📊 Initializing direct Google Analytics...');
       
       // Check if gtag script already exists
       const existingScript = document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`);
-      if (existingScript) {
-        console.log('📜 Gtag script already exists, skipping...');
-      } else {
+      if (!existingScript) {
         // Load gtag script
         const script = document.createElement('script');
         script.async = true;
         script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
         document.head.appendChild(script);
-        console.log('📜 Gtag script added to head');
       }
 
       // Initialize gtag
       window.dataLayer = window.dataLayer || [];
       const gtag = (...args: any[]) => {
-        console.log('📊 Gtag called with args:', args);
         window.dataLayer.push(args);
       };
       gtag('js', new Date());
@@ -115,20 +93,10 @@ export const initGA = () => {
           event_label: 'immediate_test',
           value: 1,
         });
-        console.log('🔄 Sent immediate test event');
       }, 1000);
-      
-      console.log('✅ Google Analytics initialized successfully!');
-      console.log('📊 dataLayer length after init:', window.dataLayer.length);
-      console.log('🔍 GA4 Property ID being used:', GA_TRACKING_ID);
-      console.log('🌐 Current URL:', window.location.href);
-      console.log('🔧 Debug mode:', process.env.NODE_ENV === 'development');
     }
   } else {
-    console.warn('⚠️ Analytics not initialized: Missing tracking ID or not in browser environment');
-    console.log('GA_TRACKING_ID:', GA_TRACKING_ID);
-    console.log('GTM_CONTAINER_ID:', GTM_CONTAINER_ID);
-    console.log('Window available:', typeof window !== 'undefined');
+    console.warn('Analytics not initialized: Missing tracking ID or not in browser environment');
   }
 };
 
