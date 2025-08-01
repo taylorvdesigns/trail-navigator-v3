@@ -46,9 +46,27 @@ const FitBounds: React.FC<{ coordinates: [number, number][] }> = ({ coordinates 
   React.useEffect(() => {
     if (coordinates.length > 0 && !hasInitialFit) {
       const bounds = L.latLngBounds(coordinates);
-      // Use responsive padding that works better on mobile
-      const padding: [number, number] = [20, 20]; // Reduced padding for better mobile fit
-      map.fitBounds(bounds, { padding, maxZoom: 15 });
+      // Use generous padding - plenty of space from edges
+      const padding: [number, number] = [60, 60]; // Much more generous padding from edges
+      map.fitBounds(bounds, { 
+        padding, 
+        maxZoom: 17, // Allow higher zoom for better trail detail
+        animate: true,
+        duration: 1.5
+      });
+      
+      // After fitting, zoom in more aggressively for better trail visibility
+      setTimeout(() => {
+        const currentZoom = map.getZoom();
+        const boundsZoom = map.getBoundsZoom(bounds);
+        
+        // Zoom in more aggressively for better trail detail
+        const targetZoom = Math.min(boundsZoom + 1, 16); // Zoom in 1 level more than bounds suggest
+        if (currentZoom < targetZoom) {
+          map.setZoom(targetZoom, { animate: true, duration: 1 });
+        }
+      }, 100);
+      
       setHasInitialFit(true);
     }
   }, [coordinates, map, hasInitialFit]);
@@ -346,12 +364,12 @@ export const MapView: React.FC<MapViewProps> = ({
         const poiCoords: [number, number] = [targetPOI.coordinates[1], targetPOI.coordinates[0]]; // [latitude, longitude] for Leaflet
         setIsProgrammaticZoom(true);
         
-        // Add a small delay to ensure the map is fully ready
+        // Add a longer delay to ensure the map is fully ready and no other zoom operations are running
         setTimeout(() => {
           if (mapRef.current) {
             mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
           }
-        }, 100);
+        }, 300);
         
         // Reset the flag after a short delay to allow the zoom to complete
         setTimeout(() => setIsProgrammaticZoom(false), 1000);
@@ -472,10 +490,24 @@ export const MapView: React.FC<MapViewProps> = ({
     return groupPOI?.post_tags[0]?.id;
   };
 
-  // Helper to fit map to trail
+  // Helper to fit map to trail with center-based zoom
   const fitTrail = () => {
     if (mapRef.current && allTrailCoords.length > 0) {
-      mapRef.current.fitBounds(allTrailCoords as [number, number][]);
+      const bounds = L.latLngBounds(allTrailCoords as [number, number][]);
+      const center = bounds.getCenter();
+      
+      console.log('fitTrail called - center:', center);
+      console.log('Current zoom before setView:', mapRef.current.getZoom());
+      
+      // Use setView with center and specific zoom level
+      mapRef.current.setView(center, 12, { 
+        animate: true,
+        duration: 1.5
+      });
+      
+      setTimeout(() => {
+        console.log('Zoom after setView:', mapRef.current?.getZoom());
+      }, 2000);
     }
   };
 
@@ -699,12 +731,25 @@ export const MapView: React.FC<MapViewProps> = ({
                   setShowZoomOut(true);
                   setLastBounds(latLngBounds as [number, number][]);
                 }
-              } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup) {
-                // Fallback: ensure bounds fitting happens on initial load
+              } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup && !selectedPOI) {
+                // Initial load: use center-based zoom for consistent viewing
                 setTimeout(() => {
                   if (mapRef.current && allTrailCoords.length > 0) {
                     const bounds = L.latLngBounds(allTrailCoords);
-                    mapRef.current.fitBounds(bounds, { padding: [20, 20] as [number, number], maxZoom: 15 });
+                    const center = bounds.getCenter();
+                    
+                    console.log('Initial load setView - center:', center);
+                    console.log('Current zoom before initial setView:', mapRef.current.getZoom());
+                    
+                    // Use setView with center and specific zoom level
+                    mapRef.current.setView(center, 12, { 
+                      animate: true,
+                      duration: 1.5
+                    });
+                    
+                    setTimeout(() => {
+                      console.log('Zoom after initial setView:', mapRef.current?.getZoom());
+                    }, 2000);
                   }
                 }, 100);
               }
@@ -727,10 +772,7 @@ export const MapView: React.FC<MapViewProps> = ({
         <GrayscaleMapLayer />
         <Pane name="group-labels" style={{ zIndex: 1000 }} />
         <Pane name="selected-poi" style={{ zIndex: 9999 }} />
-        {/* Always fit bounds to all trails if shouldFitBounds is true and no group is focused */}
-        {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup && (
-          <FitBounds coordinates={allTrailCoords} />
-        )}
+        {/* Initial bounds fitting is handled in whenReady callback to avoid conflicts */}
         
         {/* Draw convex hull polygons for each POI group */}
         {Object.entries(groupedPOIs).map(([groupName, groupPOIs], idx) => {
