@@ -23,6 +23,8 @@ import DebugTrailStructure from './Simulation/DebugTrailStructure';
 import { getPOIsByTag, slugToTagName } from '../utils/poi';
 import LoadingScreen from './LoadingScreen';
 import { GooglePlacesModal } from './GooglePlacesModal/GooglePlacesModal';
+import { AnalyticsProvider } from '../contexts/AnalyticsContext';
+import { Analytics } from '@vercel/analytics/react';
 
 // Convert WordPress trail config to TrailConfig
 export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: { endpoints: { start: [number, number], end: [number, number] } }): TrailConfig => {
@@ -129,6 +131,111 @@ export const AppContent: React.FC = () => {
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
   const [selectedPoiName, setSelectedPoiName] = useState<string>('');
+  // Test function for real-time verification
+  const testRealtimeEvent = () => {
+    if (typeof window !== 'undefined') {
+      console.log('🧪 Testing real-time event...');
+      console.log('🔍 Current GA4 Property ID:', process.env.REACT_APP_GA_TRACKING_ID);
+      console.log('🌐 Current URL:', window.location.href);
+      console.log('🔧 Environment:', process.env.NODE_ENV);
+
+      // Test 1: Check if gtag is available
+      if (window.gtag) {
+        console.log('✅ gtag function is available');
+
+        // Test 2: Send a very basic page_view event (most likely to show in real-time)
+        window.gtag('event', 'page_view', {
+          page_title: 'Trail Navigator Test Page',
+          page_location: window.location.href,
+          page_referrer: document.referrer,
+        });
+        console.log('✅ Basic page_view event sent');
+
+        // Test 3: Send a simple custom event
+        window.gtag('event', 'test_realtime', {
+          event_category: 'test',
+          event_label: 'realtime_test',
+          value: 1,
+          custom_parameter: 'test_value'
+        });
+        console.log('✅ Real-time test event sent via gtag');
+
+        // Test 4: Send a user engagement event (these are more likely to show in real-time)
+        window.gtag('event', 'user_engagement', {
+          engagement_time_msec: 1000,
+          session_id: 'test-session-' + Date.now()
+        });
+        console.log('✅ User engagement event sent');
+
+        // Test 5: Send a scroll event (highly visible in real-time)
+        window.gtag('event', 'scroll', {
+          event_category: 'engagement',
+          event_label: 'test_scroll'
+        });
+        console.log('✅ Scroll event sent');
+
+        // Test 6: Send a very specific event that should definitely show in real-time
+        window.gtag('event', 'trail_navigator_test', {
+          event_category: 'trail_app',
+          event_label: 'realtime_debug_test',
+          value: 999,
+          custom_parameter: 'debug_test_' + Date.now(),
+          page_title: 'Trail Navigator Debug Test',
+          page_location: window.location.href
+        });
+        console.log('✅ Trail Navigator debug test event sent');
+
+        // Test 7: Send a simple event with minimal parameters
+        window.gtag('event', 'simple_test', {
+          event_category: 'debug',
+          event_label: 'simple_test'
+        });
+        console.log('✅ Simple test event sent');
+
+      } else {
+        console.error('❌ gtag function is NOT available');
+      }
+
+      // Test 8: Check dataLayer
+      if (window.dataLayer) {
+        console.log('✅ dataLayer is available, length:', window.dataLayer.length);
+        console.log('📊 Last dataLayer entry:', window.dataLayer[window.dataLayer.length - 1]);
+
+        // Test 9: Send via dataLayer
+        window.dataLayer.push({
+          event: 'test_realtime_gtm',
+          event_category: 'test',
+          event_label: 'realtime_test_gtm',
+          value: 1,
+          custom_parameter: 'test_value_gtm'
+        });
+        console.log('✅ Real-time test event sent via dataLayer');
+      } else {
+        console.error('❌ dataLayer is NOT available');
+      }
+
+      // Test 10: Direct fetch to GA4 with different parameters
+      const testDirectFetch = async () => {
+        try {
+          const timestamp = Date.now();
+          const sessionId = 'test-session-' + timestamp;
+          
+          // Test with user_engagement event (most likely to show in real-time)
+          const response = await fetch(`https://www.google-analytics.com/g/collect?v=2&tid=G-3LDSE0G891&cid=test-${timestamp}&t=event&ec=engagement&ea=test_engagement&el=realtime_test&ev=1&_et=1000&sid=${sessionId}`, {
+            method: 'GET',
+            mode: 'no-cors'
+          });
+          console.log('✅ Direct fetch test response:', response.status);
+        } catch (error) {
+          console.error('❌ Direct fetch test failed:', error);
+        }
+      };
+
+      testDirectFetch();
+
+      alert('Real-time test events sent! Check GA4 Realtime in 30 seconds. Look for "Events by Event name" section and search for "simple_test" or "trail_navigator_test".');
+    }
+  };
 
   const handlePoiClick = (poi: POI) => {
     if (poi.google_place_id) {
@@ -141,6 +248,8 @@ export const AppContent: React.FC = () => {
       setSelectedPOI(poi);
     }
   };
+
+
 
   // Show entry point modal if no entry point is set and not in dev mode and user hasn't chosen simulation mode
   useEffect(() => {
@@ -273,12 +382,8 @@ export const AppContent: React.FC = () => {
   }
 
   const handleViewChange = (view: ViewMode) => {
-    // console.log('Attempting to change to view:', view);
-    // console.log('Current location pathname:', location.pathname);
-    // console.log('Current search params:', location.search);
     
     if (view === 'dev' && !isDevMode) {
-      // console.log('Blocked: dev view requested but not in dev mode');
       return;
     }
     
@@ -287,14 +392,9 @@ export const AppContent: React.FC = () => {
     const modeParam = searchParams.get('mode');
     const devQuery = modeParam === 'sim' ? '?mode=sim' : '';
     
-    // console.log('Mode param:', modeParam);
-    // console.log('Dev query:', devQuery);
-    
     if (isDevMode && view === 'dev') {
-      // console.log('Navigating to dev panel');
       setDevTab(true);
       const targetPath = '/simconfig' + devQuery;
-      // console.log('Target path:', targetPath);
       navigate(targetPath);
       return;
     } else {
@@ -302,8 +402,6 @@ export const AppContent: React.FC = () => {
     }
     switch(view) {
       case 'map':
-        // console.log('Navigating to map:', '/map' + devQuery);
-        // console.log('About to call navigate()');
         navigate('/map' + devQuery, { 
           state: { 
             center: mapCenter,
@@ -312,22 +410,16 @@ export const AppContent: React.FC = () => {
         });
         break;
       case 'nav':
-        // console.log('Navigating to nav:', '/nav' + devQuery);
-        // console.log('About to call navigate()');
         navigate('/nav' + devQuery);
         break;
       case 'list':
-        // console.log('Navigating to list:', '/list' + devQuery);
-        // console.log('About to call navigate()');
         navigate('/list' + devQuery);
         break;
     }
-    
-    // console.log('Navigation call completed');
   };
 
   return (
-    <>
+    <AnalyticsProvider>
       <AppLayout 
         currentView={currentView} 
         onViewChange={handleViewChange}
@@ -431,7 +523,29 @@ export const AppContent: React.FC = () => {
       placeId={selectedPlaceId}
       poiName={selectedPoiName}
     />
-    </>
+    
+    {/* Test Button for Real-time Verification - Hidden for now */}
+    {/* <Button
+      onClick={testRealtimeEvent}
+      variant="contained"
+      sx={{
+        position: 'fixed',
+        top: '10px',
+        right: '10px',
+        zIndex: 9999,
+        backgroundColor: '#ff6b6b',
+        '&:hover': {
+          backgroundColor: '#ff5252'
+        }
+      }}
+    >
+      Test Realtime
+    </Button> */}
+    
+    <Analytics />
+      
+
+      </AnalyticsProvider>
   );
 }; 
 

@@ -16,7 +16,10 @@ export const extractUniqueCategories = (pois: POI[]): string[] => {
         if (category.name) {
           // Clean up: take text after dash, trim whitespace
           const cleanName = category.name.split('-').pop()?.trim() || category.name;
-          categories.add(cleanName);
+          // Filter out "Featured" category from the UI
+          if (cleanName.toLowerCase() !== 'featured') {
+            categories.add(cleanName);
+          }
         }
       });
     }

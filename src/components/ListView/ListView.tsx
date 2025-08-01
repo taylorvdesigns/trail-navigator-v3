@@ -7,25 +7,21 @@ import {
   Typography, 
   Divider,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
   IconButton
 } from '@mui/material';
 import { 
   Place as PlaceIcon,
-  Close as CloseIcon,
   DirectionsWalk as WalkIcon,
   Info as InfoIcon,
   Map as MapIcon
 } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { POI, TrailPoint } from '../../types/index';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { calculateDistance } from '../../utils/distance';
 import { getUniqueTags, tagNameToSlug } from '../../utils/poi';
-import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
+
 import { findNearestTrailPoint } from '../../utils/trail';
 import { getNetworkDistanceBetweenPoints } from '../../utils/trailGraph';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
@@ -46,10 +42,13 @@ interface GroupedPOIs {
   [key: string]: POI[];
 }
 
-// Utility to extract first image src from HTML string
-function extractFirstImageSrc(html: string): string | null {
-  const match = html.match(/<img[^>]+src=["']([^"'>]+)["']/i);
-  return match ? match[1] : null;
+
+
+// Utility to check if a POI has the "Featured" category
+function isFeaturedPOI(poi: POI): boolean {
+  return poi.post_category?.some(category => 
+    category.name?.toLowerCase() === 'featured'
+  ) || false;
 }
 
 export const ListView: React.FC<ListViewProps> = ({ 
@@ -68,10 +67,6 @@ export const ListView: React.FC<ListViewProps> = ({
   const urlGroupParam = searchParams.get('group');
   const groupNameFromNav = urlGroupParam || location.state?.groupName || null;
   const focusedGroupRef = React.useRef<HTMLDivElement>(null);
-  const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
-  const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
-  const [selectedPoiName, setSelectedPoiName] = useState<string>('');
   const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
 
   const trailPois = React.useMemo(() => {
@@ -165,18 +160,9 @@ export const ListView: React.FC<ListViewProps> = ({
       }
       
       if (isIndividualPOI && matchingPOI) {
-        console.log('ListView: Opening modal for POI:', matchingPOI.title.rendered);
-        if (matchingPOI.google_place_id) {
-          // Open Google Places modal
-          console.log('ListView: Opening Google Places modal');
-          setSelectedPlaceId(matchingPOI.google_place_id);
-          setSelectedPoiName(matchingPOI.title.rendered);
-          setGooglePlacesModalOpen(true);
-        } else {
-          // Open regular POI modal
-          console.log('ListView: Opening regular POI modal');
-          setSelectedPOI(matchingPOI);
-        }
+        console.log('ListView: Navigating to map for POI:', matchingPOI.title.rendered);
+        // Navigate to map view and zoom to the POI
+        handleShowOnMap(matchingPOI);
       }
     }
   }, [groupNameFromNav, trailPois]);
@@ -216,30 +202,22 @@ export const ListView: React.FC<ListViewProps> = ({
   };
 
   const handlePoiClick = (poi: POI) => {
-    
-    if (poi.google_place_id) {
-      // Open Google Places modal
-      setSelectedPlaceId(poi.google_place_id);
-      setSelectedPoiName(poi.title.rendered);
-      setGooglePlacesModalOpen(true);
-    } else {
-      // Open regular POI modal
-      setSelectedPOI(poi);
-    }
+    // Navigate to map view and zoom to the POI
+    handleShowOnMap(poi);
   };
 
   const handleShowOnMap = (poi: POI) => {
-    // Swap coordinates to match Leaflet's expected format [latitude, longitude]
-    const latLng: [number, number] = [poi.coordinates[1], poi.coordinates[0]];
+    // Navigate to map with POI parameter for shareable URL
+    const searchParams = new URLSearchParams();
+    const modeParam = location.search.match(/mode=([^&]+)/)?.[1];
+    if (modeParam === 'sim') {
+      searchParams.set('mode', 'sim');
+    }
+    searchParams.set('poi', poi.id.toString());
     
-
-
-    navigate('/map', { 
-      state: { 
-        highlightPOI: latLng,
-        zoom: 16
-      }
-    });
+    const url = `/map?${searchParams.toString()}`;
+    console.log('🗺️ Navigating to map with POI:', poi.title.rendered, 'URL:', url);
+    navigate(url);
   };
 
   return (
@@ -363,6 +341,15 @@ export const ListView: React.FC<ListViewProps> = ({
               <List>
                 {groupPois
                   .filter(poi => !selectedTag || poi.post_tags.some(tag => tag.name === selectedTag) || poi.title.rendered === selectedTag)
+                  .sort((a, b) => {
+                    // Sort featured POIs to the top
+                    const aFeatured = isFeaturedPOI(a);
+                    const bFeatured = isFeaturedPOI(b);
+                    
+                    if (aFeatured && !bFeatured) return -1; // a comes first
+                    if (!aFeatured && bFeatured) return 1;  // b comes first
+                    return 0; // both have same featured status, maintain original order
+                  })
                   .map(poi => {
                     const distance = getDistance(poi);
                     return (
@@ -376,11 +363,34 @@ export const ListView: React.FC<ListViewProps> = ({
                               bgcolor: 'action.hover'
                             }
                           }}
+                          secondaryAction={
+                            <IconButton
+                              edge="end"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent triggering the main item click
+                                handleShowOnMap(poi);
+                              }}
+                              size="small"
+                              sx={{ color: 'primary.main' }}
+                            >
+                              <MapIcon />
+                            </IconButton>
+                          }
                         >
                           <ListItemText
                             primary={
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <PlaceIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+                                {isFeaturedPOI(poi) ? (
+                                  <FontAwesomeIcon 
+                                    icon={faStar} 
+                                    style={{ 
+                                      color: '#FFD700', 
+                                      fontSize: '20px'
+                                    }} 
+                                  />
+                                ) : (
+                                  <PlaceIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+                                )}
                                 <Typography component="span" variant="subtitle1" sx={{ color: 'white' }}>
                                   {poi.title.rendered}
                                 </Typography>
@@ -389,7 +399,10 @@ export const ListView: React.FC<ListViewProps> = ({
                             secondary={
                               <Box component="span">
                                 <Typography component="span" variant="body2" color="text.secondary">
-                                  {poi.post_category.map(cat => cat.name).join(', ')}
+                                  {poi.post_category
+                                    .filter(cat => cat.name.toLowerCase() !== 'featured')
+                                    .map(cat => cat.name)
+                                    .join(', ')}
                                 </Typography>
                                 {distance !== null && (
                                   <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
@@ -421,93 +434,7 @@ export const ListView: React.FC<ListViewProps> = ({
         )}
       </Box>
 
-      {/* POI Detail Dialog */}
-      <Dialog
-        open={!!selectedPOI}
-        onClose={() => setSelectedPOI(null)}
-        maxWidth="sm"
-        fullWidth
-      >
-        {selectedPOI && (
-          <>
-            {/* POI Image */}
-            {selectedPOI.featured_image ? (
-              <Box sx={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.100' }}>
-                <img
-                  src={selectedPOI.featured_image}
-                  alt={typeof selectedPOI.title === 'object' && typeof selectedPOI.title.rendered === 'string'
-                    ? selectedPOI.title.rendered
-                    : typeof selectedPOI.title === 'string'
-                      ? selectedPOI.title
-                      : ''}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </Box>
-            ) : selectedPOI.content?.rendered && extractFirstImageSrc(selectedPOI.content.rendered) ? (
-              <Box sx={{ width: '100%', height: 200, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.100' }}>
-                <img
-                  src={extractFirstImageSrc(selectedPOI.content.rendered) as string}
-                  alt={typeof selectedPOI.title === 'object' && typeof selectedPOI.title.rendered === 'string'
-                    ? selectedPOI.title.rendered
-                    : typeof selectedPOI.title === 'string'
-                      ? selectedPOI.title
-                      : ''}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </Box>
-            ) : (
-              <Box sx={{ width: '100%', height: 200, bgcolor: 'grey.200', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="subtitle1" color="text.secondary">No Image Available</Typography>
-              </Box>
-            )}
-            {/* POI Name */}
-            <DialogTitle sx={{ pr: 6, textAlign: 'center', fontWeight: 700, fontSize: '1.3rem', color: 'common.white', bgcolor: 'grey.900' }}>
-              {typeof selectedPOI.title === 'object' && selectedPOI.title?.rendered
-                ? selectedPOI.title.rendered
-                : typeof selectedPOI.title === 'string'
-                  ? selectedPOI.title
-                  : ''}
-              <IconButton
-                onClick={() => setSelectedPOI(null)}
-                sx={{ position: 'absolute', right: 8, top: 8, color: 'common.white' }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            {/* POI Description */}
-            <DialogContent sx={{ bgcolor: 'grey.900' }}>
-              <Box sx={{ mb: 2 }}>
-                {selectedPOI.description ? (
-                  <Typography variant="body1" sx={{ wordBreak: 'break-word', color: 'common.white' }} component="div">
-                    <span dangerouslySetInnerHTML={{ __html: selectedPOI.description }} />
-                  </Typography>
-                ) : (
-                  <Typography variant="body1" color="text.secondary">No description available.</Typography>
-                )}
-              </Box>
-            </DialogContent>
-            <DialogActions sx={{ bgcolor: 'grey.900' }}>
-              <Button onClick={() => setSelectedPOI(null)} sx={{ color: 'success.light' }}>Close</Button>
-              <Button 
-                onClick={() => handleShowOnMap(selectedPOI)} 
-                variant="contained" 
-                startIcon={<PlaceIcon />}
-                disabled={!selectedPOI.coordinates}
-              >
-                View on Map
-              </Button>
-            </DialogActions>
-          </>
-        )}
-      </Dialog>
 
-      {/* Google Places Modal */}
-      <GooglePlacesModal
-        open={googlePlacesModalOpen}
-        onClose={() => setGooglePlacesModalOpen(false)}
-        placeId={selectedPlaceId}
-        poiName={selectedPoiName}
-      />
 
       {/* Filter Bottom Sheet */}
       <FilterBottomSheet

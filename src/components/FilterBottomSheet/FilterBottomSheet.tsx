@@ -51,7 +51,7 @@ export const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
     }, 300); // Match animation duration
   };
 
-  const drawerHeight = isExpanded ? '60vh' : '200px';
+  const drawerHeight = isExpanded ? '60vh' : '340px';
 
   return (
     <>
@@ -142,7 +142,7 @@ export const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
           />
           
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-            <Typography variant="h6" component="h2">
+            <Typography variant="h6" component="h2" sx={{ color: 'primary.main' }}>
               {title}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -167,32 +167,7 @@ export const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
             </Typography>
             <CategoryToggle />
             
-            {/* Active Filters Summary */}
-            {selectedCategories.length > 0 && (
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                  Active filters:
-                </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {selectedCategories.map(category => (
-                    <Chip
-                      key={category}
-                      label={category}
-                      size="small"
-                      color="primary"
-                      variant="filled"
-                      sx={{
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        '&:hover': {
-                          bgcolor: 'primary.dark'
-                        }
-                      }}
-                    />
-                  ))}
-                </Box>
-              </Box>
-            )}
+
           </Box>
 
           {/* Additional Filter Content */}

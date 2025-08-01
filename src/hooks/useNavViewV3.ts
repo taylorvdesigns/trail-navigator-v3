@@ -96,9 +96,6 @@ function groupPOIsByTag(pois: POI[], trailId: string): Stop[] {
 export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNavViewV3Props): UseNavViewV3Result {
   const { currentLocation } = useLocation();
 
-  // Debug: log currentLocation whenever it changes
-  console.log('[useNavViewV3] currentLocation:', currentLocation);
-
   // Always convert currentLocation to [lat, lng] for trail calculations
   const currentLocationLatLng = currentLocation ? [currentLocation[1], currentLocation[0]] as [number, number] : null;
 

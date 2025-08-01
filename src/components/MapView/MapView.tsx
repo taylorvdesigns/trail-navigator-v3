@@ -21,6 +21,9 @@ import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
 import { useContext } from 'react';
 import { slugToTagName } from '../../utils/poi';
+import { useAnalytics } from '../../contexts/AnalyticsContext';
+import { useCategories } from '../../hooks/useCategories';
+import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
 
 interface MapViewProps {
   trails: TrailConfig[];
@@ -206,6 +209,8 @@ export const MapView: React.FC<MapViewProps> = ({
   onZoomChange,
   fitBounds
 }) => {
+  const { categories } = useCategories(); // Add categories hook
+  const { trackTrailEvent } = useAnalytics();
   const location = useRouterLocation();
   const mapRef = useRef<L.Map | null>(null);
   const locationContext = useContext(LocationContext);
@@ -227,6 +232,11 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showPOIGroupLabels, setShowPOIGroupLabels] = useState(true);
   const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
   const [hasInitialLoad, setHasInitialLoad] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState<number>(zoom);
+  const [selectedPOI, setSelectedPOI] = useState<POI | null>(null);
+  const [hasShownInitialZoom, setHasShownInitialZoom] = useState(false);
+  const [isProgrammaticZoom, setIsProgrammaticZoom] = useState(false);
+  const [labelHighlightedPOI, setLabelHighlightedPOI] = useState<POI | null>(null);
 
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
 
@@ -255,9 +265,10 @@ export const MapView: React.FC<MapViewProps> = ({
  
 
  
-  // Get focusedGroup from URL parameter
+  // Get focusedGroup and POI from URL parameters
   const searchParams = new URLSearchParams(location.search);
   const urlGroupParam = searchParams.get('group');
+  const urlPoiParam = searchParams.get('poi');
   
   // Convert URL group parameter to group name if it's a slug
   const urlGroupName = useMemo(() => {
@@ -313,6 +324,93 @@ export const MapView: React.FC<MapViewProps> = ({
       }
     }
   }, [urlGroupName, focusedGroup, pois]);
+
+  // Handle URL parameter changes for POI selection
+  useEffect(() => {
+    console.log('🔍 POI Navigation Debug:', {
+      urlPoiParam,
+      poisCount: pois?.length,
+      mapRefExists: !!mapRef.current,
+      selectedPOI: !!selectedPOI,
+      hasInitialLoad,
+      poisLoaded: !!pois
+    });
+    
+    if (urlPoiParam && pois && pois.length > 0 && mapRef.current && !selectedPOI && hasInitialLoad) {
+      const targetPOI = pois.find(poi => poi.id.toString() === urlPoiParam);
+      
+      if (targetPOI) {
+        console.log('🎯 Found target POI:', targetPOI.title.rendered, 'ID:', targetPOI.id);
+        console.log('📍 POI coordinates:', targetPOI.coordinates);
+        
+        // Check if coordinates are valid
+        if (!targetPOI.coordinates || targetPOI.coordinates.length !== 2 || 
+            isNaN(targetPOI.coordinates[0]) || isNaN(targetPOI.coordinates[1])) {
+          console.log('❌ Invalid POI coordinates:', targetPOI.coordinates);
+          return;
+        }
+        
+        setSelectedPOI(targetPOI);
+        setHasShownInitialZoom(true);
+        
+        // Direct zoom to the POI with smooth animation
+        const poiCoords: [number, number] = [targetPOI.coordinates[1], targetPOI.coordinates[0]]; // [latitude, longitude] for Leaflet
+        console.log('🎯 Zooming to coordinates:', poiCoords);
+        
+        console.log('🔍 Zooming directly to POI at level 18');
+        setIsProgrammaticZoom(true);
+        
+        // Add a small delay to ensure the map is fully ready
+        setTimeout(() => {
+          if (mapRef.current) {
+            mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
+            console.log('✅ Direct zoom completed');
+          }
+        }, 100);
+        
+        // Reset the flag after a short delay to allow the zoom to complete
+        setTimeout(() => setIsProgrammaticZoom(false), 1000);
+      } else {
+        console.log('❌ POI not found for ID:', urlPoiParam);
+        console.log('Available POI IDs:', pois.map(p => p.id));
+      }
+    }
+  }, [urlPoiParam, pois, selectedPOI, hasInitialLoad]);
+
+  // Clear selected POI when parameter is removed
+  useEffect(() => {
+    if (!urlPoiParam && selectedPOI) {
+      setSelectedPOI(null);
+      setHasShownInitialZoom(false);
+    }
+  }, [urlPoiParam, selectedPOI]);
+
+  // Clear selected POI on map interaction
+  useEffect(() => {
+    if (!mapRef.current || !selectedPOI) return;
+    
+    const map = mapRef.current;
+    const handleMapInteraction = () => {
+      // Don't clear selected POI if we're in the middle of a programmatic zoom
+      if (selectedPOI && !isProgrammaticZoom) {
+        setSelectedPOI(null);
+        setHasShownInitialZoom(false);
+        // Remove POI parameter from URL
+        const newSearchParams = new URLSearchParams(location.search);
+        newSearchParams.delete('poi');
+        const newSearch = newSearchParams.toString();
+        navigate(`/map?${newSearch}`, { replace: true });
+      }
+    };
+    
+    map.on('moveend', handleMapInteraction);
+    map.on('zoomend', handleMapInteraction);
+    
+    return () => {
+      map.off('moveend', handleMapInteraction);
+      map.off('zoomend', handleMapInteraction);
+    };
+  }, [selectedPOI, location.search, navigate, isProgrammaticZoom]);
  
   // Group POIs by their first post tag
   const groupedPOIs = useMemo(() => {
@@ -434,18 +532,42 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Listen for zoom changes to update onZoomChange prop
   useEffect(() => {
-    if (!mapRef.current || !onZoomChange) return;
+    if (!mapRef.current) return;
     const map = mapRef.current;
     const handleZoom = () => {
-      onZoomChange(map.getZoom());
+      const newZoom = map.getZoom();
+      console.log(`🗺️ Zoom changed to: ${newZoom}`);
+      setCurrentZoom(newZoom);
+      if (onZoomChange) {
+        onZoomChange(newZoom);
+      }
     };
     map.on('zoomend', handleZoom);
     // Call once on mount
-    onZoomChange(map.getZoom());
+    const initialZoom = map.getZoom();
+    console.log(`🗺️ Initial zoom: ${initialZoom}`);
+    setCurrentZoom(initialZoom);
+    if (onZoomChange) {
+      onZoomChange(initialZoom);
+    }
     return () => {
       map.off('zoomend', handleZoom);
     };
-  }, [onZoomChange]);
+  }, [mapRef.current]); // Run when mapRef.current changes (when map is created)
+
+    // Function to determine marker size based on zoom level
+  const getMarkerSize = (isHighlighted: boolean, zoomLevel: number): number => {
+    const baseSize = isHighlighted ? 18 : 14; // Increased base sizes
+
+    // If zoomed in (zoom level 15 or higher), make markers larger
+    if (zoomLevel >= 15) {
+      console.log(`🔍 Zoom level ${zoomLevel}: Using large markers (${isHighlighted ? 28 : 24}px)`);
+      return isHighlighted ? 28 : 24; // Increased from 24/20 to 28/24
+    }
+
+    console.log(`🔍 Zoom level ${zoomLevel}: Using small markers (${baseSize}px)`);
+    return baseSize; // Default size for zoomed out view
+  };
 
   // Map POI id to assigned trail color
   const poiTrailColorMap = useMemo(() => {
@@ -486,6 +608,31 @@ export const MapView: React.FC<MapViewProps> = ({
     // Find the color for the majority trail
     const trail = trails.find(t => t.id === majorityTrailId || t.routeId === majorityTrailId);
     return trail?.color || '#84d2cf';
+  };
+
+  // Helper function to get category icon for a POI
+  const getCategoryIcon = (poi: POI) => {
+    if (!poi.post_category || !Array.isArray(poi.post_category) || poi.post_category.length === 0) {
+      return null;
+    }
+    
+    // Get the first category (primary category)
+    const primaryCategory = poi.post_category[0];
+    if (!primaryCategory.name) {
+      return null;
+    }
+    
+    // Find matching category in our categories data
+    const categoryData = categories.find((cat: any) => cat.name === primaryCategory.name);
+    if (!categoryData) {
+      return null;
+    }
+    
+    // Parse the FontAwesome icon
+    const iconComponent = parseFontAwesomeIcon(categoryData.fa_icon);
+    const iconColor = parseFontAwesomeColor(categoryData.fa_icon_color);
+    
+    return { iconComponent, iconColor };
   };
 
   useEffect(() => {
@@ -607,6 +754,7 @@ export const MapView: React.FC<MapViewProps> = ({
                   }
                 }, 100);
               }
+              console.log('✅ Map initialized, setting hasInitialLoad to true');
               setHasInitialLoad(true);
             }
           }, 100);
@@ -625,6 +773,7 @@ export const MapView: React.FC<MapViewProps> = ({
         />
         <GrayscaleMapLayer />
         <Pane name="group-labels" style={{ zIndex: 1000 }} />
+        <Pane name="selected-poi" style={{ zIndex: 9999 }} />
         {/* Always fit bounds to all trails if shouldFitBounds is true and no group is focused */}
         {shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup && (
           <FitBounds coordinates={allTrailCoords} />
@@ -759,44 +908,7 @@ export const MapView: React.FC<MapViewProps> = ({
           </Marker>
         ))}
 
-        {/* Filter POIs based on selected categories */}
-        {pois?.filter(poi => {
-          if (!selectedCategories || selectedCategories.length === 0) {
-            return true; // Show all POIs if no categories selected
-          }
-          
-          if (!poi.post_category || !Array.isArray(poi.post_category)) {
-            return false;
-          }
-          
-          return poi.post_category.some(category => {
-            if (!category.name) return false;
-            const cleanName = category.name.split('-').pop()?.trim() || category.name;
-            return selectedCategories.includes(cleanName);
-          });
-        }).map((poi, index) => {
-          // Only show marker, not always-visible label
-          const isHighlighted = (highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1]) ||
-                               (highlightedPOIs && highlightedPOIs.some(highlightedPoi => highlightedPoi.id === poi.id));
-          // Use trail color for marker
-          const markerColor = poiTrailColorMap[poi.id] || '#43D633';
-          let markerIcon = L.divIcon({
-            className: isHighlighted ? 'highlight-poi-marker' : 'poi-marker',
-            iconSize: [isHighlighted ? 16 : 12, isHighlighted ? 16 : 12],
-            iconAnchor: [isHighlighted ? 8 : 6, isHighlighted ? 8 : 6],
-            html: `<div style='width:${isHighlighted ? 16 : 12}px;height:${isHighlighted ? 16 : 12}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);'></div>`
-          });
-          return (
-            <Marker
-              key={`poi-${index}`}
-              position={[poi.coordinates[1], poi.coordinates[0]]}
-              icon={markerIcon}
-                                          eventHandlers={{
-                              click: () => onPoiClick?.(poi)
-                            }}
-            />
-          );
-        })}
+
 
         {((isSimPlaying && simAnimatedLocation) || (!isSimPlaying && userLocation)) && (
           <Marker
@@ -931,6 +1043,142 @@ export const MapView: React.FC<MapViewProps> = ({
             </button>
           </Box>
         )}
+
+        {/* Filter POIs based on selected categories - RENDERED LAST TO APPEAR ABOVE POLYGONS */}
+        {pois?.filter(poi => {
+          if (!selectedCategories || selectedCategories.length === 0) {
+            return true; // Show all POIs if no categories selected
+          }
+          
+          if (!poi.post_category || !Array.isArray(poi.post_category)) {
+            return false;
+          }
+          
+          return poi.post_category.some(category => {
+            if (!category.name) return false;
+            const cleanName = category.name.split('-').pop()?.trim() || category.name;
+            return selectedCategories.includes(cleanName);
+          });
+        }).map((poi, index) => {
+          // Check if this POI is highlighted or selected
+          const isHighlighted = (highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1]) ||
+                               (highlightedPOIs && highlightedPOIs.some(highlightedPoi => highlightedPoi.id === poi.id));
+          const isSelected = selectedPOI && selectedPOI.id === poi.id;
+          const isLabelHighlighted = labelHighlightedPOI && labelHighlightedPOI.id === poi.id;
+          
+          // Use trail color for marker, or #242424 if label is highlighted or POI is selected
+          const markerColor = (isLabelHighlighted || isSelected) ? '#242424' : (poiTrailColorMap[poi.id] || '#43D633');
+          
+          // Get marker size based on zoom level
+          const markerSize = getMarkerSize(isHighlighted, currentZoom);
+          const iconAnchor = markerSize / 2; // Center the marker
+          console.log(`📍 Creating marker for ${poi.title.rendered}: size=${markerSize}px, zoom=${currentZoom}, highlighted=${isHighlighted}`);
+          
+          // Get category icon for this POI
+          const categoryIcon = getCategoryIcon(poi);
+          if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
+            console.log(`🎯 Adding category icon to ${poi.title.rendered}: ${categoryIcon.iconComponent.iconName}, color: ${categoryIcon.iconColor}`);
+          }
+          
+          // Create marker HTML with category icon if available and zoomed in
+          let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
+          
+          // Only add flexbox styling and icon if zoomed in (level 15+)
+          if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
+            markerHtml += `display:flex;align-items:center;justify-content:center;'>`;
+            // Render FontAwesome icon as HTML string with better visibility
+            const iconSize = Math.max(12, markerSize * 0.6); // Increased from 0.4 to 0.6, minimum 12px
+            const iconHtml = ReactDOMServer.renderToString(
+              <FontAwesomeIcon 
+                icon={categoryIcon.iconComponent} 
+                style={{ 
+                  color: 'white', // Always white, ignore category color
+                  fontSize: `${iconSize}px`
+                }} 
+              />
+            );
+            markerHtml += iconHtml;
+            markerHtml += '</div>';
+          } else {
+            // Simple div without flexbox for zoomed out view
+            markerHtml += `'></div>`;
+          }
+          
+          // Add label for selected POI
+          if (isSelected) {
+            markerHtml = `<div style="display: flex; flex-direction: column; align-items: center; z-index: 9999; position: relative;">
+              ${markerHtml}
+            </div>`;
+          }
+          
+          let markerIcon = L.divIcon({
+            className: isHighlighted ? 'highlight-poi-marker' : 'poi-marker',
+            iconSize: [markerSize, markerSize], // Keep original size
+            iconAnchor: [iconAnchor, iconAnchor], // Keep original anchor
+            html: markerHtml
+          });
+          
+          return (
+            <React.Fragment key={`poi-${index}`}>
+              <Marker
+                position={[poi.coordinates[1], poi.coordinates[0]]}
+                icon={markerIcon}
+                pane={isSelected ? "selected-poi" : "markerPane"}
+                eventHandlers={{
+                  click: () => {
+                    // Track POI interaction
+                    const poiCategory = poi.post_category?.[0]?.name || 'Unknown';
+                    const poiGroup = poi.post_tags?.[0]?.name || 'Unknown';
+                    
+                    trackTrailEvent.poiViewed(poi.title.rendered, poiCategory, poiGroup);
+                    trackTrailEvent.businessDiscovered(poi.title.rendered, poiCategory, poiGroup);
+                    
+                    onPoiClick?.(poi);
+                  }
+                }}
+              />
+              {/* Show label only for highlighted or selected POI */}
+              {(isLabelHighlighted || isSelected) && (
+                <Marker
+                  position={[poi.coordinates[1], poi.coordinates[0]]}
+                  icon={L.divIcon({
+                    className: 'poi-label',
+                    iconSize: [1, 1], // Small size to avoid visual marker
+                    iconAnchor: [0.5, 0], // Center horizontally, anchor at top
+                    html: `<div style="
+                      background: ${labelHighlightedPOI && labelHighlightedPOI.id === poi.id ? '#f0f0f0' : 'white'};
+                      color: #333;
+                      padding: 4px 8px;
+                      border-radius: 4px;
+                      font-size: 12px;
+                      font-weight: bold;
+                      margin-top: 30px;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                      white-space: nowrap;
+                      text-align: center;
+                      z-index: 99999;
+                      position: relative;
+                      cursor: pointer;
+                      display: inline-block;
+                      min-width: fit-content;
+                      transform: translateX(-50%);
+                      transition: all 0.2s ease;
+                    ">${poi.title.rendered}</div>`
+                  })}
+                  pane="selected-poi"
+                  eventHandlers={{
+                    mouseover: () => {
+                      setLabelHighlightedPOI(poi);
+                    },
+                    mouseout: () => {
+                      setLabelHighlightedPOI(null);
+                    }
+                  }}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
 
         {/* Filter Bottom Sheet */}
         <FilterBottomSheet
