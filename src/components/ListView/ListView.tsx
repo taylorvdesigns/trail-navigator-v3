@@ -16,7 +16,7 @@ import {
   Map as MapIcon
 } from '@mui/icons-material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { POI, TrailPoint } from '../../types/index';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { calculateDistance } from '../../utils/distance';
@@ -28,6 +28,7 @@ import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { CategoryToggle } from '../CategoryToggle/CategoryToggle';
 import { useUser } from '../../contexts/UserContext';
 import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
+import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
 
 interface ListViewProps {
   pois: POI[];
@@ -68,6 +69,9 @@ export const ListView: React.FC<ListViewProps> = ({
   const groupNameFromNav = urlGroupParam || location.state?.groupName || null;
   const focusedGroupRef = React.useRef<HTMLDivElement>(null);
   const [filterBottomSheetOpen, setFilterBottomSheetOpen] = useState(false);
+  const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string>('');
+  const [selectedPoiName, setSelectedPoiName] = useState<string>('');
 
   const trailPois = React.useMemo(() => {
     // Start with all POIs
@@ -220,6 +224,14 @@ export const ListView: React.FC<ListViewProps> = ({
     navigate(url);
   };
 
+  const handleOpenGooglePlaces = (poi: POI) => {
+    if (poi.google_place_id) {
+      setSelectedPlaceId(poi.google_place_id);
+      setSelectedPoiName(poi.title.rendered);
+      setGooglePlacesModalOpen(true);
+    }
+  };
+
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       
@@ -355,8 +367,6 @@ export const ListView: React.FC<ListViewProps> = ({
                     return (
                       <React.Fragment key={poi.id}>
                         <ListItem
-                          button
-                          onClick={() => handlePoiClick(poi)}
                           sx={{
                             py: 1.5,
                             '&:hover': {
@@ -364,17 +374,37 @@ export const ListView: React.FC<ListViewProps> = ({
                             }
                           }}
                           secondaryAction={
-                            <IconButton
-                              edge="end"
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent triggering the main item click
-                                handleShowOnMap(poi);
-                              }}
-                              size="small"
-                              sx={{ color: 'primary.main' }}
-                            >
-                              <MapIcon />
-                            </IconButton>
+                            <Box sx={{ display: 'flex', gap: 0.5 }}>
+                              {poi.google_place_id && (
+                                <IconButton
+                                  edge="end"
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // Prevent triggering the main item click
+                                    handleOpenGooglePlaces(poi);
+                                  }}
+                                  size="small"
+                                  sx={{ color: 'primary.main' }}
+                                >
+                                  <FontAwesomeIcon 
+                                    icon={faCircleInfo} 
+                                    style={{ 
+                                      fontSize: '16px'
+                                    }} 
+                                  />
+                                </IconButton>
+                              )}
+                              <IconButton
+                                edge="end"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent triggering the main item click
+                                  handleShowOnMap(poi);
+                                }}
+                                size="small"
+                                sx={{ color: 'primary.main' }}
+                              >
+                                <MapIcon />
+                              </IconButton>
+                            </Box>
                           }
                         >
                           <ListItemText
@@ -442,6 +472,14 @@ export const ListView: React.FC<ListViewProps> = ({
         onClose={() => setFilterBottomSheetOpen(false)}
         onToggle={() => setFilterBottomSheetOpen(!filterBottomSheetOpen)}
         title="List Filters"
+      />
+
+      {/* Google Places Modal */}
+      <GooglePlacesModal
+        open={googlePlacesModalOpen}
+        onClose={() => setGooglePlacesModalOpen(false)}
+        placeId={selectedPlaceId}
+        poiName={selectedPoiName}
       />
     </Box>
   );

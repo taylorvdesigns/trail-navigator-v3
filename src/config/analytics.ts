@@ -1,12 +1,5 @@
 // Google Analytics Configuration
-// Check if we're using GTM or direct GA4
 export const GA_TRACKING_ID = process.env.REACT_APP_GA_TRACKING_ID || '';
-export const GTM_CONTAINER_ID = process.env.REACT_APP_GTM_CONTAINER_ID || '';
-
-// Determine which tracking method to use
-// For now, let's force direct GA4 to avoid GTM configuration issues
-export const isUsingGTM = false; // Temporarily disable GTM
-export const trackingId = GA_TRACKING_ID;
 
 // Extend Window interface for Google Analytics
 declare global {
@@ -16,84 +9,25 @@ declare global {
   }
 }
 
-// Initialize Google Analytics or Google Tag Manager
+// Initialize Google Analytics (simplified - script is now in index.html)
 export const initGA = () => {
-  if (typeof window !== 'undefined' && trackingId) {
-    if (isUsingGTM) {
-      // Initialize Google Tag Manager
+  if (typeof window !== 'undefined' && GA_TRACKING_ID) {
+    // Google Analytics script is now loaded via index.html
+    // Just ensure gtag is available globally
+    if (typeof window.gtag === 'function') {
+      console.log('Google Analytics is ready (loaded from index.html)');
       
-      // Check if GTM script already exists
-      const existingGTMScript = document.querySelector(`script[src*="googletagmanager.com/gtm.js"]`);
-      if (!existingGTMScript) {
-        // Load GTM script
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`;
-        document.head.appendChild(script);
-      }
-
-      // Initialize dataLayer
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        'gtm.start': new Date().getTime(),
-        event: 'gtm.js'
-      });
-
-      // Add GTM noscript fallback
-      const noscript = document.createElement('noscript');
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`;
-      iframe.height = '0';
-      iframe.width = '0';
-      iframe.style.display = 'none';
-      iframe.style.visibility = 'hidden';
-      noscript.appendChild(iframe);
-      document.head.appendChild(noscript);
-    } else {
-      // Initialize direct Google Analytics
-      
-      // Check if gtag script already exists
-      const existingScript = document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`);
-      if (!existingScript) {
-        // Load gtag script
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
-        document.head.appendChild(script);
-      }
-
-      // Initialize gtag
-      window.dataLayer = window.dataLayer || [];
-      const gtag = (...args: any[]) => {
-        window.dataLayer.push(args);
-      };
-      gtag('js', new Date());
-      gtag('config', GA_TRACKING_ID, {
-        page_title: 'Trail Navigator',
-        page_location: window.location.href,
-        debug_mode: process.env.NODE_ENV === 'development',
-        send_page_view: true,
-        anonymize_ip: false,
-      });
-
-      // Make gtag available globally
-      window.gtag = gtag;
-      
-      // Force a page view event
-      gtag('event', 'page_view', {
-        page_title: 'Trail Navigator',
-        page_location: window.location.href,
-        page_referrer: document.referrer,
-      });
-      
-      // Test immediate event
+      // Send a test event to verify everything is working
       setTimeout(() => {
-        gtag('event', 'test_immediate', {
-          event_category: 'test',
-          event_label: 'immediate_test',
+        window.gtag('event', 'app_initialized', {
+          event_category: 'app_lifecycle',
+          event_label: 'app_start',
           value: 1,
         });
+        console.log('App initialization event sent to Google Analytics');
       }, 1000);
+    } else {
+      console.warn('Google Analytics gtag function not available');
     }
   } else {
     console.warn('Analytics not initialized: Missing tracking ID or not in browser environment');
