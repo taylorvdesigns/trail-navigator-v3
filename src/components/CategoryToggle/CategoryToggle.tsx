@@ -1,17 +1,15 @@
 import React from 'react';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { usePOIs } from '../../hooks/usePOIs';
 import { useUser } from '../../contexts/UserContext';
-import { extractUniqueCategories } from '../../utils/poi';
-import { getCategoryIcon } from '../../utils/categoryIcons';
+import { useCategories } from '../../hooks/useCategories';
+import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
 
 export const CategoryToggle: React.FC = () => {
-  const { pois, loading } = usePOIs();
+  const { pois } = usePOIs();
   const { selectedCategories, toggleCategory } = useUser();
-  
-  const categories = React.useMemo(() => {
-    return extractUniqueCategories(pois);
-  }, [pois]);
+  const { categories: wpCategories, loading } = useCategories();
 
   const handleCategoryChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -99,31 +97,64 @@ export const CategoryToggle: React.FC = () => {
         onChange={handleCategoryChange}
         aria-label="category filter"
         size="small"
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          '& .MuiToggleButton-root': {
+            flex: '0 0 auto',
+            minWidth: 'fit-content'
+          }
+        }}
       >
-        {categories.map((category) => (
-          <ToggleButton
-            key={category}
-            value={category}
-            aria-label={category}
-            sx={{
-              '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'white',
-                '&:hover': {
-                  bgcolor: 'primary.dark'
+        {wpCategories.map((category) => {
+          const iconComponent = parseFontAwesomeIcon(category.fa_icon);
+          const iconColor = parseFontAwesomeColor(category.fa_icon_color);
+          
+          return (
+            <ToggleButton
+              key={category.slug}
+              value={category.name}
+              aria-label={category.name}
+              sx={{
+                borderRadius: '4px !important', // 2px rounded corners (4px = 2px in Material-UI)
+                border: 'none !important',
+                '&.Mui-selected': {
+                  bgcolor: 'white',
+                  color: '#63686e',
+                  '&:hover': {
+                    bgcolor: '#f5f5f5'
+                  },
+                  '& .MuiSvgIcon-root, & svg': {
+                    color: '#63686e !important'
+                  }
+                },
+                '&:not(.Mui-selected)': {
+                  bgcolor: '#63686e',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: '#7a7f85'
+                  },
+                  '& .MuiSvgIcon-root, & svg': {
+                    color: 'white !important'
+                  }
                 }
-              },
-              '&:not(.Mui-selected)': {
-                color: 'text.secondary',
-                '&:hover': {
-                  bgcolor: 'action.hover'
-                }
-              }
-            }}
-          >
-            {getCategoryIcon(category, 20)}
-          </ToggleButton>
-        ))}
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FontAwesomeIcon 
+                  icon={iconComponent} 
+                  style={{ 
+                    fontSize: 16
+                  }} 
+                />
+                <span style={{ fontSize: '12px', fontWeight: 500 }}>
+                  {category.name}
+                </span>
+              </Box>
+            </ToggleButton>
+          );
+        })}
       </ToggleButtonGroup>
     </Box>
   );

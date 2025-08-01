@@ -347,32 +347,41 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Handle URL parameter changes for POI selection
   useEffect(() => {
-    if (urlPoiParam && pois && pois.length > 0 && mapRef.current && !selectedPOI && hasInitialLoad) {
+    console.log('POI zoom useEffect triggered:', { urlPoiParam, poisLength: pois?.length, hasMapRef: !!mapRef.current, selectedPOI: !!selectedPOI, hasInitialLoad });
+    
+    if (urlPoiParam && pois && pois.length > 0 && mapRef.current && hasInitialLoad) {
       const targetPOI = pois.find(poi => poi.id.toString() === urlPoiParam);
+      console.log('Found target POI:', targetPOI);
       
       if (targetPOI) {
         // Check if coordinates are valid
         if (!targetPOI.coordinates || targetPOI.coordinates.length !== 2 || 
             isNaN(targetPOI.coordinates[0]) || isNaN(targetPOI.coordinates[1])) {
+          console.log('Invalid POI coordinates:', targetPOI.coordinates);
           return;
         }
         
-        setSelectedPOI(targetPOI);
-        setHasShownInitialZoom(true);
-        
-        // Direct zoom to the POI with smooth animation
-        const poiCoords: [number, number] = [targetPOI.coordinates[1], targetPOI.coordinates[0]]; // [latitude, longitude] for Leaflet
-        setIsProgrammaticZoom(true);
-        
-        // Add a longer delay to ensure the map is fully ready and no other zoom operations are running
-        setTimeout(() => {
-          if (mapRef.current) {
-            mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
-          }
-        }, 300);
-        
-        // Reset the flag after a short delay to allow the zoom to complete
-        setTimeout(() => setIsProgrammaticZoom(false), 1000);
+        // Only set selectedPOI if it's different from current
+        if (!selectedPOI || selectedPOI.id !== targetPOI.id) {
+          console.log('Setting selected POI and zooming to:', targetPOI.title.rendered);
+          setSelectedPOI(targetPOI);
+          setHasShownInitialZoom(true);
+          
+          // Direct zoom to the POI with smooth animation
+          const poiCoords: [number, number] = [targetPOI.coordinates[1], targetPOI.coordinates[0]]; // [latitude, longitude] for Leaflet
+          setIsProgrammaticZoom(true);
+          
+          // Add a longer delay to ensure the map is fully ready and no other zoom operations are running
+          setTimeout(() => {
+            if (mapRef.current) {
+              console.log('Zooming to POI coordinates:', poiCoords);
+              mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
+            }
+          }, 300);
+          
+          // Reset the flag after a short delay to allow the zoom to complete
+          setTimeout(() => setIsProgrammaticZoom(false), 1000);
+        }
       }
     }
   }, [urlPoiParam, pois, selectedPOI, hasInitialLoad]);
@@ -696,8 +705,10 @@ export const MapView: React.FC<MapViewProps> = ({
         zoom={highlightZoom || (shouldFitBounds ? 13 : zoom)} // fallback zoom if no bounds
         style={{ height: '100%', width: '100%' }}
         whenReady={() => {
+          console.log('Map whenReady callback triggered');
           // Add a small delay to ensure map is fully ready
           setTimeout(() => {
+            console.log('whenReady timeout - hasInitialLoad:', hasInitialLoad, 'mapRef.current:', !!mapRef.current);
             if (mapRef.current && !hasInitialLoad) {
               if (highlightPOI) {
                 mapRef.current.setView(safeCenter, highlightZoom || 16);
@@ -731,8 +742,9 @@ export const MapView: React.FC<MapViewProps> = ({
                   setShowZoomOut(true);
                   setLastBounds(latLngBounds as [number, number][]);
                 }
-              } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup && !selectedPOI) {
+              } else if (shouldFitBounds && allTrailCoords.length > 0 && !isSimPlaying && !focusedGroup && !selectedPOI && !urlPoiParam) {
                 // Initial load: use center-based zoom for consistent viewing
+                // Only run if there's no POI parameter in the URL
                 setTimeout(() => {
                   if (mapRef.current && allTrailCoords.length > 0) {
                     const bounds = L.latLngBounds(allTrailCoords);
@@ -753,6 +765,8 @@ export const MapView: React.FC<MapViewProps> = ({
                   }
                 }, 100);
               }
+              // Always set hasInitialLoad to true, regardless of whether we zoomed or not
+              console.log('Setting hasInitialLoad to true');
               setHasInitialLoad(true);
             }
           }, 100);
