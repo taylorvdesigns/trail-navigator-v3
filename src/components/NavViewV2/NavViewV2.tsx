@@ -13,7 +13,7 @@ import { NavContextCard } from '../NavView/NavContextCard';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { calculatePreciseNetworkDistance } from '../../utils/trailGraph';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom';
 import Split from 'react-split';
 import { determineTrailHeading, getEndpointNameForHeading } from '../../utils/trailHeading';
 import './NavViewV2.css';
@@ -313,6 +313,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const startSizesRef = useRef([60, 40]);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useRouterLocation();
   const { stops, userStop, activeTrailId, currentLocation: navViewCurrentLocation } = useNavViewV3({
     allTrails,
     allTrailData,
@@ -844,7 +845,16 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             }}
             onClick={() => {
               if (stop.type === 'poi') {
-                navigate('/list', { state: { groupName: stop.name } });
+                // Preserve simulation mode when navigating to list view
+                const searchParams = new URLSearchParams();
+                const modeParam = location.search.match(/mode=([^&]+)/)?.[1];
+                if (modeParam === 'sim') {
+                  searchParams.set('mode', 'sim');
+                }
+                searchParams.set('group', stop.name);
+                
+                const url = `/list?${searchParams.toString()}`;
+                navigate(url, { state: { groupName: stop.name } });
               }
             }}
           >
