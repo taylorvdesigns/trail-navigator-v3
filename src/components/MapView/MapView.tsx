@@ -83,8 +83,7 @@ export const MapView: React.FC<MapViewProps> = ({
   // Hooks for data and functionality
   const { categories } = useCategories(); // Categories for POI filtering
   
-  // Debug categories loading - Track when categories are available for POI icon rendering
-  console.log('MapView categories loaded:', categories?.length || 0, 'categories');
+  // Categories for POI icon rendering from WordPress API
   const { trackTrailEvent } = useAnalytics(); // Analytics tracking
   const location = useRouterLocation(); // React Router location
   const mapRef = useRef<L.Map | null>(null); // Leaflet map reference
@@ -236,7 +235,6 @@ export const MapView: React.FC<MapViewProps> = ({
           // Add a longer delay to ensure the map is fully ready and no other zoom operations are running
           setTimeout(() => {
             if (mapRef.current) {
-              console.log('Zooming to POI at level 18');
               mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
             }
           }, 300);
@@ -394,7 +392,6 @@ export const MapView: React.FC<MapViewProps> = ({
      */
     const handleZoom = () => {
       const newZoom = map.getZoom();
-      console.log(`Zoom changed to: ${newZoom}`);
       setCurrentZoom(newZoom);
       if (onZoomChange) {
         onZoomChange(newZoom);
@@ -1022,8 +1019,7 @@ export const MapView: React.FC<MapViewProps> = ({
           // Create marker HTML with category icon if available and zoomed in
           let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
           
-          // Debug logging for POI icon rendering - track zoom level and icon availability
-          console.log(`POI ${poi.title.rendered}: zoom=${currentZoom}, categoryIcon=${!!categoryIcon}, iconComponent=${!!categoryIcon?.iconComponent}`);
+          // POI icon rendering based on zoom level and category data availability
           
           // Only add flexbox styling and icon if zoomed in (level 15+) and category icon is available
           if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
