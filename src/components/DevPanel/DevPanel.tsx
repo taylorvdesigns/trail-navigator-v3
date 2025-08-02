@@ -183,6 +183,14 @@ export const DevPanel: React.FC = () => {
                     bgcolor: '#39FF14',
                     color: '#000',
                   },
+                  '&.Mui-focusVisible': {
+                    bgcolor: '#39FF14',
+                    color: '#000',
+                  },
+                  '&:focus': {
+                    bgcolor: '#39FF14',
+                    color: '#000',
+                  },
                   fontWeight: 600,
                   fontSize: 13,
                   py: 1.5,
@@ -227,6 +235,14 @@ export const DevPanel: React.FC = () => {
                   bgcolor: '#2196f3',
                   color: '#fff',
                 },
+                '&.Mui-focusVisible': {
+                  bgcolor: '#2196f3',
+                  color: '#fff',
+                },
+                '&:focus': {
+                  bgcolor: '#2196f3',
+                  color: '#fff',
+                },
                 fontWeight: 600,
                 fontSize: 13,
                 py: 1.5,
@@ -243,6 +259,14 @@ export const DevPanel: React.FC = () => {
                 borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
+                  bgcolor: '#2196f3',
+                  color: '#fff',
+                },
+                '&.Mui-focusVisible': {
+                  bgcolor: '#2196f3',
+                  color: '#fff',
+                },
+                '&:focus': {
                   bgcolor: '#2196f3',
                   color: '#fff',
                 },
@@ -292,6 +316,14 @@ export const DevPanel: React.FC = () => {
                   borderColor: '#e91e63',
                   borderRadius: 2,
                   '&.Mui-selected': {
+                    bgcolor: '#e91e63',
+                    color: '#fff',
+                  },
+                  '&.Mui-focusVisible': {
+                    bgcolor: '#e91e63',
+                    color: '#fff',
+                  },
+                  '&:focus': {
                     bgcolor: '#e91e63',
                     color: '#fff',
                   },
@@ -371,7 +403,9 @@ export const DevPanel: React.FC = () => {
                     color: '#fff', 
                     borderColor: '#39FF14', 
                     borderRadius: 2, 
-                    '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' } 
+                    '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' },
+                    '&.Mui-focusVisible': { bgcolor: '#39FF14', color: '#000' },
+                    '&:focus': { bgcolor: '#39FF14', color: '#000' }
                   }}
                 >
                   {SPEED_LABELS[mult as keyof typeof SPEED_LABELS]}
