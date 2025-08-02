@@ -41,6 +41,7 @@ import { useAnalytics } from '../../contexts/AnalyticsContext';
 import { useCategories } from '../../hooks/useCategories';
 import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
 import { POIDistanceModal } from '../POIDistanceModal';
+import { GooglePlacesModal } from '../GooglePlacesModal/GooglePlacesModal';
 
 /**
  * Props interface for MapView component
@@ -111,6 +112,9 @@ export const MapView: React.FC<MapViewProps> = ({
   const [isProgrammaticZoom, setIsProgrammaticZoom] = useState(false); // Programmatic zoom flag
   const [labelHighlightedPOI, setLabelHighlightedPOI] = useState<POI | null>(null); // POI with highlighted label
   const [showDistanceModal, setShowDistanceModal] = useState(false); // Distance modal state
+  const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false); // Google Places modal state
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string>(''); // Selected Google Place ID
+  const [selectedPoiName, setSelectedPoiName] = useState<string>(''); // Selected POI name for modal
 
   // Trail data and junction processing
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
@@ -479,6 +483,20 @@ export const MapView: React.FC<MapViewProps> = ({
     const iconColor = parseFontAwesomeColor(categoryData.fa_icon_color);
     
     return { iconComponent, iconColor };
+  };
+
+  /**
+   * Handle opening Google Places modal for a POI
+   * Sets the modal state and place ID for displaying business information
+   * 
+   * @param poi - The POI to show Google Places information for
+   */
+  const handleOpenGooglePlaces = (poi: POI) => {
+    if (poi.google_place_id && poi.google_place_id !== 'none') {
+      setSelectedPlaceId(poi.google_place_id);
+      setSelectedPoiName(poi.title.rendered);
+      setGooglePlacesModalOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -1101,6 +1119,10 @@ export const MapView: React.FC<MapViewProps> = ({
                     },
                     mouseout: () => {
                       setLabelHighlightedPOI(null);
+                    },
+                    click: () => {
+                      // Open Google Places modal when POI label is clicked
+                      handleOpenGooglePlaces(poi);
                     }
                   }}
                 />
@@ -1142,6 +1164,14 @@ export const MapView: React.FC<MapViewProps> = ({
             />
           </>
         )}
+
+        {/* Google Places Modal */}
+        <GooglePlacesModal
+          open={googlePlacesModalOpen}
+          onClose={() => setGooglePlacesModalOpen(false)}
+          placeId={selectedPlaceId}
+          poiName={selectedPoiName}
+        />
       </MapContainer>
     </Box>
   );
