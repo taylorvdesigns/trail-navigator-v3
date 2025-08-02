@@ -28,10 +28,11 @@ import { NavViewV2 } from './NavViewV2';
 import { ListView } from './ListView/ListView';
 import { TrailView } from '../views/TrailView';
 import { NotFoundView } from '../views/NotFoundView';
-import { ViewMode, LocomotionMode, WordPressTrailConfig, TrailConfig, POI } from '../types/index';
+import { ViewMode, WordPressTrailConfig, TrailConfig, POI } from '../types/index';
 import { usePOIs } from '../hooks/usePOIs';
 import { useLocation } from '../contexts/LocationContext';
 import { useDevMode } from '../contexts/DevContext';
+import { useUser } from '../contexts/UserContext';
 import { DevPanel } from './DevPanel/DevPanel';
 import { EntryPointModal } from './EntryPointModal/EntryPointModal';
 import { useWordPressConfig } from '../hooks/useWordPressConfig';
@@ -109,7 +110,7 @@ const SimulationModeModal: React.FC<{ open: boolean; onClose: () => void; onSimu
  */
 export const AppContent: React.FC = () => {
   // State management
-  const [locomotionMode, setLocomotionMode] = useState<LocomotionMode>('walking');
+  const { locomotionMode, setLocomotionMode } = useUser();
   const { pois, loading: poisLoading, error: poisError } = usePOIs();
   const { data: wpConfig, isLoading: wpLoading, error: wpError } = useWordPressConfig();
   const navigate = useNavigate();
