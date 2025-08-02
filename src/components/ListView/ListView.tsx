@@ -302,6 +302,38 @@ export const ListView: React.FC<ListViewProps> = ({
     }
   };
 
+  /**
+   * Handles clicking the "All" filter button
+   * Updates both local state and URL parameters
+   */
+  const handleAllFilterClick = () => {
+    setSelectedTag(null);
+    
+    // Update URL to remove group parameter while preserving other parameters
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete('group');
+    
+    const newUrl = `/list?${searchParams.toString()}`;
+    navigate(newUrl, { replace: true });
+  };
+
+  /**
+   * Handles clicking a specific group filter button
+   * Updates both local state and URL parameters
+   * 
+   * @param tag - The tag/group name to filter by
+   */
+  const handleGroupFilterClick = (tag: string) => {
+    setSelectedTag(tag);
+    
+    // Update URL to set group parameter while preserving other parameters
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('group', tag);
+    
+    const newUrl = `/list?${searchParams.toString()}`;
+    navigate(newUrl, { replace: true });
+  };
+
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       
@@ -310,14 +342,14 @@ export const ListView: React.FC<ListViewProps> = ({
         <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
           <Chip
             label="All"
-            onClick={() => setSelectedTag(null)}
+            onClick={handleAllFilterClick}
             color={selectedTag === null ? 'primary' : 'default'}
           />
           {uniqueTags.map((tag) => (
             <Chip
               key={tag}
               label={tag}
-              onClick={() => setSelectedTag(tag)}
+              onClick={() => handleGroupFilterClick(tag)}
               color={selectedTag === tag ? 'primary' : 'default'}
             />
           ))}
