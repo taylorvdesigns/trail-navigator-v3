@@ -81,6 +81,9 @@ export const MapView: React.FC<MapViewProps> = ({
 }) => {
   // Hooks for data and functionality
   const { categories } = useCategories(); // Categories for POI filtering
+  
+  // Debug categories loading
+  console.log('MapView categories loaded:', categories?.length || 0, 'categories');
   const { trackTrailEvent } = useAnalytics(); // Analytics tracking
   const location = useRouterLocation(); // React Router location
   const mapRef = useRef<L.Map | null>(null); // Leaflet map reference
@@ -392,7 +395,7 @@ export const MapView: React.FC<MapViewProps> = ({
     return () => {
       map.off('zoomend', handleZoom);
     };
-  }, [onZoomChange]); // Run when onZoomChange changes
+  }, [onZoomChange, mapRef.current]); // Include mapRef.current in dependencies
 
     // Function to determine marker size based on zoom level
   const getMarkerSize = (isHighlighted: boolean, zoomLevel: number): number => {
@@ -426,34 +429,24 @@ export const MapView: React.FC<MapViewProps> = ({
   // Helper function to get category icon for a POI
   const getCategoryIcon = (poi: POI) => {
     if (!poi.post_category || !Array.isArray(poi.post_category) || poi.post_category.length === 0) {
-      console.log(`POI ${poi.title.rendered}: No post_category`);
       return null;
     }
     
     // Get the first category (primary category)
     const primaryCategory = poi.post_category[0];
     if (!primaryCategory.name) {
-      console.log(`POI ${poi.title.rendered}: No primary category name`);
       return null;
     }
-    
-    console.log(`POI ${poi.title.rendered}: Looking for category "${primaryCategory.name}"`);
-    console.log(`Available categories:`, categories.map((cat: any) => cat.name));
     
     // Find matching category in our categories data
     const categoryData = categories.find((cat: any) => cat.name === primaryCategory.name);
     if (!categoryData) {
-      console.log(`POI ${poi.title.rendered}: Category "${primaryCategory.name}" not found in categories data`);
       return null;
     }
-    
-    console.log(`POI ${poi.title.rendered}: Found category data:`, categoryData);
     
     // Parse the FontAwesome icon
     const iconComponent = parseFontAwesomeIcon(categoryData.fa_icon);
     const iconColor = parseFontAwesomeColor(categoryData.fa_icon_color);
-    
-    console.log(`POI ${poi.title.rendered}: Parsed icon component:`, iconComponent);
     
     return { iconComponent, iconColor };
   };
