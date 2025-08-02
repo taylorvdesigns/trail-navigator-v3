@@ -189,6 +189,27 @@ interface UserContext {
 - **Group Navigation**: Multi-user coordination
 - **Advanced Analytics**: Predictive user behavior
 
+### **Advanced Navigation Features** (Future Implementation)
+- **Dynamic POI Group Expansion**: When user enters a POI group's bounds, Nav view automatically expands to show individual POIs instead of grouped display
+  - Solves the "which restaurant?" problem in dense POI areas
+  - Provides granular navigation within POI clusters
+  - Uses convex hull calculations to determine when user is within group bounds
+  - Seamless transition from group view to individual POI stops
+
+- **Progress Tracking for POI Navigation**: Complete navigation experience when user selects a specific POI
+  - "Start Navigation" button in Map View initiates progress tracking
+  - Nav view switches to "Navigation Mode" with real-time progress bar
+  - Distance and time remaining updates continuously
+  - Visual progress indicator along the trail path
+  - "Arrived" notification when within 50m of destination
+  - State management for navigation sessions
+
+### **Smart Navigation Enhancements** (Future Concepts)
+- **Smart POI Recommendations**: Context-aware suggestions based on time, weather, user preferences
+- **Voice Navigation**: Audio cues for upcoming turns and POI announcements
+- **Social Navigation**: Share navigation progress and coordinate group meetups
+- **Predictive Routing**: AI-powered route suggestions based on user patterns
+
 ## 📈 **Success Metrics**
 
 ### **User Engagement**
@@ -223,6 +244,6 @@ interface UserContext {
 
 ---
 
-**Document Version**: 8.0  
-**Last Updated**: Aug 1 2025  
-**Next Review**: Aug 15 2025 
+**Document Version**: 8.1  
+**Last Updated**: Jan 30 2025  
+**Next Review**: Feb 15 2025 
