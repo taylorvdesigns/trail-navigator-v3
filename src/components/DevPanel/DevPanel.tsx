@@ -221,10 +221,10 @@ export const DevPanel: React.FC = () => {
               aria-label="Northbound"
               sx={{
                 color: '#fff',
-                borderColor: '#e91e63',
+                borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
-                  bgcolor: '#e91e63',
+                  bgcolor: '#2196f3',
                   color: '#fff',
                 },
                 fontWeight: 600,
@@ -240,10 +240,10 @@ export const DevPanel: React.FC = () => {
               aria-label="Southbound"
               sx={{
                 color: '#fff',
-                borderColor: '#e91e63',
+                borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
-                  bgcolor: '#e91e63',
+                  bgcolor: '#2196f3',
                   color: '#fff',
                 },
                 fontWeight: 600,
