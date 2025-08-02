@@ -180,16 +180,24 @@ export const DevPanel: React.FC = () => {
                   borderColor: '#39FF14',
                   borderRadius: 2,
                   '&.Mui-selected': {
-                    bgcolor: '#39FF14',
-                    color: '#000',
+                    bgcolor: '#39FF14 !important',
+                    color: '#000 !important',
                   },
                   '&.Mui-focusVisible': {
-                    bgcolor: '#39FF14',
-                    color: '#000',
+                    bgcolor: '#39FF14 !important',
+                    color: '#000 !important',
                   },
                   '&:focus': {
-                    bgcolor: '#39FF14',
-                    color: '#000',
+                    bgcolor: '#39FF14 !important',
+                    color: '#000 !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-selected': {
+                    bgcolor: '#39FF14 !important',
+                    color: '#000 !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-focusVisible': {
+                    bgcolor: '#39FF14 !important',
+                    color: '#000 !important',
                   },
                   fontWeight: 600,
                   fontSize: 13,
@@ -232,16 +240,24 @@ export const DevPanel: React.FC = () => {
                 borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
-                  bgcolor: '#2196f3',
-                  color: '#fff',
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
                 },
                 '&.Mui-focusVisible': {
-                  bgcolor: '#2196f3',
-                  color: '#fff',
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
                 },
                 '&:focus': {
-                  bgcolor: '#2196f3',
-                  color: '#fff',
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
+                },
+                '&.MuiToggleButton-root.Mui-selected': {
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
+                },
+                '&.MuiToggleButton-root.Mui-focusVisible': {
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
                 },
                 fontWeight: 600,
                 fontSize: 13,
@@ -259,16 +275,24 @@ export const DevPanel: React.FC = () => {
                 borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
-                  bgcolor: '#2196f3',
-                  color: '#fff',
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
                 },
                 '&.Mui-focusVisible': {
-                  bgcolor: '#2196f3',
-                  color: '#fff',
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
                 },
                 '&:focus': {
-                  bgcolor: '#2196f3',
-                  color: '#fff',
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
+                },
+                '&.MuiToggleButton-root.Mui-selected': {
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
+                },
+                '&.MuiToggleButton-root.Mui-focusVisible': {
+                  bgcolor: '#2196f3 !important',
+                  color: '#fff !important',
                 },
                 fontWeight: 600,
                 fontSize: 13,
@@ -316,16 +340,24 @@ export const DevPanel: React.FC = () => {
                   borderColor: '#e91e63',
                   borderRadius: 2,
                   '&.Mui-selected': {
-                    bgcolor: '#e91e63',
-                    color: '#fff',
+                    bgcolor: '#e91e63 !important',
+                    color: '#fff !important',
                   },
                   '&.Mui-focusVisible': {
-                    bgcolor: '#e91e63',
-                    color: '#fff',
+                    bgcolor: '#e91e63 !important',
+                    color: '#fff !important',
                   },
                   '&:focus': {
-                    bgcolor: '#e91e63',
-                    color: '#fff',
+                    bgcolor: '#e91e63 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-selected': {
+                    bgcolor: '#e91e63 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-focusVisible': {
+                    bgcolor: '#e91e63 !important',
+                    color: '#fff !important',
                   },
                   fontWeight: 600,
                   fontSize: 13,
@@ -403,9 +435,11 @@ export const DevPanel: React.FC = () => {
                     color: '#fff', 
                     borderColor: '#39FF14', 
                     borderRadius: 2, 
-                    '&.Mui-selected': { bgcolor: '#39FF14', color: '#000' },
-                    '&.Mui-focusVisible': { bgcolor: '#39FF14', color: '#000' },
-                    '&:focus': { bgcolor: '#39FF14', color: '#000' }
+                    '&.Mui-selected': { bgcolor: '#39FF14 !important', color: '#000 !important' },
+                    '&.Mui-focusVisible': { bgcolor: '#39FF14 !important', color: '#000 !important' },
+                    '&:focus': { bgcolor: '#39FF14 !important', color: '#000 !important' },
+                    '&.MuiToggleButton-root.Mui-selected': { bgcolor: '#39FF14 !important', color: '#000 !important' },
+                    '&.MuiToggleButton-root.Mui-focusVisible': { bgcolor: '#39FF14 !important', color: '#000 !important' }
                   }}
                 >
                   {SPEED_LABELS[mult as keyof typeof SPEED_LABELS]}
