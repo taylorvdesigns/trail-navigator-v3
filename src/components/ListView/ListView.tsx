@@ -377,12 +377,7 @@ export const ListView: React.FC<ListViewProps> = ({
         ) : (
           Object.entries(groupedPois)
           .filter(([groupName]) => 
-            !selectedTag || 
-            groupName === selectedTag || 
-            groupedPois[groupName].some(poi => 
-              poi.post_tags.some(tag => tag.name === selectedTag) ||
-              poi.title.rendered === selectedTag
-            )
+            !selectedTag || groupName === selectedTag
           )
           .map(([groupName, groupPois]) => (
             <Box 
@@ -422,7 +417,6 @@ export const ListView: React.FC<ListViewProps> = ({
               </Box>
               <List>
                 {groupPois
-                  .filter(poi => !selectedTag || poi.post_tags.some(tag => tag.name === selectedTag) || poi.title.rendered === selectedTag)
                   .sort((a, b) => {
                     // Sort featured POIs to the top
                     const aFeatured = isFeaturedPOI(a);
