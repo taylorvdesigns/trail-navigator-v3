@@ -375,6 +375,7 @@ export const MapView: React.FC<MapViewProps> = ({
     const map = mapRef.current;
     const handleZoom = () => {
       const newZoom = map.getZoom();
+      console.log(`Zoom changed to: ${newZoom}`);
       setCurrentZoom(newZoom);
       if (onZoomChange) {
         onZoomChange(newZoom);
@@ -968,6 +969,9 @@ export const MapView: React.FC<MapViewProps> = ({
           
           // Create marker HTML with category icon if available and zoomed in
           let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
+          
+          // Debug logging for POI icon rendering
+          console.log(`POI ${poi.title.rendered}: zoom=${currentZoom}, categoryIcon=${!!categoryIcon}, iconComponent=${!!categoryIcon?.iconComponent}`);
           
           // Only add flexbox styling and icon if zoomed in (level 15+)
           if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
