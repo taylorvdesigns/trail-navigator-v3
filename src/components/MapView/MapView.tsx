@@ -229,6 +229,7 @@ export const MapView: React.FC<MapViewProps> = ({
           // Add a longer delay to ensure the map is fully ready and no other zoom operations are running
           setTimeout(() => {
             if (mapRef.current) {
+              console.log('Zooming to POI at level 18');
               mapRef.current.setView(poiCoords, 18, { animate: true, duration: 2 });
             }
           }, 300);
@@ -425,24 +426,34 @@ export const MapView: React.FC<MapViewProps> = ({
   // Helper function to get category icon for a POI
   const getCategoryIcon = (poi: POI) => {
     if (!poi.post_category || !Array.isArray(poi.post_category) || poi.post_category.length === 0) {
+      console.log(`POI ${poi.title.rendered}: No post_category`);
       return null;
     }
     
     // Get the first category (primary category)
     const primaryCategory = poi.post_category[0];
     if (!primaryCategory.name) {
+      console.log(`POI ${poi.title.rendered}: No primary category name`);
       return null;
     }
+    
+    console.log(`POI ${poi.title.rendered}: Looking for category "${primaryCategory.name}"`);
+    console.log(`Available categories:`, categories.map((cat: any) => cat.name));
     
     // Find matching category in our categories data
     const categoryData = categories.find((cat: any) => cat.name === primaryCategory.name);
     if (!categoryData) {
+      console.log(`POI ${poi.title.rendered}: Category "${primaryCategory.name}" not found in categories data`);
       return null;
     }
+    
+    console.log(`POI ${poi.title.rendered}: Found category data:`, categoryData);
     
     // Parse the FontAwesome icon
     const iconComponent = parseFontAwesomeIcon(categoryData.fa_icon);
     const iconColor = parseFontAwesomeColor(categoryData.fa_icon_color);
+    
+    console.log(`POI ${poi.title.rendered}: Parsed icon component:`, iconComponent);
     
     return { iconComponent, iconColor };
   };
