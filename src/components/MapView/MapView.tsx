@@ -82,7 +82,7 @@ export const MapView: React.FC<MapViewProps> = ({
   // Hooks for data and functionality
   const { categories } = useCategories(); // Categories for POI filtering
   
-  // Debug categories loading
+  // Debug categories loading - Track when categories are available for POI icon rendering
   console.log('MapView categories loaded:', categories?.length || 0, 'categories');
   const { trackTrailEvent } = useAnalytics(); // Analytics tracking
   const location = useRouterLocation(); // React Router location
@@ -374,9 +374,20 @@ export const MapView: React.FC<MapViewProps> = ({
   // Auto-reset logic removed - focused group is only cleared by Zoom Out button
 
   // Listen for zoom changes to update onZoomChange prop
+  /**
+   * Set up zoom change handler to track current zoom level
+   * This is essential for POI icon rendering which depends on zoom level >= 15
+   * Also triggers onZoomChange callback for parent components
+   */
   useEffect(() => {
     if (!mapRef.current) return;
+    
     const map = mapRef.current;
+    
+    /**
+     * Handle zoom level changes from user interaction or programmatic zoom
+     * Updates currentZoom state and calls onZoomChange callback
+     */
     const handleZoom = () => {
       const newZoom = map.getZoom();
       console.log(`Zoom changed to: ${newZoom}`);
@@ -385,25 +396,37 @@ export const MapView: React.FC<MapViewProps> = ({
         onZoomChange(newZoom);
       }
     };
+    
+    // Listen for zoom end events (when zoom animation completes)
     map.on('zoomend', handleZoom);
-    // Call once on mount
+    
+    // Set initial zoom level on mount
     const initialZoom = map.getZoom();
     setCurrentZoom(initialZoom);
     if (onZoomChange) {
       onZoomChange(initialZoom);
     }
+    
+    // Cleanup: remove event listener when component unmounts
     return () => {
       map.off('zoomend', handleZoom);
     };
   }, [onZoomChange, mapRef.current]); // Include mapRef.current in dependencies
 
-    // Function to determine marker size based on zoom level
+    /**
+   * Determine marker size based on zoom level and highlight status
+   * Larger markers are used when zoomed in (level 15+) to accommodate POI icons
+   * 
+   * @param isHighlighted - Whether the POI is highlighted/selected
+   * @param zoomLevel - Current map zoom level
+   * @returns Marker size in pixels
+   */
   const getMarkerSize = (isHighlighted: boolean, zoomLevel: number): number => {
-    const baseSize = isHighlighted ? 18 : 14; // Increased base sizes
+    const baseSize = isHighlighted ? 18 : 14; // Base sizes for zoomed out view
 
-    // If zoomed in (zoom level 15 or higher), make markers larger
+    // If zoomed in (zoom level 15 or higher), make markers larger to accommodate POI icons
     if (zoomLevel >= 15) {
-      return isHighlighted ? 28 : 24; // Increased from 24/20 to 28/24
+      return isHighlighted ? 28 : 24; // Larger sizes for zoomed in view
     }
 
     return baseSize; // Default size for zoomed out view
@@ -426,8 +449,15 @@ export const MapView: React.FC<MapViewProps> = ({
 
 
 
-  // Helper function to get category icon for a POI
+  /**
+   * Get category icon for a POI from WordPress API data
+   * Matches POI's primary category with categories data and parses FontAwesome icons
+   * 
+   * @param poi - The POI to get category icon for
+   * @returns Object with iconComponent and iconColor, or null if not found
+   */
   const getCategoryIcon = (poi: POI) => {
+    // Check if POI has category data
     if (!poi.post_category || !Array.isArray(poi.post_category) || poi.post_category.length === 0) {
       return null;
     }
@@ -438,13 +468,13 @@ export const MapView: React.FC<MapViewProps> = ({
       return null;
     }
     
-    // Find matching category in our categories data
+    // Find matching category in our categories data from WordPress API
     const categoryData = categories.find((cat: any) => cat.name === primaryCategory.name);
     if (!categoryData) {
       return null;
     }
     
-    // Parse the FontAwesome icon
+    // Parse the FontAwesome icon and color from WordPress data
     const iconComponent = parseFontAwesomeIcon(categoryData.fa_icon);
     const iconColor = parseFontAwesomeColor(categoryData.fa_icon_color);
     
@@ -968,25 +998,27 @@ export const MapView: React.FC<MapViewProps> = ({
           const markerSize = getMarkerSize(isHighlighted, currentZoom);
           const iconAnchor = markerSize / 2; // Center the marker
           
-          // Get category icon for this POI
+          // Get category icon for this POI from WordPress API
           const categoryIcon = getCategoryIcon(poi);
           
           // Create marker HTML with category icon if available and zoomed in
           let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
           
-          // Debug logging for POI icon rendering
+          // Debug logging for POI icon rendering - track zoom level and icon availability
           console.log(`POI ${poi.title.rendered}: zoom=${currentZoom}, categoryIcon=${!!categoryIcon}, iconComponent=${!!categoryIcon?.iconComponent}`);
           
-          // Only add flexbox styling and icon if zoomed in (level 15+)
+          // Only add flexbox styling and icon if zoomed in (level 15+) and category icon is available
           if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
             markerHtml += `display:flex;align-items:center;justify-content:center;'>`;
+            
             // Render FontAwesome icon as HTML string with better visibility
+            // Icon size scales with marker size but has a minimum of 12px
             const iconSize = Math.max(12, markerSize * 0.6); // Increased from 0.4 to 0.6, minimum 12px
             const iconHtml = ReactDOMServer.renderToString(
               <FontAwesomeIcon 
                 icon={categoryIcon.iconComponent} 
                 style={{ 
-                  color: 'white', // Always white, ignore category color
+                  color: 'white', // Always white for better contrast against marker background
                   fontSize: `${iconSize}px`
                 }} 
               />
@@ -994,21 +1026,22 @@ export const MapView: React.FC<MapViewProps> = ({
             markerHtml += iconHtml;
             markerHtml += '</div>';
           } else {
-            // Simple div without flexbox for zoomed out view
+            // Simple div without flexbox for zoomed out view (no icon displayed)
             markerHtml += `'></div>`;
           }
           
-          // Add label for selected POI
+          // Add label for selected POI - wrap marker in container for proper z-index layering
           if (isSelected) {
             markerHtml = `<div style="display: flex; flex-direction: column; align-items: center; z-index: 9999; position: relative;">
               ${markerHtml}
             </div>`;
           }
           
+          // Create Leaflet divIcon with custom HTML for POI marker
           let markerIcon = L.divIcon({
             className: isHighlighted ? 'highlight-poi-marker' : 'poi-marker',
             iconSize: [markerSize, markerSize], // Keep original size
-            iconAnchor: [iconAnchor, iconAnchor], // Keep original anchor
+            iconAnchor: [iconAnchor, iconAnchor], // Keep original anchor for proper positioning
             html: markerHtml
           });
           
