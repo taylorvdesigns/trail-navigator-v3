@@ -59,7 +59,7 @@ export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: 
     id: wpTrail.routeId,
     endpoint1: trailData?.endpoints.start || [0, 0],
     endpoint2: trailData?.endpoints.end || [0, 0],
-    endpointNames: [`${wpTrail.name} Start`, `${wpTrail.name} End`]
+    endpointNames: [wpTrail.endpoint1_name || `${wpTrail.name} Start`, wpTrail.endpoint2_name || `${wpTrail.name} End`]
   };
 };
 
