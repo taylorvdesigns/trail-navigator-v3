@@ -23,7 +23,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { FilterBottomSheet } from '../FilterBottomSheet/FilterBottomSheet';
 import './MapView.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark, faMapPin } from '@fortawesome/free-solid-svg-icons';
+import { faMapPin, faPersonWalking, faPersonRunning, faPersonBiking } from '@fortawesome/free-solid-svg-icons';
 import { POI, TrailConfig } from '../../types/index';
 import L from 'leaflet';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
@@ -88,7 +88,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const location = useRouterLocation(); // React Router location
   const mapRef = useRef<L.Map | null>(null); // Leaflet map reference
   const locationContext = useContext(LocationContext); // Location context
-  const { selectedCategories } = useUser(); // User's selected categories
+  const { selectedCategories, locomotionMode } = useUser(); // User's selected categories and locomotion mode
   const navigate = useNavigate(); // Navigation function
   
   // Location state management
@@ -308,6 +308,25 @@ export const MapView: React.FC<MapViewProps> = ({
 
 
 
+  /**
+   * Get the locomotion icon based on current locomotion mode
+   * Returns the appropriate FontAwesome icon for walking, running, or biking
+   * 
+   * @returns FontAwesome icon for current locomotion mode
+   */
+  const getLocomotionIcon = () => {
+    switch (locomotionMode) {
+      case 'walking':
+        return faPersonWalking;
+      case 'running':
+        return faPersonRunning;
+      case 'biking':
+        return faPersonBiking;
+      default:
+        return faPersonWalking;
+    }
+  };
+
   // Create a custom React component for the user location marker
   const UserLocationMarker = () => (
     <div style={{
@@ -316,15 +335,18 @@ export const MapView: React.FC<MapViewProps> = ({
       height: '24px',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      backgroundColor: '#e91e63',
+      borderRadius: '50%',
+      border: '2px solid white',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
     }}>
       <FontAwesomeIcon 
-        icon={faCircleXmark} 
+        icon={getLocomotionIcon()} 
         style={{ 
           color: 'white', 
-          fontSize: '20px',
-          zIndex: 1000,
-          filter: 'drop-shadow(0 0 2px #1976d2) drop-shadow(0 0 4px #1976d2)'
+          fontSize: '14px',
+          zIndex: 1000
         }} 
       />
     </div>
