@@ -29,7 +29,9 @@ export const DevPanel: React.FC = () => {
     setSimIndex,
     setSimTrailPoints,
     simLoop,
-    setSimLoop
+    setSimLoop,
+    simDirection,
+    setSimDirection
   } = useLocation();
   const [selectedLocation, setSelectedLocation] = useState(0);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
@@ -202,7 +204,57 @@ export const DevPanel: React.FC = () => {
           <Typography variant="body2" sx={{ mb: 1, color: '#ccc', fontSize: '0.8rem' }}>
             Change the direction you are headed on the trail.
           </Typography>
-
+          <ToggleButtonGroup
+            value={simDirection}
+            exclusive
+            onChange={(_event, newValue) => {
+              if (newValue !== null) {
+                setSimDirection(newValue);
+              }
+            }}
+            aria-label="Simulation Direction"
+            fullWidth
+            sx={{ gap: 1 }}
+          >
+            <ToggleButton
+              value="top"
+              aria-label="Northbound"
+              sx={{
+                color: '#fff',
+                borderColor: '#e91e63',
+                borderRadius: 2,
+                '&.Mui-selected': {
+                  bgcolor: '#e91e63',
+                  color: '#fff',
+                },
+                fontWeight: 600,
+                fontSize: 13,
+                py: 1.5,
+                px: 2
+              }}
+            >
+              Northbound
+            </ToggleButton>
+            <ToggleButton
+              value="bottom"
+              aria-label="Southbound"
+              sx={{
+                color: '#fff',
+                borderColor: '#e91e63',
+                borderRadius: 2,
+                '&.Mui-selected': {
+                  bgcolor: '#e91e63',
+                  color: '#fff',
+                },
+                fontWeight: 600,
+                fontSize: 13,
+                py: 1.5,
+                px: 2
+              }}
+            >
+              Southbound
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
 
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
