@@ -210,6 +210,26 @@ interface UserContext {
 - **Social Navigation**: Share navigation progress and coordinate group meetups
 - **Predictive Routing**: AI-powered route suggestions based on user patterns
 
+### **Entry Point Management** (Future Implementation)
+- **Entry Point Label**: Visual label displayed under the entry point marker on Map View
+- **Entry Point Modal**: Interactive modal triggered by clicking the entry point marker or label
+- **Distance Information**: Real-time display of user's distance from the current entry point
+- **Entry Point Selection**: Option to change entry point directly from the modal
+- **Trail-Accurate Distance**: Uses network distance calculation (not haversine) for precise trail distance
+- **Visual Feedback**: Clear indication of current entry point vs. available alternatives
+- **User Experience**: Streamlined workflow for entry point management without leaving Map View
+
+### **Dynamic Locomotion Configuration** (Future Implementation)
+- **WordPress Plugin Integration**: Locomotion types and speeds defined in Trail Config plugin
+- **Trail-Specific Transportation**: Each trail can enable/disable specific transportation modes
+- **Flexible Transportation Options**: Support for walking, biking, electric scooters, rollerblades, etc.
+- **Speed Configuration**: Customizable speed settings for each transportation type per trail
+- **Dynamic UI Updates**: App automatically adapts to show only available transportation options
+- **Trail Compliance**: Ensures users only see transportation modes appropriate for each trail
+- **Admin Control**: Trail managers can easily configure allowed transportation types
+- **Icon Customization**: Custom icons for each transportation type
+- **Speed-Based Calculations**: Distance and time calculations adjust based on transportation speed
+
 ## 📈 **Success Metrics**
 
 ### **User Engagement**
