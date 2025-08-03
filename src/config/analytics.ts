@@ -118,6 +118,23 @@ export const trackTrailEvent = {
     });
   },
 
+  // Adaptive zoom tracking
+  adaptiveZoomApplied: (targetZoom: number, poiDensity: number, userLocation: [number, number], trigger: 'initial_load' | 'location_change' | 'simulation_mode') => {
+    trackEvent('adaptive_zoom_applied', 'map_interaction', `zoom_${targetZoom}_density_${poiDensity}`, targetZoom, {
+      target_zoom_level: targetZoom,
+      poi_density: poiDensity,
+      trigger_type: trigger,
+      user_latitude: userLocation[1],
+      user_longitude: userLocation[0],
+    });
+  },
+
+  adaptiveZoomSkipped: (reason: 'manual_interaction' | 'no_user_location' | 'poi_parameter' | 'missing_data') => {
+    trackEvent('adaptive_zoom_skipped', 'map_interaction', reason, undefined, {
+      skip_reason: reason,
+    });
+  },
+
   poiGroupFocused: (groupName: string, poiCount: number) => {
     trackEvent('poi_group_focused', 'map_interaction', groupName, poiCount, {
       group_name: groupName,

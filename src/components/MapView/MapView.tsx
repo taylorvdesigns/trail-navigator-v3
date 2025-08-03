@@ -31,12 +31,14 @@ import { LocationContext } from '../../contexts/LocationContext';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useTrailJunctions } from '../../hooks/useTrailJunctions';
+import { useTrailGraph } from '../../hooks/useTrailGraph';
 
 import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
 import { useContext } from 'react';
 import { slugToTagName } from '../../utils/poi';
+import { haversine } from '../../utils/distance';
 import { useAnalytics } from '../../contexts/AnalyticsContext';
 import { useCategories } from '../../hooks/useCategories';
 import { parseFontAwesomeIcon, parseFontAwesomeColor } from '../../utils/fontAwesomeParser';
@@ -84,7 +86,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const { categories } = useCategories(); // Categories for POI filtering
   
   // Categories for POI icon rendering from WordPress API
-  const { trackTrailEvent } = useAnalytics(); // Analytics tracking
+  const { trackTrailEvent } = useAnalytics(); // Analytics tracking for trail events
   const location = useRouterLocation(); // React Router location
   const mapRef = useRef<L.Map | null>(null); // Leaflet map reference
   const locationContext = useContext(LocationContext); // Location context
@@ -115,8 +117,19 @@ export const MapView: React.FC<MapViewProps> = ({
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>(''); // Selected Google Place ID
   const [selectedPoiName, setSelectedPoiName] = useState<string>(''); // Selected POI name for modal
 
+  // Adaptive zoom state management
+  const [adaptiveZoomEnabled] = useState(true); // Whether adaptive zoom is enabled
+  const [lastManualInteraction, setLastManualInteraction] = useState<Date | null>(null); // Track last manual zoom/pan
+  const [zoomMode, setZoomMode] = useState<'adaptive' | 'manual' | 'poi-focus'>('adaptive'); // Current zoom mode
+  const [hasAppliedInitialAdaptiveZoom, setHasAppliedInitialAdaptiveZoom] = useState(false); // Track if initial adaptive zoom was applied
+  const [lastUserLocation, setLastUserLocation] = useState<[number, number] | null>(null); // Track last user location for change detection
+  const [simulationModeReady, setSimulationModeReady] = useState(false); // Track if simulation mode has had time to set location
+
   // Trail data and junction processing
   const { data: trailsData, isLoading, isError } = useTrailsData(trails);
+  
+  // Trail graph for network distance calculations
+  const { graph } = useTrailGraph();
 
   /**
    * Find trail junctions with a higher threshold (20 meters)
@@ -327,6 +340,152 @@ export const MapView: React.FC<MapViewProps> = ({
     }
   };
 
+  /**
+   * Calculate optimal zoom level based on POI density around user location
+   * 
+   * Adaptive zoom logic that considers:
+   * - Number of nearby POIs (within 500m radius)
+   * - POI density patterns (urban vs rural)
+   * - Mobile screen constraints
+   * - User interaction history
+   * 
+   * @param userLocation - User's current GPS coordinates [lng, lat]
+   * @param pois - Array of all POIs to analyze
+   * @param radius - Search radius in meters (default: 500m)
+   * @returns Optimal zoom level (15-18) for mobile viewing
+   * 
+   * Zoom Level Guidelines:
+   * - 15: Rural areas, sparse POIs (0-2 nearby)
+   * - 16: Suburban areas, moderate POIs (3-5 nearby)  
+   * - 17: Urban areas, dense POIs (6-10 nearby)
+   * - 18: Very dense areas (10+ nearby)
+   */
+  /**
+   * Calculate optimal zoom level based on POI density around user location
+   * 
+   * Analyzes the number of POIs within a specified radius of the user's location
+   * and determines the appropriate zoom level for optimal viewing experience.
+   * 
+   * Zoom Strategy:
+   * - 0 POIs (rural areas): Zoom 15 (wider view to show trail context)
+   * - 1-3 POIs (sparse areas): Zoom 15 (lower zoom to show more area)
+   * - 4-8 POIs (moderate density): Zoom 16 (balanced view)
+   * - 9+ POIs (high density): Zoom 17 (detailed view of busy areas)
+   * 
+   * @param userLocation - The current user's [lng, lat] coordinates
+   * @param pois - Array of POI objects to analyze
+   * @param radius - Search radius in meters for nearby POIs (default: 1000m)
+   * @returns Optimal zoom level (15-17) based on POI density
+   */
+  const calculateOptimalInitialZoom = (userLocation: [number, number] | null, pois: POI[] | undefined, radius = 1000): number => {
+    // If no POIs available, return default zoom
+    if (!pois) {
+      return 16; // Default to moderate zoom for mobile
+    }
+
+    // Prioritize user location over map center for reference point
+    let referenceLocation: [number, number] | null = null;
+    
+    if (userLocation) {
+      // Use actual user location (GPS or simulation)
+      referenceLocation = userLocation;
+    } else if (mapRef.current) {
+      // Fallback to map center only if no user location available
+      const center = mapRef.current.getCenter();
+      referenceLocation = [center.lng, center.lat];
+    }
+    
+    // If no reference location or trail graph available, return default
+    if (!referenceLocation || !graph) {
+      return 16; // Default to moderate zoom for mobile
+    }
+
+    // Calculate POI density within specified radius of reference location
+    const nearbyPOIs = pois.filter(poi => {
+      if (!poi.coordinates || !referenceLocation) return false;
+      
+      // Calculate straight-line distance for POI density analysis
+      const distance = haversine(referenceLocation, poi.coordinates);
+      
+      // Only include POIs within the search radius
+      return distance <= radius;
+    });
+
+    // Determine optimal zoom level based on POI density patterns
+    let optimalZoom: number;
+    if (nearbyPOIs.length === 0) {
+      // Rural area - show more context and trail surroundings
+      optimalZoom = 15;
+    } else if (nearbyPOIs.length <= 3) {
+      // Sparse POIs - lower zoom to show more area and context
+      optimalZoom = 15;
+    } else if (nearbyPOIs.length <= 8) {
+      // Moderate density - balanced zoom for readability
+      optimalZoom = 16;
+    } else {
+      // High density - higher zoom for detailed view of busy areas
+      optimalZoom = 17;
+    }
+
+    return optimalZoom;
+  };
+
+  /**
+   * Apply adaptive zoom to the map
+   * 
+   * Smoothly animates to the optimal zoom level based on POI density
+   * Only applies if adaptive zoom is enabled and user hasn't manually interacted recently
+   * 
+   * @param targetZoom - The zoom level to animate to
+   * @param userLocation - User's current location coordinates
+   * @param duration - Animation duration in seconds (default: 1.5s)
+   * @param poiDensity - Number of POIs in the area (for analytics)
+   * @param trigger - What triggered the adaptive zoom (for analytics)
+   */
+  const applyAdaptiveZoom = (targetZoom: number, userLocation: [number, number], duration = 1.5, poiDensity = 0, trigger: 'initial_load' | 'location_change' | 'simulation_mode' = 'initial_load') => {
+    if (!mapRef.current || !adaptiveZoomEnabled) {
+      // Track when adaptive zoom is skipped due to missing data
+      trackTrailEvent.adaptiveZoomSkipped('missing_data');
+      return;
+    }
+
+    // Check if user has manually interacted recently (within 30 seconds)
+    const now = new Date();
+    const timeSinceLastInteraction = lastManualInteraction 
+      ? now.getTime() - lastManualInteraction.getTime() 
+      : Infinity;
+    
+    if (timeSinceLastInteraction < 30000) { // 30 seconds
+      // Track when adaptive zoom is skipped due to recent manual interaction
+      trackTrailEvent.adaptiveZoomSkipped('manual_interaction');
+      return;
+    }
+
+    const currentZoom = mapRef.current.getZoom();
+    if (Math.abs(currentZoom - targetZoom) < 0.5) {
+      return;
+    }
+
+    // Convert from [lng, lat] to [lat, lng] for Leaflet
+    const leafletCoordinates: [number, number] = [userLocation[1], userLocation[0]];
+    
+    // Apply smooth zoom animation and center on user location
+    mapRef.current.setView(
+      leafletCoordinates,
+      targetZoom,
+      { 
+        animate: true, 
+        duration: duration 
+      }
+    );
+
+    // Track successful adaptive zoom application
+    trackTrailEvent.adaptiveZoomApplied(targetZoom, poiDensity, userLocation, trigger);
+
+    // Update zoom mode
+    setZoomMode('adaptive');
+  };
+
   // Create a custom React component for the user location marker
   const UserLocationMarker = () => (
     <div style={{
@@ -419,9 +578,23 @@ export const MapView: React.FC<MapViewProps> = ({
         onZoomChange(newZoom);
       }
     };
+
+    /**
+     * Handle manual user interactions (zoom/pan)
+     * Tracks when user manually controls the map to respect their preferences
+     */
+    const handleManualInteraction = () => {
+      setLastManualInteraction(new Date());
+      setZoomMode('manual');
+      console.log(`[AdaptiveZoom] Manual interaction detected - disabling adaptive zoom for 30s`);
+    };
     
     // Listen for zoom end events (when zoom animation completes)
     map.on('zoomend', handleZoom);
+    
+    // Listen for manual user interactions
+    map.on('zoomstart', handleManualInteraction);
+    map.on('movestart', handleManualInteraction);
     
     // Set initial zoom level on mount
     const initialZoom = map.getZoom();
@@ -430,11 +603,115 @@ export const MapView: React.FC<MapViewProps> = ({
       onZoomChange(initialZoom);
     }
     
-    // Cleanup: remove event listener when component unmounts
+    // Cleanup: remove event listeners when component unmounts
     return () => {
       map.off('zoomend', handleZoom);
+      map.off('zoomstart', handleManualInteraction);
+      map.off('movestart', handleManualInteraction);
     };
-  }, [onZoomChange, mapRef.current]); // Include mapRef.current in dependencies
+  }, [onZoomChange, mapRef.current]); // Include mapRef.current to ensure proper event listener attachment
+
+  /**
+   * Effect: Handle adaptive zoom on initial load and location changes
+   * 
+   * Triggers:
+   * - Initial map load (when userLocation becomes available)
+   * - User location changes (GPS updates or simulation location changes)
+   * - POI data changes (new POIs loaded)
+   * 
+   * Behavior:
+   * - Calculates optimal zoom based on nearby POI density
+   * - Smoothly animates to new zoom level
+   * - Respects user's manual zoom preferences
+   * - Detects location changes and re-applies adaptive zoom
+   * - Logs zoom decisions for debugging
+   */
+  useEffect(() => {
+    // Only apply adaptive zoom if we have required data (POIs and map)
+    if (!pois || !mapRef.current || !adaptiveZoomEnabled) {
+      return;
+    }
+
+    // Detect if user location has changed
+    const locationChanged = userLocation && lastUserLocation && 
+      (Math.abs(userLocation[0] - lastUserLocation[0]) > 0.000001 || 
+       Math.abs(userLocation[1] - lastUserLocation[1]) > 0.000001);
+    
+    if (locationChanged) {
+      setHasAppliedInitialAdaptiveZoom(false);
+      setLastUserLocation(userLocation);
+    } else if (userLocation && !lastUserLocation) {
+      // First time we have a user location
+      setLastUserLocation(userLocation);
+    }
+
+    // Skip if we've already applied adaptive zoom for this location
+    if (hasAppliedInitialAdaptiveZoom && !locationChanged) {
+      return;
+    }
+
+    // Skip if user has manually interacted recently
+    const now = new Date();
+    const timeSinceLastInteraction = lastManualInteraction 
+      ? now.getTime() - lastManualInteraction.getTime() 
+      : Infinity;
+    
+    if (timeSinceLastInteraction < 30000) { // 30 seconds
+      return;
+    }
+
+    // Wait for simulation mode to be ready and have location
+    if (isSimPlaying && (!userLocation || !simulationModeReady)) {
+      return;
+    }
+
+    // Don't apply adaptive zoom without a user location (prevent zooming to map center)
+    if (!userLocation) {
+      trackTrailEvent.adaptiveZoomSkipped('no_user_location');
+      return;
+    }
+
+    // Skip adaptive zoom if there's a POI parameter in the URL (let POI-specific zoom handle it)
+    if (urlPoiParam) {
+      trackTrailEvent.adaptiveZoomSkipped('poi_parameter');
+      return;
+    }
+
+    // Calculate optimal zoom based on POI density
+    const optimalZoom = calculateOptimalInitialZoom(userLocation || null, pois);
+    
+    // Calculate POI density for analytics
+    const nearbyPOIs = pois.filter(poi => {
+      if (!poi.coordinates || !userLocation) return false;
+      const distance = haversine(userLocation, poi.coordinates);
+      return distance <= 1000; // 1km radius
+    });
+    
+    // Determine trigger type for analytics
+    const trigger: 'initial_load' | 'location_change' | 'simulation_mode' = 
+      locationChanged ? 'location_change' : 
+      isSimPlaying ? 'simulation_mode' : 'initial_load';
+    
+    // Apply adaptive zoom with smooth animation and analytics tracking
+    applyAdaptiveZoom(optimalZoom, userLocation, 2.0, nearbyPOIs.length, trigger); // Longer duration for initial zoom
+    
+    // Mark that we've applied adaptive zoom for this location
+    setHasAppliedInitialAdaptiveZoom(true);
+  }, [userLocation, pois, adaptiveZoomEnabled, hasAppliedInitialAdaptiveZoom, lastManualInteraction, lastUserLocation, isSimPlaying, simulationModeReady, urlPoiParam, calculateOptimalInitialZoom, applyAdaptiveZoom]);
+
+  /**
+   * Effect: Set simulation mode ready flag after delay
+   * Gives simulation mode time to set the user location before applying adaptive zoom
+   */
+  useEffect(() => {
+    if (isSimPlaying && !simulationModeReady) {
+      const timer = setTimeout(() => {
+        setSimulationModeReady(true);
+      }, 1000); // 1 second delay
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSimPlaying, simulationModeReady]);
 
     /**
    * Determine marker size based on zoom level and highlight status
@@ -1045,6 +1322,7 @@ export const MapView: React.FC<MapViewProps> = ({
           
           // Only add flexbox styling and icon if zoomed in (level 15+) and category icon is available
           if (currentZoom >= 15 && categoryIcon && categoryIcon.iconComponent) {
+
             markerHtml += `display:flex;align-items:center;justify-content:center;'>`;
             
             // Render FontAwesome icon as HTML string with better visibility
