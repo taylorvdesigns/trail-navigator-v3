@@ -9,7 +9,7 @@ import { useNavViewV3 } from '../../hooks/useNavViewV3';
 import { useLocation } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
-import { NavContextCard } from '../NavView/NavContextCard';
+import { MiddleCardVariant } from '../NavView/MiddleCardVariant';
 import { findNearestTrailPoint } from '../../utils/trail';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { calculatePreciseNetworkDistance } from '../../utils/trailGraph';
@@ -96,7 +96,7 @@ const StopRow = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'stretch',
-  minHeight: 52,
+  minHeight: 40,  // Reduced from 52 to 40
   width: '100%',
   position: 'relative',
 });
@@ -755,7 +755,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
     if (stop.type === 'endpoint') {
       return (
-        <Box key={stop.id} sx={{ position: 'relative', pt: 1, pb: 1 }}>
+        <Box key={stop.id} sx={{ position: 'relative', pt: 0, pb: 1 }}>
           <TrailEndCard color={stopColor} sx={{ background: stopColor, color: '#242424', borderRadius: 50, display: 'flex', alignItems: 'center', padding: '0.5em 1.5em' }}>
             <TrailEndMarker color={'#242424'} />
             <Box sx={{ width: 180, flex: 1, minWidth: 0 }}>
@@ -934,7 +934,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             <div ref={aheadRef} style={{ 
               padding: '0 16px', 
               textAlign: 'center', 
-              marginBottom: 32,
+              marginBottom: 0,  // Remove bottom margin
               flexShrink: 0
             }}>
               {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
@@ -983,7 +983,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 display: 'flex', 
                 justifyContent: 'center' 
               }}>
-                <NavContextCard
+                <MiddleCardVariant
                   destination={endpointName}
                   trail={activeTrail.name}
                   distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
@@ -1002,13 +1002,13 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             <div ref={behindStickyRef} style={{ 
               padding: '0 16px', 
               textAlign: 'center', 
-              marginTop: 16,
+              marginTop: 0,  // Remove top margin
               overflowY: 'auto', // allow scrolling
               overflowX: 'hidden',
             }}>
-              <SectionHeader>
+              {/* <SectionHeader>
                 Behind You
-              </SectionHeader>
+              </SectionHeader> */}
               {/* Sliding split view for behind */}
               {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
               {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
@@ -1108,7 +1108,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     height: 6,
                     borderRadius: 3,
                     background: '#ccc',
-                    margin: '8px auto',
+                    margin: '0 auto 8px auto',  // Remove top margin, keep bottom margin
                     cursor: 'row-resize',
                     opacity: 0.7,
                   }}
@@ -1137,7 +1137,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 >
                   {/* Attach ref to a wrapping div, not the NavContextCard component */}
                   <div ref={navContextCardRef} style={{ width: '100vw', maxWidth: '100vw', margin: 0, boxSizing: 'border-box', overflowX: 'hidden', display: 'flex', justifyContent: 'center' }}>
-                    <NavContextCard
+                    <MiddleCardVariant
                       destination={endpointName}
                       trail={activeTrail.name}
                       distanceMiles={userStop ? metersToMiles(userStop.metadata.distance || 0) : 0}
@@ -1161,6 +1161,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     overflowX: 'hidden',
                     padding: '0 16px',
                     textAlign: 'center',
+                    marginTop: '-16px',  // Increased negative margin to eliminate remaining space
                     // maxHeight: MAX_BEHIND_HEIGHT, // Remove constraint in draggable mode
                     minHeight: 0,
                     maxWidth: '100vw',
@@ -1169,9 +1170,9 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     // alignItems: 'stretch', // REMOVE for block layout
                   }}
                 >
-                  <SectionHeader>
+                  {/* <SectionHeader>
                     Behind You
-                  </SectionHeader>
+                  </SectionHeader> */}
                   {/* Sliding split view for behind */}
                   {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
                   {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}

@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { LocationProvider } from './contexts/LocationContext';
 import { UserProvider } from './contexts/UserContext';
 import { DevProvider } from './contexts/DevContext';
+import { DesignProvider } from './contexts/DesignContext';
 import { AppContent } from './components/AppContent';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -30,8 +31,10 @@ export const App: React.FC = () => {
           <UserProvider>
             <LocationProvider>
               <DevProvider>
-                <CssBaseline />
-                <AppContent />
+                <DesignProvider>
+                  <CssBaseline />
+                  <AppContent />
+                </DesignProvider>
               </DevProvider>
             </LocationProvider>
           </UserProvider>

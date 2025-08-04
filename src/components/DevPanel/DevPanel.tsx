@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Divider, FormControlLabel, Switch, ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
 
 import { useLocation } from '../../contexts/LocationContext';
+import { useDesign } from '../../contexts/DesignContext';
 import { TEST_LOCATIONS } from '../../config/appSettings';
 import { TRAIL_ROUTES } from '../../config/routes.config';
 import { useTrailsData } from '../../hooks/useTrailsData';
@@ -36,6 +37,7 @@ export const DevPanel: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState(0);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
+  const { middleCardVariant, setMiddleCardVariant } = useDesign();
 
   // Automatically enable simulation mode when DevPanel mounts
   useEffect(() => {
@@ -473,6 +475,108 @@ export const DevPanel: React.FC = () => {
           <Typography variant="body2" sx={{ color: '#fff', mt: 1 }}>
             State: {isSimPlaying ? 'Playing' : 'Paused'} | Speed: {simSpeedMultiplier}x | Mode: {locomotionMode} | Loop: {simLoop ? 'On' : 'Off'}
           </Typography>
+        </Box>
+
+        <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+
+        {/* UI Design Testing */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+            UI Design Testing
+          </Typography>
+          
+          {/* Nav View Section */}
+          <Box sx={{ ml: 2, mb: 2 }}>
+            <Typography variant="body2" sx={{ mb: 0.5, color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>
+              Nav View
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1, color: '#ccc', fontSize: '0.8rem' }}>
+              Middle Card Design
+            </Typography>
+            <ToggleButtonGroup
+              value={middleCardVariant}
+              exclusive
+              onChange={(_event, newValue) => {
+                if (newValue !== null) {
+                  setMiddleCardVariant(newValue);
+                }
+              }}
+              aria-label="Middle Card Design"
+              fullWidth
+              sx={{ gap: 1 }}
+            >
+              <ToggleButton
+                value="default"
+                aria-label="Default Design"
+                sx={{
+                  color: '#fff',
+                  borderColor: '#9c27b0',
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.Mui-focusVisible': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&:focus': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-selected': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-focusVisible': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  fontWeight: 600,
+                  fontSize: 13,
+                  py: 1.5,
+                  px: 2
+                }}
+              >
+                Default
+              </ToggleButton>
+              <ToggleButton
+                value="v2"
+                aria-label="Design V2"
+                sx={{
+                  color: '#fff',
+                  borderColor: '#9c27b0',
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.Mui-focusVisible': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&:focus': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-selected': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-focusVisible': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  fontWeight: 600,
+                  fontSize: 13,
+                  py: 1.5,
+                  px: 2
+                }}
+              >
+                Design V2
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
         </Box>
       </Box>
     </Box>
