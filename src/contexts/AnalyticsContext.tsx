@@ -45,8 +45,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
       
       trackTrailEvent.sessionStarted('app_load', deviceType);
       
-      // Test event to verify tracking
-      trackEvent('test_event', 'debug', 'analytics_test', 1, { test: true });
+
       
 
       

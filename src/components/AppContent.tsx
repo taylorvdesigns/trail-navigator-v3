@@ -466,23 +466,7 @@ export const AppContent: React.FC = () => {
       poiName={selectedPoiName}
     />
     
-    {/* Test Button for Real-time Verification - Hidden for now */}
-    {/* <Button
-      onClick={testRealtimeEvent}
-      variant="contained"
-      sx={{
-        position: 'fixed',
-        top: '10px',
-        right: '10px',
-        zIndex: 9999,
-        backgroundColor: '#ff6b6b',
-        '&:hover': {
-          backgroundColor: '#ff5252'
-        }
-      }}
-    >
-      Test Realtime
-    </Button> */}
+
     
     <Analytics />
     

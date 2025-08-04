@@ -16,16 +16,6 @@ export const initGA = () => {
     // Just ensure gtag is available globally
     if (typeof window.gtag === 'function') {
       console.log('Google Analytics is ready (loaded from index.html)');
-      
-      // Send a test event to verify everything is working
-      setTimeout(() => {
-        window.gtag('event', 'app_initialized', {
-          event_category: 'app_lifecycle',
-          event_label: 'app_start',
-          value: 1,
-        });
-        console.log('App initialization event sent to Google Analytics');
-      }, 1000);
     } else {
       console.warn('Google Analytics gtag function not available');
     }

@@ -575,6 +575,41 @@ export const DevPanel: React.FC = () => {
               >
                 Design V2
               </ToggleButton>
+              <ToggleButton
+                value="v3"
+                aria-label="Design V3"
+                sx={{
+                  color: '#fff',
+                  borderColor: '#9c27b0',
+                  borderRadius: 2,
+                  '&.Mui-selected': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.Mui-focusVisible': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&:focus': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-selected': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  '&.MuiToggleButton-root.Mui-focusVisible': {
+                    bgcolor: '#9c27b0 !important',
+                    color: '#fff !important',
+                  },
+                  fontWeight: 600,
+                  fontSize: 13,
+                  py: 1.5,
+                  px: 2
+                }}
+              >
+                Design V3
+              </ToggleButton>
             </ToggleButtonGroup>
           </Box>
         </Box>

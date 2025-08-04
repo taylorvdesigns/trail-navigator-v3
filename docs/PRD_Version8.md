@@ -230,6 +230,15 @@ interface UserContext {
 - **Icon Customization**: Custom icons for each transportation type
 - **Speed-Based Calculations**: Distance and time calculations adjust based on transportation speed
 
+### **Destination Star Indicator** (Future Implementation)
+- **Visual Destination Marker**: Star icon displayed in Nav View when user selects "Start Navigating" from POI modal
+- **POI Selection Integration**: Triggered when user clicks "Start Navigating" button in Map View POI modal
+- **Nav View Integration**: Star appears on the corresponding subway stop/POI in the navigation interface
+- **Clear Visual Feedback**: Users can easily see which POI they've selected as their destination
+- **State Management**: Persistent destination selection across app views
+- **Navigation Context**: Provides clear visual context for navigation progress
+- **User Experience**: Eliminates confusion about which POI is the current navigation target
+
 ## 📈 **Success Metrics**
 
 ### **User Engagement**

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavContextCard } from './NavContextCard';
 import { NavContextCardV2 } from './NavContextCardV2';
+import { NavContextCardV3 } from './NavContextCardV3';
 import { useDesign } from '../../contexts/DesignContext';
 
 interface MiddleCardVariantProps {
@@ -25,6 +26,8 @@ export const MiddleCardVariant: React.FC<MiddleCardVariantProps> = (props) => {
   switch (middleCardVariant) {
     case 'v2':
       return <NavContextCardV2 {...props} />;
+    case 'v3':
+      return <NavContextCardV3 {...props} />;
     case 'default':
     default:
       return <NavContextCard {...props} />;
