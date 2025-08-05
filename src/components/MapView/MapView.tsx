@@ -1099,20 +1099,19 @@ export const MapView: React.FC<MapViewProps> = ({
               iconAnchor: [12, 12],
               html: `
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                  <div style="position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                  <div style="position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background-color: #1976d2; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
                     ${ReactDOMServer.renderToString(
                       <FontAwesomeIcon 
                         icon={faMapPin} 
                         style={{ 
                           color: 'white', 
-                          fontSize: '20px', 
-                          zIndex: 1000, 
-                          filter: 'drop-shadow(0 0 2px #1976d2) drop-shadow(0 0 4px #1976d2)' 
+                          fontSize: '14px',
+                          zIndex: 1000
                         }} 
                       />
                     )}
                   </div>
-                  <!-- <div style="margin-top:4px;background:#fff;color:#4CAF50;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Starting Point</div> -->
+                  <div style="margin-top:4px;background:#fff;color:#1976d2;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Starting Point</div>
                 </div>
               `
             })}

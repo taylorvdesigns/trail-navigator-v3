@@ -3,14 +3,14 @@ import { Box, Paper, Typography, styled } from '@mui/material';
 import { LocomotionMode, Stop, TrailConfig, POI, TrailPoint } from '../../types';
 import { Junction, getNavViewSplitData } from '../../utils/navViewSplit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightLong } from '@fortawesome/free-solid-svg-icons';
+import { faRightLong, faMapPin } from '@fortawesome/free-solid-svg-icons';
 
 import { useNavViewV3 } from '../../hooks/useNavViewV3';
 import { useLocation } from '../../contexts/LocationContext';
 import { metersToMiles } from '../../utils/distance';
 import { calculateETA } from '../../utils/eta';
 import { MiddleCardVariant } from '../NavView/MiddleCardVariant';
-import { findNearestTrailPoint } from '../../utils/trail';
+
 import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { calculatePreciseNetworkDistance } from '../../utils/trailGraph';
 import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom';
@@ -296,6 +296,21 @@ const SplitView: React.FC<SplitViewProps> = ({
   );
 };
 
+/**
+ * NavViewV2 Component
+ * 
+ * Main navigation view that displays:
+ * - POI list with distances and ETAs
+ * - Middle card showing current status and entry point distance
+ * - Split view for junction branches
+ * - Entry point integration with consistent distance calculations
+ * 
+ * Features:
+ * - Network distance calculations for accurate trail routing
+ * - Entry point display with distinctive pin icon
+ * - Responsive layout with draggable sections
+ * - Real-time distance and ETA updates
+ */
 export const NavViewV2: React.FC<NavViewV2Props> = ({
   trailConfig,
   allTrails,
@@ -320,17 +335,21 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     junctions,
     pois,
   });
+  // Get trail graph for network distance calculations
   const { graph } = useTrailGraph();
+  
+  // Get user location and entry point data
   const { entryPoint, currentLocation, previousLocation, simDirection, isSimulationMode } = useLocation();
 
-  // --- DEBUG REFS FOR WIDTHS ---
+  // Refs for layout management and debugging
   const splitPaneRef = useRef<HTMLDivElement>(null);
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const navContextCardRef = useRef<HTMLDivElement>(null);
 
+  // State for storing precise network distance from entry point to user
   const [preciseNetworkDistance, setPreciseNetworkDistance] = React.useState<number | null>(null);
 
-  // Convert precise network distance from meters to miles
+  // Convert precise network distance from meters to miles for display
   const preciseNetworkDistanceMiles = preciseNetworkDistance ? preciseNetworkDistance / 1609.34 : null;
 
 
@@ -453,41 +472,57 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     elevationDescription = getElevationDescription(nextStopElevation - userElevation, nextStop.name);
   }
 
-  // Calculate distance from entry point to current location
+  // Calculate distance from entry point to current location using network distance
   let entryPointDistanceMiles: number | null = null;
-  if (entryPoint && userStop && activeTrail && allTrailData) {
-    const trailData = allTrailData.find(t => t.id === activeTrail.id);
-    if (trailData && trailData.points) {
-      const entryCoords = [entryPoint[0], entryPoint[1]] as [number, number];
-      const userCoords = userStop.metadata.coordinates as [number, number];
-      const entryTrailPoint = findNearestTrailPoint(entryCoords, trailData.points);
-      const userTrailPoint = findNearestTrailPoint(userCoords, trailData.points);
-      if (entryTrailPoint && userTrailPoint) {
-        const distMeters = Math.abs((userTrailPoint.point?.distance ?? 0) - (entryTrailPoint.point?.distance ?? 0));
-        entryPointDistanceMiles = metersToMiles(distMeters);
-      }
+  if (entryPoint && userStop && graph) {
+    const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
+    const entryCoords: [number, number] = entryPoint; // entryPoint is already in [lng, lat] format
+    const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, entryCoords);
+    if (networkDistance !== null) {
+      entryPointDistanceMiles = metersToMiles(networkDistance);
     }
   }
 
   // Helper to get network distance and ETA for a stop
+  /**
+   * Calculates distance and ETA from user's current location to a specific stop
+   * Uses network distance calculation for accurate trail-based routing
+   * 
+   * @param stop - The stop (POI, junction, endpoint, or entry point) to calculate distance to
+   * @returns Object containing distance in miles and ETA in minutes, or null if calculation fails
+   */
   const getStopMetrics = (stop: Stop): { distanceMiles: number | null, etaMinutes: number | null } => {
+    // Validate required data is available
     if (!graph || !userStop || !userStop.metadata?.coordinates || !stop.metadata?.coordinates) {
       return { distanceMiles: null, etaMinutes: null };
     }
+    
+    // Convert coordinates to [lng, lat] format for network distance calculation
     const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
     const stopCoords: [number, number] = [stop.metadata.coordinates[1], stop.metadata.coordinates[0]];
+    
+    // Calculate precise network distance using trail graph
     const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, stopCoords);
     if (networkDistance === null) return { distanceMiles: null, etaMinutes: null };
+    
+    // Convert to miles and calculate ETA based on locomotion mode
     const distanceMiles = metersToMiles(networkDistance);
     const etaMinutes = calculateETA(networkDistance, locomotionMode);
+    
     return { distanceMiles, etaMinutes };
   };
 
-  // Memoize metrics for all stops for performance
+  /**
+   * Memoized calculation of distance and ETA metrics for all stops
+   * Includes stops from ahead/behind sections and all split branches
+   * Optimized for performance to avoid recalculating on every render
+   */
   const stopMetricsMap = useMemo(() => {
     if (!graph || !userStop || !userStop.metadata?.coordinates) return {};
+    
     const metrics: Record<string, { distanceMiles: number | null, etaMinutes: number | null }> = {};
-    // Gather all stops from ahead, behind, and all split branches
+    
+    // Gather all stops from ahead, behind, and all split branches for comprehensive metrics
     const allStops: Stop[] = [
       ...aheadStops,
       ...behindStops,
@@ -500,11 +535,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       ...(behindSplitData.afterJunction || []),
       ...(behindSplitData.beforeJunction || []),
     ];
+    
+    // Calculate metrics for each stop
     allStops.forEach(stop => {
       metrics[stop.id] = getStopMetrics(stop);
     });
+    
     return metrics;
-  }, [graph, userStop, locomotionMode, aheadStops, behindStops]);
+  }, [graph, userStop, locomotionMode, aheadStops, behindStops, aheadSplitData, behindSplitData]);
 
   // Ref to measure ahead section height
   const aheadRef = useRef<HTMLDivElement>(null);
@@ -553,15 +591,21 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     }
   }, [aheadHeight]);
 
-  // Debug: Log precise network distance from entry point to user location
+  /**
+   * Calculates and stores the precise network distance from entry point to user's current location
+   * This distance is used by the middle card to show "distance from starting point"
+   * Coordinates are converted from [lat, lng] to [lng, lat] format for consistency with POI calculations
+   */
   React.useEffect(() => {
     if (graph && entryPoint && userStop && userStop.metadata?.coordinates) {
+      // Convert entryPoint from [lat, lng] to [lng, lat] format for network distance calculation
       const preciseDistance = calculatePreciseNetworkDistance(
         graph,
-        [entryPoint[1], entryPoint[0]], // [lng, lat]
-        [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]] // [lng, lat]
+        [entryPoint[1], entryPoint[0]], // Convert entryPoint from [lat, lng] to [lng, lat]
+        [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]] // User coords in [lng, lat]
       );
-      // Store the precise distance for display
+      
+      // Store the precise distance for display in middle card
       if (preciseDistance !== null) {
         setPreciseNetworkDistance(preciseDistance);
       }
@@ -674,7 +718,15 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     );
   }
 
-  // In renderStop, use the 4-column layout
+  /**
+   * Renders a single stop (POI, junction, endpoint, or entry point) in the navigation list
+   * Uses a 4-column layout: Distance | Trail Line + Icon | ETA | Name
+   * 
+   * @param stop - The stop to render
+   * @param color - Optional color override for the stop
+   * @param isLast - Whether this is the last stop in the list
+   * @returns JSX element for the stop
+   */
   const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
     let stopColor = color || activeTrail.color;
     const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
@@ -748,6 +800,99 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               {stop.name}
               {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
             </Typography>
+          </StopCol>
+        </StopRow>
+      );
+    }
+
+    // Special rendering for entry point with distinctive pin icon and styling
+    if (stop.type === 'entry') {
+      return (
+        <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333` }}>
+          {/* Distance from user to entry point (left column) */}
+          <StopCol width={36} direction="column">
+            <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+              {metrics.distanceMiles !== null ? metrics.distanceMiles.toFixed(1) : '--'}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em' }}>
+              mi
+            </Typography>
+          </StopCol>
+          {/* Trail line with centered pin icon (center column) */}
+          <StopCol width={36} sx={{ position: 'relative', minHeight: 52 }}>
+            <SubwayLine color={stopColor} />
+            {/* Pin icon in circle with trail color background and dark border */}
+            <Box sx={{ 
+              left: '50%', 
+              top: '50%', 
+              transform: 'translate(-50%, -50%)', 
+              position: 'absolute',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 28,
+              height: 28,
+              backgroundColor: stopColor,
+              borderRadius: '50%',
+              border: '2px solid #242424',
+            }}>
+              <FontAwesomeIcon 
+                icon={faMapPin} 
+                style={{ 
+                  color: '#242424', 
+                  fontSize: '16px'
+                }} 
+              />
+            </Box>
+          </StopCol>
+          {/* ETA (right of line) */}
+          <StopCol width={36} direction="column">
+            {metrics.etaMinutes !== null && metrics.etaMinutes >= 60 ? (
+              <>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                    {Math.floor(Math.round(metrics.etaMinutes) / 60)}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                    hr
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                    {Math.round(metrics.etaMinutes) % 60}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                    min
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  {metrics.etaMinutes !== null ? Math.round(metrics.etaMinutes) : '--'}
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                  min
+                </Typography>
+              </Box>
+            )}
+          </StopCol>
+          {/* Entry Point Name in pill-shaped container (rightmost column) */}
+          <StopCol sx={{ flex: 1, justifyContent: 'flex-start', pl: 1 }}>
+            <Box
+              sx={{
+                backgroundColor: stopColor,
+                color: '#242424',
+                borderRadius: '12px',
+                padding: '4px 12px',
+                display: 'inline-block',
+                fontWeight: 600,
+                fontSize: '0.75rem',
+                cursor: 'default',
+              }}
+            >
+              {stop.name}
+            </Box>
           </StopCol>
         </StopRow>
       );
@@ -866,12 +1011,22 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     );
   };
 
+  /**
+   * Renders a list of stops with consistent styling and proper spacing
+   * 
+   * @param stops - Array of stops to render
+   * @param color - Optional color override for all stops in the list
+   * @returns Array of JSX elements for the stops
+   */
   const renderStopList = (stops: Stop[], color?: string) => {
     const listColor = color || activeTrail.color;
     return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
   };
   
-  // Mouse/touch event handlers for dragging the middle section
+  /**
+   * Mouse/touch event handlers for dragging the middle section to resize ahead/behind areas
+   * Enables user to adjust the split between navigation sections
+   */
   const onMiddleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     draggingRef.current = true;
     startYRef.current = 'touches' in e ? e.touches[0].clientY : e.clientY;
@@ -882,25 +1037,40 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     document.addEventListener('touchend', onDragEnd);
   };
 
+  /**
+   * Handles drag movement to resize the ahead/behind sections
+   * Calculates new split sizes based on mouse/touch position
+   * Enforces minimum sizes for usability
+   */
   const onDrag = (e: MouseEvent | TouchEvent) => {
     if (!draggingRef.current || !containerRef.current) return;
+    
     const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
     const containerRect = containerRef.current.getBoundingClientRect();
     const totalHeight = containerRect.height;
     const deltaY = clientY - startYRef.current;
+    
+    // Calculate new heights based on drag delta
     let aheadHeight = (startSizesRef.current[0] / 100) * totalHeight + deltaY;
     let behindHeight = totalHeight - aheadHeight - 160; // 160px fixed middle height
-    // Clamp min/max
+    
+    // Clamp to minimum sizes for usability
     const minAhead = 100;
     const minBehind = 200;
     aheadHeight = Math.max(minAhead, Math.min(totalHeight - minBehind - 160, aheadHeight));
     behindHeight = totalHeight - aheadHeight - 160;
+    
+    // Convert to percentages and update state
     const aheadPct = (aheadHeight / totalHeight) * 100;
     const behindPct = (behindHeight / totalHeight) * 100;
     setSplitSizes([aheadPct, behindPct]);
     e.preventDefault();
   };
 
+  /**
+   * Cleans up drag event listeners when dragging ends
+   * Resets dragging state and removes document event listeners
+   */
   const onDragEnd = () => {
     draggingRef.current = false;
     document.removeEventListener('mousemove', onDrag);

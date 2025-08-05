@@ -93,7 +93,7 @@ function groupPOIsByTag(pois: POI[], trailId: string): Stop[] {
 }
 
 export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNavViewV3Props): UseNavViewV3Result {
-  const { currentLocation } = useLocation();
+  const { currentLocation, entryPoint } = useLocation();
 
   // Always convert currentLocation to [lat, lng] for trail calculations
   const currentLocationLatLng = useMemo(() => {
@@ -221,6 +221,45 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
         }
       };
     }
+
+    // --- Step 3.5: Create the entry point stop ---
+    let entryPointStop: Stop | null = null;
+    if (entryPoint && allTrailData) {
+      // Entry point is already in [lng, lat] format, which is what findNearestTrailPoint expects
+      const entryPointLatLng: [number, number] = entryPoint;
+      
+            // Find which trail the entry point is actually on and calculate its distance
+      let entryPointTrailId = activeTrailId;
+      let entryPointDistance = 0;
+      
+      // Search all trails to find which one the entry point is actually on
+      for (const trailData of allTrailData) {
+        if (trailData.points) {
+          const nearestPoint = findNearestTrailPoint(entryPointLatLng, trailData.points);
+          if (nearestPoint && nearestPoint.distance < 200) { // Within 200m tolerance
+            entryPointTrailId = trailData.id;
+            entryPointDistance = nearestPoint.point.distance || 0;
+            break;
+          }
+        }
+      }
+
+      entryPointStop = {
+        id: 'entry-point',
+        type: 'entry',
+        name: "Entry Point",
+        trailId: entryPointTrailId, // Use the actual trail the entry point is on
+        metadata: {
+          coordinates: entryPointLatLng,
+          distance: entryPointDistance,
+          isEntryPoint: true,
+        }
+      };
+      
+
+      
+
+    }
     
     // --- Step 4: Filter stops to only those relevant to the active trail ---
     const userDist = finalUserStop?.metadata.distance || 0;
@@ -242,12 +281,22 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     if (closestJunctionBehind) {
       (closestJunctionBehind.metadata.trails || []).forEach(id => relevantTrailIds.add(id));
     }
+    
+    // Always include the entry point's trail if it exists
+    if (entryPointStop) {
+      relevantTrailIds.add(entryPointStop.trailId);
+    }
 
     const relevantStops = allStops.filter(stop => relevantTrailIds.has(stop.trailId));
     
     // Add the user stop to the relevant list
     if(finalUserStop) {
       relevantStops.push(finalUserStop);
+    }
+
+    // Add the entry point stop to the relevant list (always include entry point regardless of trail)
+    if(entryPointStop) {
+      relevantStops.push(entryPointStop);
     }
     
     // --- Step 5: Sort the final, relevant list of stops ---
@@ -267,6 +316,8 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
       // If both are on the same trail (either active or a branch), sort by distance.
       return (a.metadata.distance || 0) - (b.metadata.distance || 0);
     });
+    
+
 
     // The sortedStops array is then split by getNavViewSplitData into:
     //   - beforeJunction: stops before the next junction (from the user's current position)
@@ -280,9 +331,11 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     //
     // No reversal or column-reverse is needed; the order is always correct due to this sorting and splitting logic.
     
+
+    
     return { stops: sortedStops, userStop: finalUserStop };
 
-  }, [allTrailData, allTrails, pois, junctions, currentLocationLatLng, userPointOnTrail, activeTrailId]);
+  }, [allTrailData, allTrails, pois, junctions, currentLocationLatLng, userPointOnTrail, activeTrailId, entryPoint]);
 
   return {
     stops,

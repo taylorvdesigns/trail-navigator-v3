@@ -95,6 +95,7 @@ export interface StopMetadata {
   groupCount?: number;
   eta?: number;  // Estimated time of arrival in minutes
   branchTrailIds?: string[];
+  isEntryPoint?: boolean;
 }
 
 export interface BaseStop {
@@ -122,4 +123,8 @@ export interface UserStop extends BaseStop {
   type: 'user';
 }
 
-export type Stop = POIStop | JunctionStop | EndpointStop | UserStop; 
+export interface EntryStop extends BaseStop {
+  type: 'entry';
+}
+
+export type Stop = POIStop | JunctionStop | EndpointStop | UserStop | EntryStop; 

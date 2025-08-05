@@ -32,13 +32,26 @@ interface NavContextCardV3Props {
  * - Green accent color for highlights and pills
  * - No decorative elements (unlike V2)
  */
+/**
+ * NavContextCardV3 Component
+ * 
+ * Design V3: Quadrant-based layout with clean grid structure
+ * Features:
+ * - Left column: YOU ARE HERE pill + locomotion icon + mode text
+ * - Right column: 2x2 grid with directional arrow + info quadrants
+ * - Clean typography with all uppercase text
+ * - Green accent color for highlights and pills
+ * - No decorative elements (unlike V2)
+ */
 export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
   destination,
   trail,
   distanceMiles,
   mode,
   onLocomotionChange,
-  borderColor
+  borderColor,
+  preciseNetworkDistanceMiles,
+  entryPointDistanceMiles
 }) => {
   const [isLocomotionModalOpen, setIsLocomotionModalOpen] = useState(false);
 
@@ -50,8 +63,17 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
     accessible: faPersonWalkingAccessible,
   };
 
-  // Use distanceMiles directly (already in miles)
-  const distanceValue = distanceMiles;
+  /**
+   * Get distance value with fallback hierarchy:
+   * 1. Precise network distance (most accurate)
+   * 2. Entry point distance (legacy calculation)
+   * 3. User's trail distance (fallback)
+   */
+  const distanceValue = typeof preciseNetworkDistanceMiles === 'number' 
+    ? preciseNetworkDistanceMiles 
+    : typeof entryPointDistanceMiles === 'number' 
+    ? entryPointDistanceMiles 
+    : distanceMiles; // fallback to user's trail distance
 
   // Dynamic accent color based on trail color (fallback to green)
   const highlightColor = borderColor || '#4CAF50';
