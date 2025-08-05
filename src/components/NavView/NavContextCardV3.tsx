@@ -100,7 +100,7 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
           {/* AHEAD OF YOU Pill */}
           <Box sx={{
             backgroundColor: '#666',
-            color: '#fff',
+            color: '#242424',
             px: 2,
             py: 0.5,
             borderRadius: 99,
@@ -124,8 +124,8 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
             gap: 1,
             my: 1,
           }}>
-            {/* YOU ARE HERE Pill */}
-            <Box sx={{
+            {/* YOU ARE HERE Pill - Hidden in V3 */}
+            {/* <Box sx={{
               backgroundColor: '#fff',
               color: '#000',
               px: 2,
@@ -141,7 +141,7 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
               width: '100%',
             }}>
               YOU ARE HERE
-            </Box>
+            </Box> */}
 
             {/* Locomotion Icon */}
             <Box
@@ -192,7 +192,7 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
           {/* BEHIND YOU Pill */}
           <Box sx={{
             backgroundColor: '#666',
-            color: '#fff',
+            color: '#242424',
             px: 2,
             py: 0.5,
             borderRadius: 99,
@@ -267,7 +267,7 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
               </Typography>
               <Box sx={{
                 backgroundColor: highlightColor,
-                color: '#fff',
+                color: '#242424',
                 px: 1.5,
                 py: 0.25,
                 borderRadius: 99,
@@ -280,7 +280,7 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
               </Box>
             </Box>
 
-            {/* Bottom-Left Quadrant - Current Trail */}
+            {/* Bottom-Left Quadrant - Heading Towards */}
             <Box sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -298,11 +298,11 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
                 textAlign: 'center',
                 mb: 0.5,
               }}>
-                CURRENT TRAIL
+                HEADING TOWARDS
               </Typography>
               <Box sx={{
                 backgroundColor: highlightColor,
-                color: '#fff',
+                color: '#242424',
                 px: 1.5,
                 py: 0.25,
                 borderRadius: 99,
@@ -310,12 +310,13 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
                 fontSize: '0.8rem',
                 textTransform: 'uppercase',
                 letterSpacing: 0.3,
+                textAlign: 'center',
               }}>
-                {trail}
+                {destination}
               </Box>
             </Box>
 
-            {/* Bottom-Right Quadrant - Heading Towards */}
+            {/* Bottom-Right Quadrant - Current Trail */}
             <Box sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -332,11 +333,11 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
                 textAlign: 'center',
                 mb: 0.5,
               }}>
-                HEADING TOWARDS
+                CURRENT TRAIL
               </Typography>
               <Box sx={{
                 backgroundColor: highlightColor,
-                color: '#fff',
+                color: '#242424',
                 px: 1.5,
                 py: 0.25,
                 borderRadius: 99,
@@ -344,9 +345,8 @@ export const NavContextCardV3: React.FC<NavContextCardV3Props> = ({
                 fontSize: '0.8rem',
                 textTransform: 'uppercase',
                 letterSpacing: 0.3,
-                textAlign: 'center',
               }}>
-                {destination}
+                {trail}
               </Box>
             </Box>
           </Box>
