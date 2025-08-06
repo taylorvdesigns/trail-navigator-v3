@@ -33,7 +33,6 @@ import { usePOIs } from '../hooks/usePOIs';
 import { useLocation } from '../contexts/LocationContext';
 import { useSimulationConfigMode } from '../contexts/SimulationConfigContext';
 import { useUser } from '../contexts/UserContext';
-import { LocationProvider } from '../contexts/LocationContext';
 import { SimulationConfigPanel } from './SimulationConfigPanel/SimulationConfigPanel';
 import { EntryPointModal } from './EntryPointModal/EntryPointModal';
 import { useWordPressConfig } from '../hooks/useWordPressConfig';
@@ -129,7 +128,7 @@ export const AppContent: React.FC = () => {
   }, [routerLocation.pathname, routerLocation.search]);
   
   // Location and simulation config mode context
-  const { currentLocation, entryPoint } = useLocation();
+  const { currentLocation, entryPoint, setTestLocation, setEntryPoint } = useLocation();
   const { isSimulationConfigMode } = useSimulationConfigMode();
 
   /**
@@ -154,6 +153,37 @@ export const AppContent: React.FC = () => {
 
   // Get real junctions from trail data
   const junctions = useTrailJunctions(trailData || []);
+
+  // Auto-assign random locations when in sim mode and trail data is available
+  useEffect(() => {
+    const searchParams = new URLSearchParams(routerLocation.search);
+    const modeParam = searchParams.get('mode');
+    const isSimulationModeInURL = modeParam === 'sim';
+    
+    if (isSimulationModeInURL && trailData && trailData.length > 0) {
+      console.log('AppContent: Auto-assigning locations in sim mode');
+      
+      // Auto-assign current location if none is set
+      if (!currentLocation) {
+        const { getRandomTrailPointFromMultiple } = require('../utils/trail');
+        const randomResult = getRandomTrailPointFromMultiple(trailData);
+        if (randomResult) {
+          console.log('AppContent: Auto-assigning current location to:', [randomResult.point.longitude, randomResult.point.latitude]);
+          setTestLocation([randomResult.point.longitude, randomResult.point.latitude]);
+        }
+      }
+      
+      // Auto-assign entry point if none is set
+      if (!entryPoint) {
+        const { getRandomTrailPointFromMultiple } = require('../utils/trail');
+        const randomResult = getRandomTrailPointFromMultiple(trailData);
+        if (randomResult) {
+          console.log('AppContent: Auto-assigning entry point to:', [randomResult.point.longitude, randomResult.point.latitude]);
+          setEntryPoint([randomResult.point.longitude, randomResult.point.latitude]);
+        }
+      }
+    }
+  }, [trailData, currentLocation, entryPoint, routerLocation.search, setTestLocation, setEntryPoint]);
 
   const {
     activeTrailId,
@@ -367,12 +397,11 @@ export const AppContent: React.FC = () => {
 
   return (
     <AnalyticsProvider>
-      <LocationProvider trailsData={trailData}>
-        <AppLayout 
-          currentView={currentView} 
-          onViewChange={handleViewChange}
-          title={focusedGroup || undefined}
-        >
+      <AppLayout 
+        currentView={currentView} 
+        onViewChange={handleViewChange}
+        title={focusedGroup || undefined}
+      >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <SimulationModeModal open={showSimModal} onClose={() => setShowSimModal(false)} onSimulate={handleSimulate} />
         <EntryPointModal 
@@ -429,9 +458,8 @@ export const AppContent: React.FC = () => {
         )}
       </Box>
       
-    </AppLayout>
-      </LocationProvider>
-    
+            </AppLayout>
+      
     {/* POI Modal */}
     <Dialog
       open={!!selectedPOI}

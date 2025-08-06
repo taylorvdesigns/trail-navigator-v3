@@ -29,12 +29,14 @@ export const App: React.FC = () => {
       <BrowserRouter>
         <ThemeProvider>
           <UserProvider>
-            <SimulationConfigProvider>
-              <DesignProvider>
-                <CssBaseline />
-                <AppContent />
-              </DesignProvider>
-            </SimulationConfigProvider>
+            <LocationProvider>
+              <SimulationConfigProvider>
+                <DesignProvider>
+                  <CssBaseline />
+                  <AppContent />
+                </DesignProvider>
+              </SimulationConfigProvider>
+            </LocationProvider>
           </UserProvider>
         </ThemeProvider>
       </BrowserRouter>

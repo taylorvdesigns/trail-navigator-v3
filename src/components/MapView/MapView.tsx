@@ -1139,8 +1139,9 @@ export const MapView: React.FC<MapViewProps> = ({
 
         {/* Entry Point Marker */}
         {entryPoint && (
+          console.log('Rendering entry point marker at:', entryPoint),
           <Marker
-            position={[entryPoint[0], entryPoint[1]]}
+            position={[entryPoint[1], entryPoint[0]]}
             icon={L.divIcon({
               className: 'entry-point-marker',
               iconAnchor: [12, 12],

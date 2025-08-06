@@ -24,7 +24,7 @@ export const SimulationConfigProvider: React.FC<{ children: React.ReactNode }> =
     // Check URL for simulation config mode parameter
     const searchParams = new URLSearchParams(location.search);
     const modeParam = searchParams.get('mode');
-    const isSimConfig = modeParam === 'simconfig' || location.pathname.startsWith('/simconfig/') || location.pathname === '/simconfig';
+    const isSimConfig = modeParam === 'sim' || modeParam === 'simconfig' || location.pathname.startsWith('/simconfig/') || location.pathname === '/simconfig';
     setIsSimulationConfigMode(isSimConfig);
   }, [location]);
 

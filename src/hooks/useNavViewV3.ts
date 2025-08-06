@@ -225,8 +225,8 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
     // --- Step 3.5: Create the entry point stop ---
     let entryPointStop: Stop | null = null;
     if (entryPoint && allTrailData) {
-      // Entry point is already in [lng, lat] format, which is what findNearestTrailPoint expects
-      const entryPointLatLng: [number, number] = entryPoint;
+      // Convert entry point from [lng, lat] to [lat, lng] format for findNearestTrailPoint
+      const entryPointLatLng: [number, number] = [entryPoint[1], entryPoint[0]];
       
             // Find which trail the entry point is actually on and calculate its distance
       let entryPointTrailId = activeTrailId;

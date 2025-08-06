@@ -372,7 +372,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       // The list is already sorted closest to farthest.
       return stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > userDistance);
     }
-  }, [stops, userStop, activeTrailId, simDirection]);
+  }, [stops, userStop, activeTrailId, simDirection, entryPoint]);
 
   // Correctly filter for stops behind on the active trail
   const behindStops = useMemo(() => {
@@ -389,7 +389,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       const stopsBehind = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) < userDistance);
       return stopsBehind.slice().reverse();
     }
-  }, [stops, userStop, activeTrailId, simDirection]);
+  }, [stops, userStop, activeTrailId, simDirection, entryPoint]);
   
   // Get split view data for ahead section
   const aheadSplitData = useMemo(() => getNavViewSplitData(
@@ -542,7 +542,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     });
     
     return metrics;
-  }, [graph, userStop, locomotionMode, aheadStops, behindStops, aheadSplitData, behindSplitData]);
+  }, [graph, userStop, locomotionMode, aheadStops, behindStops, aheadSplitData, behindSplitData, entryPoint]);
 
   // Ref to measure ahead section height
   const aheadRef = useRef<HTMLDivElement>(null);

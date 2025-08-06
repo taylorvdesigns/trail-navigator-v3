@@ -6,7 +6,8 @@ import { useDesign } from '../../contexts/DesignContext';
 import { TRAIL_ROUTES } from '../../config/routes.config';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useUser } from '../../contexts/UserContext';
-import { getRandomTrailPointFromMultiple } from '../../utils/trail';
+import { useWordPressConfig } from '../../hooks/useWordPressConfig';
+import { getRandomTrailPointFromMultiple, getRandomTrailPoint, findNearestTrailPoint } from '../../utils/trail';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -38,8 +39,51 @@ export const SimulationConfigPanel: React.FC = () => {
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
   const { middleCardVariant, setMiddleCardVariant } = useDesign();
+  const { data: wpConfig } = useWordPressConfig();
 
-  // Automatically enable simulation mode when SimulationConfigPanel mounts
+  // Helper function to get trail info for a location
+  const getTrailInfoForLocation = (location: [number, number] | null) => {
+    if (!location || !trailsData || !wpConfig?.trails) return null;
+    
+    let closestDistance = Infinity;
+    let closestTrailIndex = -1;
+    let closestPointDistance = 0;
+    
+    trailsData.forEach((trail, index) => {
+      if (trail.points) {
+        const nearestPoint = findNearestTrailPoint([location[1], location[0]], trail.points);
+        if (nearestPoint && nearestPoint.distance < closestDistance) {
+          closestDistance = nearestPoint.distance;
+          closestTrailIndex = index;
+          closestPointDistance = nearestPoint.point.distance || 0;
+        }
+      }
+    });
+    
+    if (closestTrailIndex >= 0) {
+      // Get the trail name from the WordPress config
+      const wpTrail = wpConfig.trails[closestTrailIndex];
+      console.log('Trail assignment debug:', {
+        location: location,
+        closestTrailIndex: closestTrailIndex,
+        trailName: wpTrail?.name,
+        distance: closestPointDistance
+      });
+      return {
+        name: wpTrail?.name || `Trail ${closestTrailIndex + 1}`,
+        distance: closestPointDistance,
+        coordinates: [location[0], location[1]]
+      };
+    }
+    
+    return null;
+  };
+
+  // Get trail info for current location and entry point
+  const currentLocationTrailInfo = getTrailInfoForLocation(currentLocation);
+  const entryPointTrailInfo = getTrailInfoForLocation(entryPoint);
+
+  // Enable simulation mode when SimulationConfigPanel mounts
   useEffect(() => {
     setSimulationMode(true);
   }, [setSimulationMode]);
@@ -111,6 +155,7 @@ export const SimulationConfigPanel: React.FC = () => {
     if (trailsData && trailsData.length > 0) {
       const randomResult = getRandomTrailPointFromMultiple(trailsData);
       if (randomResult) {
+        console.log('Changing current location to:', [randomResult.point.longitude, randomResult.point.latitude]);
         setCurrentRandomLocation({
           ...randomResult,
           name: `Random Trail Location`
@@ -171,6 +216,26 @@ export const SimulationConfigPanel: React.FC = () => {
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Current Location:
           </Typography>
+          
+          {/* Current Location Info Display */}
+          {currentLocationTrailInfo ? (
+            <Box sx={{ mb: 2, p: 1.5, bgcolor: 'rgba(57, 255, 20, 0.1)', borderRadius: 1, border: '1px solid rgba(57, 255, 20, 0.3)' }}>
+              <Typography variant="body2" sx={{ color: '#39FF14', fontWeight: 600, mb: 0.5 }}>
+                {currentLocationTrailInfo.name}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#ccc', display: 'block', mb: 0.5 }}>
+                Coordinates: {currentLocationTrailInfo.coordinates[0].toFixed(6)}, {currentLocationTrailInfo.coordinates[1].toFixed(6)}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#ccc', display: 'block' }}>
+                Distance: {Math.round(currentLocationTrailInfo.distance)}m
+              </Typography>
+            </Box>
+          ) : (
+            <Typography variant="body2" sx={{ color: '#666', mb: 2, fontStyle: 'italic' }}>
+              No location assigned
+            </Typography>
+          )}
+          
           <Button
             onClick={handleChangeLocation}
             variant="outlined"
@@ -292,11 +357,32 @@ export const SimulationConfigPanel: React.FC = () => {
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             Entry Point:
           </Typography>
+          
+          {/* Entry Point Info Display */}
+          {entryPointTrailInfo ? (
+            <Box sx={{ mb: 2, p: 1.5, bgcolor: 'rgba(233, 30, 99, 0.1)', borderRadius: 1, border: '1px solid rgba(233, 30, 99, 0.3)' }}>
+              <Typography variant="body2" sx={{ color: '#e91e63', fontWeight: 600, mb: 0.5 }}>
+                {entryPointTrailInfo.name}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#ccc', display: 'block', mb: 0.5 }}>
+                Coordinates: {entryPointTrailInfo.coordinates[0].toFixed(6)}, {entryPointTrailInfo.coordinates[1].toFixed(6)}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#ccc', display: 'block' }}>
+                Distance: {Math.round(entryPointTrailInfo.distance)}m
+              </Typography>
+            </Box>
+          ) : (
+            <Typography variant="body2" sx={{ color: '#666', mb: 2, fontStyle: 'italic' }}>
+              No entry point assigned
+            </Typography>
+          )}
+          
           <Button
             onClick={() => {
               if (trailsData && trailsData.length > 0) {
                 const randomResult = getRandomTrailPointFromMultiple(trailsData);
                 if (randomResult) {
+                  console.log('Changing entry point to:', [randomResult.point.longitude, randomResult.point.latitude]);
                   setEntryPoint([randomResult.point.longitude, randomResult.point.latitude]);
                 }
               }
