@@ -116,6 +116,10 @@ export const MapView: React.FC<MapViewProps> = ({
   const [googlePlacesModalOpen, setGooglePlacesModalOpen] = useState(false); // Google Places modal state
   const [selectedPlaceId, setSelectedPlaceId] = useState<string>(''); // Selected Google Place ID
   const [selectedPoiName, setSelectedPoiName] = useState<string>(''); // Selected POI name for modal
+  
+  // New state for Map View POI interaction (separate from List View → Map View flow)
+  const [mapViewSelectedPOI, setMapViewSelectedPOI] = useState<POI | null>(null); // POI selected directly in Map View
+  const [shouldOpenDistanceModal, setShouldOpenDistanceModal] = useState(false); // Flag to open distance modal
 
   // Adaptive zoom state management
   const [adaptiveZoomEnabled] = useState(true); // Whether adaptive zoom is enabled
@@ -261,11 +265,11 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Clear selected POI when parameter is removed
   useEffect(() => {
-    if (!urlPoiParam && selectedPOI) {
+    if (!urlPoiParam && selectedPOI && !showDistanceModal) {
       setSelectedPOI(null);
       setHasShownInitialZoom(false);
     }
-  }, [urlPoiParam, selectedPOI]);
+  }, [urlPoiParam, selectedPOI, showDistanceModal]);
 
   // Clear selected POI on map interaction
   // Note: Removed automatic exit on zoom/move to allow users to explore context
@@ -610,6 +614,49 @@ export const MapView: React.FC<MapViewProps> = ({
       map.off('movestart', handleManualInteraction);
     };
   }, [onZoomChange, mapRef.current]); // Include mapRef.current to ensure proper event listener attachment
+
+  /**
+   * Effect: Handle map click to clear Map View POI state
+   * 
+   * Clears the Map View POI action buttons when user clicks elsewhere on the map
+   * This provides a way to dismiss the action buttons without selecting an action
+   */
+  useEffect(() => {
+    if (!mapRef.current) return;
+    
+    const map = mapRef.current;
+    
+    const handleMapClick = () => {
+      // Add a small delay to prevent map click from interfering with POI clicks
+      setTimeout(() => {
+        // Don't clear mapViewSelectedPOI if distance modal is open or buttons are visible
+        if (mapViewSelectedPOI && !showDistanceModal && !shouldOpenDistanceModal) {
+          setMapViewSelectedPOI(null);
+        }
+      }, 200); // Increased delay to allow state updates to propagate
+    };
+    
+    map.on('click', handleMapClick);
+    
+    // Cleanup: remove event listener when component unmounts
+    return () => {
+      map.off('click', handleMapClick);
+    };
+  }, [mapRef.current]); // Include mapRef.current to ensure proper event listener attachment
+
+  /**
+   * Effect: Handle opening distance modal when flag is set
+   * 
+   * Opens the distance modal when shouldOpenDistanceModal is true
+   * This ensures the modal opens in the next render cycle after state updates
+   */
+  useEffect(() => {
+    if (shouldOpenDistanceModal && mapViewSelectedPOI) {
+      setSelectedPOI(mapViewSelectedPOI);
+      setShowDistanceModal(true);
+      setShouldOpenDistanceModal(false);
+    }
+  }, [shouldOpenDistanceModal, mapViewSelectedPOI]);
 
   /**
    * Effect: Handle adaptive zoom on initial load and location changes
@@ -1282,6 +1329,77 @@ export const MapView: React.FC<MapViewProps> = ({
           </Box>
         )}
 
+        {/* Map View POI Action Buttons - New interaction for direct Map View POI clicks */}
+        {mapViewSelectedPOI && (
+          <Box
+            sx={{
+              position: 'fixed',
+              left: 0,
+              right: '80px', // Leave space for filter button on the right
+              bottom: 'calc(56px + env(safe-area-inset-bottom, 0px) + 16px)', // Match filter button position
+              zIndex: 2100,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 2,
+              px: 3,
+              pb: 2,
+              pointerEvents: 'none',
+            }}
+          >
+            <button
+              style={{
+                width: '45%',
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginRight: '2%',
+                marginLeft: 2,
+              }}
+              onClick={(e) => {
+                // Prevent event from bubbling up to map click handler
+                e.stopPropagation();
+                // Set flag to open distance modal in next render cycle
+                setShouldOpenDistanceModal(true);
+              }}
+            >
+              How Far?
+            </button>
+            <button
+              style={{
+                width: '45%',
+                background: '#fff',
+                color: '#1976d2',
+                border: '2px solid #1976d2',
+                borderRadius: 8,
+                padding: '10px 0',
+                fontSize: 16,
+                fontWeight: 'bold',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                marginLeft: '2%',
+                marginRight: 2,
+              }}
+              onClick={(e) => {
+                // Prevent event from bubbling up to map click handler
+                e.stopPropagation();
+                handleOpenGooglePlaces(mapViewSelectedPOI);
+                setMapViewSelectedPOI(null);
+              }}
+            >
+              More Info
+            </button>
+          </Box>
+        )}
+
         {/* Filter POIs based on selected categories - RENDERED LAST TO APPEAR ABOVE POLYGONS */}
         {pois?.filter(poi => {
           if (!selectedCategories || selectedCategories.length === 0) {
@@ -1302,10 +1420,11 @@ export const MapView: React.FC<MapViewProps> = ({
           const isHighlighted = (highlightPOI && poi.coordinates[1] === highlightPOI[0] && poi.coordinates[0] === highlightPOI[1]) ||
                                (highlightedPOIs && highlightedPOIs.some(highlightedPoi => highlightedPoi.id === poi.id));
           const isSelected = selectedPOI && selectedPOI.id === poi.id;
+          const isMapViewSelected = mapViewSelectedPOI && mapViewSelectedPOI.id === poi.id;
           const isLabelHighlighted = labelHighlightedPOI && labelHighlightedPOI.id === poi.id;
           
           // Use trail color for marker, or #242424 if label is highlighted or POI is selected
-          const markerColor = (isLabelHighlighted || isSelected) ? '#242424' : (poiTrailColorMap[poi.id] || '#43D633');
+          const markerColor = (isLabelHighlighted || isSelected || isMapViewSelected) ? '#242424' : (poiTrailColorMap[poi.id] || '#43D633');
           
           // Get marker size based on zoom level
           const markerSize = getMarkerSize(isHighlighted, currentZoom);
@@ -1344,7 +1463,7 @@ export const MapView: React.FC<MapViewProps> = ({
           }
           
           // Add label for selected POI - wrap marker in container for proper z-index layering
-          if (isSelected) {
+          if (isSelected || isMapViewSelected) {
             markerHtml = `<div style="display: flex; flex-direction: column; align-items: center; z-index: 9999; position: relative;">
               ${markerHtml}
             </div>`;
@@ -1363,8 +1482,8 @@ export const MapView: React.FC<MapViewProps> = ({
               <Marker
                 position={[poi.coordinates[1], poi.coordinates[0]]}
                 icon={markerIcon}
-                pane={isSelected ? "selected-poi" : "markerPane"}
-                zIndexOffset={isSelected ? 1000 : 0}
+                pane={(isSelected || isMapViewSelected) ? "selected-poi" : "markerPane"}
+                zIndexOffset={(isSelected || isMapViewSelected) ? 1000 : 0}
                 eventHandlers={{
                   click: () => {
                     // Track POI interaction
@@ -1374,12 +1493,26 @@ export const MapView: React.FC<MapViewProps> = ({
                     trackTrailEvent.poiViewed(poi.title.rendered, poiCategory, poiGroup);
                     trackTrailEvent.businessDiscovered(poi.title.rendered, poiCategory, poiGroup);
                     
-                    onPoiClick?.(poi);
+                    // Show Map View POI action buttons instead of immediately opening modal
+                    setMapViewSelectedPOI(poi);
+                    
+                    // Center the map on the selected POI with smooth animation
+                    if (mapRef.current && poi.coordinates) {
+                      const poiPosition: [number, number] = [poi.coordinates[1], poi.coordinates[0]]; // [lat, lng]
+                      const currentZoom = mapRef.current.getZoom();
+                      mapRef.current.setView(poiPosition, currentZoom, {
+                        animate: true,
+                        duration: 1.0
+                      });
+                    }
+                    
+                    // Don't call onPoiClick to prevent automatic modal opening
+                    // onPoiClick?.(poi);
                   }
                 }}
               />
               {/* Show label only for highlighted or selected POI */}
-              {(isLabelHighlighted || isSelected) && (
+              {(isLabelHighlighted || isSelected || isMapViewSelected) && (
                 <Marker
                   position={[poi.coordinates[1], poi.coordinates[0]]}
                   icon={L.divIcon({
@@ -1435,13 +1568,19 @@ export const MapView: React.FC<MapViewProps> = ({
         />
 
         {/* POI Distance Modal */}
-                {showDistanceModal && selectedPOI && (
+        {showDistanceModal && selectedPOI && (
           <>
             <POIDistanceModal
               poi={selectedPOI}
-              onClose={() => setShowDistanceModal(false)}
+              onClose={() => {
+                setShowDistanceModal(false);
+                // Clear Map View POI state when distance modal is closed
+                setMapViewSelectedPOI(null);
+              }}
               onStartNavigation={() => {
                 setShowDistanceModal(false);
+                // Clear Map View POI state when starting navigation
+                setMapViewSelectedPOI(null);
                 // Navigate to Nav View with the POI as destination
                 const searchParams = new URLSearchParams();
                 searchParams.set('destination', selectedPOI.id);
@@ -1463,7 +1602,11 @@ export const MapView: React.FC<MapViewProps> = ({
         {/* Google Places Modal */}
         <GooglePlacesModal
           open={googlePlacesModalOpen}
-          onClose={() => setGooglePlacesModalOpen(false)}
+          onClose={() => {
+            setGooglePlacesModalOpen(false);
+            // Clear Map View POI state when Google Places modal is closed
+            setMapViewSelectedPOI(null);
+          }}
           placeId={selectedPlaceId}
           poiName={selectedPoiName}
         />
