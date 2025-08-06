@@ -247,7 +247,7 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
       entryPointStop = {
         id: 'entry-point',
         type: 'entry',
-        name: "Entry Point",
+        name: "Trail Entry Point",
         trailId: entryPointTrailId, // Use the actual trail the entry point is on
         metadata: {
           coordinates: entryPointLatLng,
@@ -315,6 +315,15 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
 
       // If both are on the same trail (either active or a branch), sort by distance.
       return (a.metadata.distance || 0) - (b.metadata.distance || 0);
+    });
+
+    console.log('useNavViewV3: Stops summary', {
+      totalStops: sortedStops.length,
+      activeTrailId,
+      userDistance: finalUserStop?.metadata.distance,
+      entryPointDistance: entryPointStop?.metadata.distance,
+      entryPointTrailId: entryPointStop?.trailId,
+      entryPointOnSameTrail: entryPointStop?.trailId === activeTrailId
     });
     
 

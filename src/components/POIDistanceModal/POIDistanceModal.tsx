@@ -132,7 +132,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
           <Typography 
             variant="h6" 
             sx={{ 
-              textAlign: 'center', 
+              textAlign: 'left', 
               fontWeight: '600',
               color: '#fff',
               fontSize: '1.1rem',
@@ -142,6 +142,22 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
           >
             {typeof poi.title === 'object' && poi.title.rendered ? poi.title.rendered : String(poi.title)}
           </Typography>
+          {/* Display POI Group name if available */}
+          {poi.post_tags && poi.post_tags.length > 0 && (
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                textAlign: 'left', 
+                color: '#999',
+                fontSize: '0.85rem',
+                fontWeight: '400',
+                mt: 0.5,
+                fontStyle: 'italic'
+              }}
+            >
+              {poi.post_tags[0].name}
+            </Typography>
+          )}
         </Box>
 
         {/* Distance section */}
@@ -265,7 +281,9 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
             </Box>
           </Box>
 
-          {/* Start button */}
+          {/* Start Navigation button - Hidden for future feature development */}
+          {/* TODO: Enable Start Navigation button for future feature development */}
+          {/* 
           <Button
             variant="contained"
             fullWidth
@@ -288,6 +306,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
           >
             Start Navigation
           </Button>
+          */}
         </Box>
       </Paper>
     </Box>

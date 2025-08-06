@@ -161,14 +161,15 @@ export const AppContent: React.FC = () => {
     const isSimulationModeInURL = modeParam === 'sim';
     
     if (isSimulationModeInURL && trailData && trailData.length > 0) {
-      console.log('AppContent: Auto-assigning locations in sim mode');
-      
       // Auto-assign current location if none is set
       if (!currentLocation) {
         const { getRandomTrailPointFromMultiple } = require('../utils/trail');
         const randomResult = getRandomTrailPointFromMultiple(trailData);
         if (randomResult) {
-          console.log('AppContent: Auto-assigning current location to:', [randomResult.point.longitude, randomResult.point.latitude]);
+          console.log('AppContent: Auto-assigning user location', {
+            currentLocation,
+            newLocation: [randomResult.point.longitude, randomResult.point.latitude]
+          });
           setTestLocation([randomResult.point.longitude, randomResult.point.latitude]);
         }
       }
@@ -178,7 +179,10 @@ export const AppContent: React.FC = () => {
         const { getRandomTrailPointFromMultiple } = require('../utils/trail');
         const randomResult = getRandomTrailPointFromMultiple(trailData);
         if (randomResult) {
-          console.log('AppContent: Auto-assigning entry point to:', [randomResult.point.longitude, randomResult.point.latitude]);
+          console.log('AppContent: Auto-assigning entry point', {
+            entryPoint,
+            newLocation: [randomResult.point.longitude, randomResult.point.latitude]
+          });
           setEntryPoint([randomResult.point.longitude, randomResult.point.latitude]);
         }
       }

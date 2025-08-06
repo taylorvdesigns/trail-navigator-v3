@@ -1159,7 +1159,7 @@ export const MapView: React.FC<MapViewProps> = ({
                       />
                     )}
                   </div>
-                  <div style="margin-top:4px;background:#fff;color:#1976d2;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Starting Point</div>
+                  <div style="margin-top:4px;background:#fff;color:#1976d2;font-weight:600;border-radius:6px;padding:2px 8px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.10);white-space:nowrap;z-index:2;pointer-events:none;">Trail Entry Point</div>
                 </div>
               `
             })}

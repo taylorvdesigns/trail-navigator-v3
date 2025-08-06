@@ -47,6 +47,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [simTrailPoints, setSimTrailPoints] = useState<any[]>([]);
   const [simAnimatedLocation, setSimAnimatedLocation] = useState<[number, number] | null>(null);
   const [simLoop, setSimLoop] = useState(false);
+
   
   // Simple simulation timer ref
   const simTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -55,10 +56,9 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const modeParam = searchParams.get('mode');
-    if (modeParam === 'sim') {
-      console.log('Early detection: Enabling simulation mode from URL');
-      setSimulationMode(true);
-    }
+            if (modeParam === 'sim') {
+          setSimulationMode(true);
+        }
   }, []);
 
   // Update previous location when current location changes
@@ -108,6 +108,9 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const clearEntryPoint = () => {
     setEntryPoint(null);
   };
+
+  // Save current coordinates to localStorage
+
 
   // Simple simulation logic
   useEffect(() => {

@@ -15,7 +15,7 @@ export const initGA = () => {
     // Google Analytics script is now loaded via index.html
     // Just ensure gtag is available globally
     if (typeof window.gtag === 'function') {
-      console.log('Google Analytics is ready (loaded from index.html)');
+      // Google Analytics is ready
     } else {
       console.warn('Google Analytics gtag function not available');
     }

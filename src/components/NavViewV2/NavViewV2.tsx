@@ -346,11 +346,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const navContextCardRef = useRef<HTMLDivElement>(null);
 
-  // State for storing precise network distance from entry point to user
-  const [preciseNetworkDistance, setPreciseNetworkDistance] = React.useState<number | null>(null);
-
-  // Convert precise network distance from meters to miles for display
-  const preciseNetworkDistanceMiles = preciseNetworkDistance ? preciseNetworkDistance / 1609.34 : null;
+  // Convert precise network distance from meters to miles for display (legacy - now using entryPointDistanceMiles)
+  const preciseNetworkDistanceMiles = null;
 
 
   const activeTrail = useMemo(() => {
@@ -362,6 +359,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     if (!userStop) return [];
     const userDistance = userStop.metadata.distance || 0;
     
+
+    
     if (simDirection === 'bottom') {
       // When traveling "backwards", stops with smaller distance are ahead.
       // We need to reverse the list to sort them from closest to farthest.
@@ -370,7 +369,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     } else {
       // Default "forwards" direction. Stops with greater distance are ahead.
       // The list is already sorted closest to farthest.
-      return stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > userDistance);
+      const aheadStops = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > userDistance);
+      console.log('NavView: Ahead stops found', aheadStops.map(s => ({
+        id: s.id,
+        type: s.type,
+        name: s.name,
+        distance: s.metadata.distance
+      })));
+      return aheadStops;
     }
   }, [stops, userStop, activeTrailId, simDirection, entryPoint]);
 
@@ -378,6 +384,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const behindStops = useMemo(() => {
     if (!userStop) return [];
     const userDistance = userStop.metadata.distance || 0;
+    
+
     
     if (simDirection === 'bottom') {
       // When traveling "backwards", stops with greater distance are behind.
@@ -387,7 +395,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       // Default "forwards" direction. Stops with smaller distance are behind.
       // We need to reverse the list to sort them from closest to farthest.
       const stopsBehind = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) < userDistance);
-      return stopsBehind.slice().reverse();
+      const behindStops = stopsBehind.slice().reverse();
+      console.log('NavView: Behind stops found', behindStops.map(s => ({
+        id: s.id,
+        type: s.type,
+        name: s.name,
+        distance: s.metadata.distance
+      })));
+      return behindStops;
     }
   }, [stops, userStop, activeTrailId, simDirection, entryPoint]);
   
@@ -405,6 +420,15 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     simDirection
   ), [activeTrailId, aheadStops, stops, allTrails, junctions, navViewCurrentLocation, allTrailData, simDirection]);
 
+  console.log('NavView: Ahead split data', {
+    beforeJunction: aheadSplitData.beforeJunction.length,
+    junctionStop: aheadSplitData.junctionStop?.name,
+    leftBranch: aheadSplitData.leftBranch?.stops.length,
+    rightBranch: aheadSplitData.rightBranch?.stops.length,
+    afterJunction: aheadSplitData.afterJunction.length,
+    hasSplit: !!(aheadSplitData.leftBranch || aheadSplitData.rightBranch)
+  });
+
   // Get split view data for behind section
   // The behindStops list is now always correctly sorted (closest to farthest), so we no longer need to reverse it here.
   const behindSplitData = useMemo(() => getNavViewSplitData(
@@ -419,6 +443,15 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     undefined,
     simDirection
   ), [activeTrailId, behindStops, stops, allTrails, junctions, navViewCurrentLocation, allTrailData, simDirection]);
+
+  console.log('NavView: Behind split data', {
+    beforeJunction: behindSplitData.beforeJunction.length,
+    junctionStop: behindSplitData.junctionStop?.name,
+    leftBranch: behindSplitData.leftBranch?.stops.length,
+    rightBranch: behindSplitData.rightBranch?.stops.length,
+    afterJunction: behindSplitData.afterJunction.length,
+    hasSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch)
+  });
 
   // Determine the correct endpoint name for the heading
   let endpointName = 'Unknown';
@@ -474,12 +507,33 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
   // Calculate distance from entry point to current location using network distance
   let entryPointDistanceMiles: number | null = null;
-  if (entryPoint && userStop && graph) {
-    const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
-    const entryCoords: [number, number] = entryPoint; // entryPoint is already in [lng, lat] format
-    const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, entryCoords);
-    if (networkDistance !== null) {
-      entryPointDistanceMiles = metersToMiles(networkDistance);
+  if (userStop && graph) {
+    // Find the entry point stop from the stops list to get the correct coordinate format
+    const entryPointStop = stops.find(stop => stop.type === 'entry');
+    if (entryPointStop && entryPointStop.metadata?.coordinates) {
+
+      
+      // Log the actual distance calculation details
+      if (entryPointStop && entryPointStop.metadata?.coordinates) {
+        const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
+        const entryCoords: [number, number] = [entryPointStop.metadata.coordinates[1], entryPointStop.metadata.coordinates[0]];
+        const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, entryCoords);
+        console.log('NavView: Entry point distance', {
+          networkDistance,
+          entryPointDistanceMiles: metersToMiles(networkDistance || 0),
+          entryPointOnSameTrail: entryPointStop.trailId === activeTrailId
+        });
+      }
+
+      
+      // Use the same coordinate conversion as getStopMetrics
+      const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
+      const entryCoords: [number, number] = [entryPointStop.metadata.coordinates[1], entryPointStop.metadata.coordinates[0]];
+      const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, entryCoords);
+      if (networkDistance !== null) {
+        entryPointDistanceMiles = metersToMiles(networkDistance);
+
+      }
     }
   }
 
@@ -535,6 +589,20 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       ...(behindSplitData.afterJunction || []),
       ...(behindSplitData.beforeJunction || []),
     ];
+
+    console.log('NavView: All stops for metrics', {
+      aheadStops: aheadStops.length,
+      behindStops: behindStops.length,
+      aheadLeftBranch: aheadSplitData.leftBranch?.stops.length || 0,
+      aheadRightBranch: aheadSplitData.rightBranch?.stops.length || 0,
+      behindLeftBranch: behindSplitData.leftBranch?.stops.length || 0,
+      behindRightBranch: behindSplitData.rightBranch?.stops.length || 0,
+      aheadAfterJunction: aheadSplitData.afterJunction.length,
+      aheadBeforeJunction: aheadSplitData.beforeJunction.length,
+      behindAfterJunction: behindSplitData.afterJunction.length,
+      behindBeforeJunction: behindSplitData.beforeJunction.length,
+      totalAllStops: allStops.length
+    });
     
     // Calculate metrics for each stop
     allStops.forEach(stop => {
@@ -596,21 +664,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
    * This distance is used by the middle card to show "distance from starting point"
    * Coordinates are converted from [lat, lng] to [lng, lat] format for consistency with POI calculations
    */
-  React.useEffect(() => {
-    if (graph && entryPoint && userStop && userStop.metadata?.coordinates) {
-      // Convert entryPoint from [lat, lng] to [lng, lat] format for network distance calculation
-      const preciseDistance = calculatePreciseNetworkDistance(
-        graph,
-        [entryPoint[1], entryPoint[0]], // Convert entryPoint from [lat, lng] to [lng, lat]
-        [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]] // User coords in [lng, lat]
-      );
-      
-      // Store the precise distance for display in middle card
-      if (preciseDistance !== null) {
-        setPreciseNetworkDistance(preciseDistance);
-      }
-    }
-  }, [graph, entryPoint, userStop]);
+
 
   // Sliding split view state for ahead and behind
   const [aheadFocus, setAheadFocus] = useState<'left' | 'right'>('left');
@@ -621,6 +675,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   React.useEffect(() => {
     const hasAheadSplit = !!(aheadSplitData.leftBranch || aheadSplitData.rightBranch);
     const hasBehindSplit = !!(behindSplitData.leftBranch || behindSplitData.rightBranch);
+    
+    console.log('NavView: View mode determination', {
+      hasAheadSplit,
+      hasBehindSplit,
+      aheadLeftBranch: aheadSplitData.leftBranch?.stops.length || 0,
+      aheadRightBranch: aheadSplitData.rightBranch?.stops.length || 0,
+      behindLeftBranch: behindSplitData.leftBranch?.stops.length || 0,
+      behindRightBranch: behindSplitData.rightBranch?.stops.length || 0,
+      behindBeforeJunction: behindSplitData.beforeJunction.length,
+      behindAfterJunction: behindSplitData.afterJunction.length
+    });
     
     // Only reset aheadFocus if split view disappears
     if (!hasAheadSplit) {
@@ -1020,6 +1085,21 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
    */
   const renderStopList = (stops: Stop[], color?: string) => {
     const listColor = color || activeTrail.color;
+    
+    // Debug what stops are being rendered
+    if (stops.length > 0) {
+      console.log('NavView: Rendering stop list', {
+        stopCount: stops.length,
+        stops: stops.map(s => ({
+          id: s.id,
+          type: s.type,
+          name: s.name,
+          distance: s.metadata.distance,
+          trailId: s.trailId
+        }))
+      });
+    }
+    
     return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
   };
   
@@ -1028,13 +1108,52 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
    * Enables user to adjust the split between navigation sections
    */
   const onMiddleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-    draggingRef.current = true;
-    startYRef.current = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    startSizesRef.current = [...splitSizes];
-    document.addEventListener('mousemove', onDrag);
-    document.addEventListener('touchmove', onDrag, { passive: false });
-    document.addEventListener('mouseup', onDragEnd);
-    document.addEventListener('touchend', onDragEnd);
+    // Store initial position for scroll detection
+    const startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    
+    // Add a one-time touchmove listener to detect if this is a scroll gesture
+    const detectScroll = (moveEvent: TouchEvent) => {
+      const currentY = moveEvent.touches[0].clientY;
+      const currentX = moveEvent.touches[0].clientX;
+      const deltaY = Math.abs(currentY - startY);
+      const deltaX = Math.abs(currentX - startX);
+      
+      // If this looks like a scroll gesture (more vertical than horizontal movement)
+      if (deltaY > deltaX && deltaY > 5) {
+        // This is likely a scroll, don't start dragging
+        document.removeEventListener('touchmove', detectScroll);
+        return;
+      }
+      
+      // This is likely a drag gesture, start dragging
+      document.removeEventListener('touchmove', detectScroll);
+      draggingRef.current = true;
+      startYRef.current = startY;
+      startSizesRef.current = [...splitSizes];
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('touchmove', onDrag, { passive: false });
+      document.addEventListener('mouseup', onDragEnd);
+      document.addEventListener('touchend', onDragEnd);
+    };
+    
+    // For mouse events, start dragging immediately
+    if (!('touches' in e)) {
+      draggingRef.current = true;
+      startYRef.current = startY;
+      startSizesRef.current = [...splitSizes];
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', onDragEnd);
+    } else {
+      // For touch events, add scroll detection
+      document.addEventListener('touchmove', detectScroll, { passive: true });
+      // Clean up if touch ends without movement
+      const cleanup = () => {
+        document.removeEventListener('touchmove', detectScroll);
+        document.removeEventListener('touchend', cleanup);
+      };
+      document.addEventListener('touchend', cleanup);
+    }
   };
 
   /**
@@ -1079,6 +1198,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     document.removeEventListener('touchend', onDragEnd);
   };
   
+  console.log('NavView: View mode condition', {
+    aheadHeight,
+    MAX_AHEAD_HEIGHT,
+    shouldUseStickyMode: aheadHeight < MAX_AHEAD_HEIGHT,
+    hasAheadSplit: !!(aheadSplitData.leftBranch || aheadSplitData.rightBranch),
+    hasBehindSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch)
+  });
+
   return (
     <div ref={containerRef} style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#23272a', minHeight: 0, flex: 1 }}>
       {aheadHeight < MAX_AHEAD_HEIGHT ? (
@@ -1153,6 +1280,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 display: 'flex', 
                 justifyContent: 'center' 
               }}>
+
                 <MiddleCardVariant
                   destination={endpointName}
                   trail={activeTrail.name}
@@ -1175,7 +1303,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               marginTop: 0,  // Remove top margin
               overflowY: 'auto', // allow scrolling
               overflowX: 'hidden',
+              flex: 1, // Take remaining space
+              minHeight: 0, // Allow shrinking
             }}>
+              {(() => {
+                console.log('NavView: Behind section in sticky mode', {
+                  behindBeforeJunction: behindSplitData.beforeJunction.length,
+                  behindAfterJunction: behindSplitData.afterJunction.length,
+                  hasBehindSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch)
+                });
+                return null;
+              })()}
               {/* <SectionHeader>
                 Behind You
               </SectionHeader> */}
@@ -1217,14 +1355,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             overflowX: 'visible', // DEBUG: allow overflow
             display: 'flex',
             flexDirection: 'column',
-            height: 'calc(100vh - 0px)', // adjust 0px if you have a header/footer
+            height: 'calc(100vh - 80px)', // Account for bottom navigation bar
             // border: '3px solid magenta', // DEBUG
             // background: 'rgba(255,0,255,0.05)', // DEBUG
           }}>
             <Split
               direction="vertical"
               sizes={splitSizes}
-              minSize={[100, 200]}
+              minSize={[100, 400]}
               gutterSize={0}
               snapOffset={0}
               style={{
@@ -1239,7 +1377,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               className="navview-split-pane"
             >
               {/* Ahead Section (capped at max height) */}
-              <div ref={aheadRef} style={{ overflowY: 'auto', overflowX: 'hidden', padding: '0 16px', textAlign: 'center', maxHeight: MAX_AHEAD_HEIGHT, minHeight: 0, maxWidth: '100vw' }}>
+              <div ref={aheadRef} style={{ overflowY: 'auto', overflowX: 'hidden', padding: '16px 16px 0 16px', textAlign: 'center', maxHeight: MAX_AHEAD_HEIGHT, minHeight: 0, maxWidth: '100vw' }}>
                 {renderStopList(aheadSplitData.afterJunction.slice().reverse(), activeTrail.color)}
                 {(aheadSplitData.leftBranch || aheadSplitData.rightBranch) && (
                   <SplitView
@@ -1329,17 +1467,29 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                   style={{
                     overflowY: 'auto',
                     overflowX: 'hidden',
-                    padding: '0 16px',
+                    padding: '0 16px 40px 16px', // Add bottom padding for navigation bar
                     textAlign: 'center',
                     marginTop: '-16px',  // Increased negative margin to eliminate remaining space
                     // maxHeight: MAX_BEHIND_HEIGHT, // Remove constraint in draggable mode
                     minHeight: 0,
                     maxWidth: '100vw',
+                    flex: 1, // Take remaining space
                     // display: 'flex', // REMOVE flex for block layout
                     // flexDirection: 'column', // REMOVE for block layout
                     // alignItems: 'stretch', // REMOVE for block layout
                   }}
                 >
+                  {(() => {
+                    console.log('NavView: Behind section in split/drag mode', {
+                      behindBeforeJunction: behindSplitData.beforeJunction.length,
+                      behindAfterJunction: behindSplitData.afterJunction.length,
+                      hasBehindSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch),
+                      behindRef: behindStickyRef.current?.scrollHeight,
+                      behindClientHeight: behindStickyRef.current?.clientHeight,
+                      padding: '0 16px 40px 16px'
+                    });
+                    return null;
+                  })()}
                   {/* <SectionHeader>
                     Behind You
                   </SectionHeader> */}

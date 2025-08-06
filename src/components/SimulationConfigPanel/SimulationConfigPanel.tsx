@@ -63,12 +63,7 @@ export const SimulationConfigPanel: React.FC = () => {
     if (closestTrailIndex >= 0) {
       // Get the trail name from the WordPress config
       const wpTrail = wpConfig.trails[closestTrailIndex];
-      console.log('Trail assignment debug:', {
-        location: location,
-        closestTrailIndex: closestTrailIndex,
-        trailName: wpTrail?.name,
-        distance: closestPointDistance
-      });
+
       return {
         name: wpTrail?.name || `Trail ${closestTrailIndex + 1}`,
         distance: closestPointDistance,
@@ -155,7 +150,9 @@ export const SimulationConfigPanel: React.FC = () => {
     if (trailsData && trailsData.length > 0) {
       const randomResult = getRandomTrailPointFromMultiple(trailsData);
       if (randomResult) {
-        console.log('Changing current location to:', [randomResult.point.longitude, randomResult.point.latitude]);
+        console.log('SimConfig: Changing user location', {
+          newLocation: [randomResult.point.longitude, randomResult.point.latitude]
+        });
         setCurrentRandomLocation({
           ...randomResult,
           name: `Random Trail Location`
@@ -382,7 +379,9 @@ export const SimulationConfigPanel: React.FC = () => {
               if (trailsData && trailsData.length > 0) {
                 const randomResult = getRandomTrailPointFromMultiple(trailsData);
                 if (randomResult) {
-                  console.log('Changing entry point to:', [randomResult.point.longitude, randomResult.point.latitude]);
+                  console.log('SimConfig: Changing entry point', {
+                    newLocation: [randomResult.point.longitude, randomResult.point.latitude]
+                  });
                   setEntryPoint([randomResult.point.longitude, randomResult.point.latitude]);
                 }
               }
