@@ -35,7 +35,7 @@ export const useLocation = () => {
   return context;
 };
 
-export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LocationProvider: React.FC<{ children: React.ReactNode; trailsData?: any[] }> = ({ children, trailsData = [] }) => {
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
   const [previousLocation, setPreviousLocation] = useState<[number, number] | null>(null);
   const [isSimulationMode, setSimulationMode] = useState(false);
@@ -89,7 +89,15 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [isSimulationMode]);
 
-
+  // Auto-assign random location when simulation mode is enabled
+  useEffect(() => {
+    if (isSimulationMode && !currentLocation) {
+      const randomResult = getRandomTrailPointFromMultiple(trailsData || []);
+      if (randomResult) {
+        setCurrentLocation([randomResult.point.longitude, randomResult.point.latitude]);
+      }
+    }
+  }, [isSimulationMode, currentLocation, trailsData]);
 
   const setTestLocation = (coordinates: [number, number]) => {
     setCurrentLocation(coordinates);

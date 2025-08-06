@@ -34,8 +34,7 @@ export const SimulationConfigPanel: React.FC = () => {
     simDirection,
     setSimDirection
   } = useLocation();
-  const [selectedLocation, setSelectedLocation] = useState<number | null>(null);
-  const [randomLocations, setRandomLocations] = useState<Array<{ point: any; trailIndex: number; name: string }>>([]);
+  const [currentRandomLocation, setCurrentRandomLocation] = useState<{ point: any; trailIndex: number; name: string } | null>(null);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
   const { middleCardVariant, setMiddleCardVariant } = useDesign();
@@ -45,34 +44,18 @@ export const SimulationConfigPanel: React.FC = () => {
     setSimulationMode(true);
   }, [setSimulationMode]);
 
-  // Generate random locations when trail data is available
+  // Generate a random location when trail data is available
   useEffect(() => {
-    if (trailsData && trailsData.length > 0) {
-      const locations = [];
-      for (let i = 0; i < 4; i++) {
-        const randomResult = getRandomTrailPointFromMultiple(trailsData);
-        if (randomResult) {
-          locations.push({
-            ...randomResult,
-            name: `Random Location ${i + 1}`
-          });
-        }
+    if (trailsData && trailsData.length > 0 && !currentRandomLocation) {
+      const randomResult = getRandomTrailPointFromMultiple(trailsData);
+      if (randomResult) {
+        setCurrentRandomLocation({
+          ...randomResult,
+          name: `Random Trail Location`
+        });
       }
-      setRandomLocations(locations);
     }
-  }, [trailsData]);
-
-  // Update selectedLocation when current location changes
-  useEffect(() => {
-    if (currentLocation && randomLocations.length > 0) {
-      const TOL = 1e-5;
-      const idx = randomLocations.findIndex(loc =>
-        Math.abs(loc.point.longitude - currentLocation[0]) < TOL &&
-        Math.abs(loc.point.latitude - currentLocation[1]) < TOL
-      );
-      if (idx !== -1) setSelectedLocation(idx);
-    }
-  }, [currentLocation, randomLocations]);
+  }, [trailsData, currentRandomLocation]);
 
   // Find the main trail polyline (first trail)
   const trailPoints = trailsData && trailsData[0]?.points ? trailsData[0].points : [];
@@ -119,17 +102,21 @@ export const SimulationConfigPanel: React.FC = () => {
   const handleReset = () => {
     // Resetting simulation
     setIsSimPlaying(false);
-    if (selectedLocation !== null && randomLocations[selectedLocation]) {
-      const location = randomLocations[selectedLocation];
-      setTestLocation([location.point.longitude, location.point.latitude]);
+    if (currentRandomLocation) {
+      setTestLocation([currentRandomLocation.point.longitude, currentRandomLocation.point.latitude]);
     }
   };
 
-  const handleLocationChange = (_event: React.MouseEvent<HTMLElement>, newValue: number | null) => {
-    if (newValue !== null && randomLocations[newValue]) {
-      setSelectedLocation(newValue);
-      const location = randomLocations[newValue];
-      setTestLocation([location.point.longitude, location.point.latitude]);
+  const handleChangeLocation = () => {
+    if (trailsData && trailsData.length > 0) {
+      const randomResult = getRandomTrailPointFromMultiple(trailsData);
+      if (randomResult) {
+        setCurrentRandomLocation({
+          ...randomResult,
+          name: `Random Trail Location`
+        });
+        setTestLocation([randomResult.point.longitude, randomResult.point.latitude]);
+      }
     }
   };
 
@@ -179,61 +166,30 @@ export const SimulationConfigPanel: React.FC = () => {
         </Typography>
         <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
         
-        {/* Test Location Selection */}
+        {/* Current Location */}
         <Box sx={{ mt: 2, mb: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
-            Select Test Location:
+            Current Location:
           </Typography>
-          <ToggleButtonGroup
-            value={selectedLocation}
-            exclusive
-            onChange={handleLocationChange}
-            orientation="vertical"
-            aria-label="Test Location"
+          <Button
+            onClick={handleChangeLocation}
+            variant="outlined"
+            color="primary"
             fullWidth
-            sx={{ gap: 1 }}
+            sx={{ 
+              borderRadius: 2, 
+              py: 1.5, 
+              fontWeight: 600,
+              borderColor: '#39FF14',
+              color: '#39FF14',
+              '&:hover': {
+                borderColor: '#39FF14',
+                bgcolor: 'rgba(57, 255, 20, 0.1)'
+              }
+            }}
           >
-            {randomLocations.map((location, index) => (
-              <ToggleButton
-                key={index}
-                value={index}
-                aria-label={location.name}
-                sx={{
-                  justifyContent: 'flex-start',
-                  color: '#fff',
-                  borderColor: '#39FF14',
-                  borderRadius: 2,
-                  '&.Mui-selected': {
-                    bgcolor: '#39FF14 !important',
-                    color: '#000 !important',
-                  },
-                  '&.Mui-focusVisible': {
-                    bgcolor: '#39FF14 !important',
-                    color: '#000 !important',
-                  },
-                  '&:focus': {
-                    bgcolor: '#39FF14 !important',
-                    color: '#000 !important',
-                  },
-                  '&.MuiToggleButton-root.Mui-selected': {
-                    bgcolor: '#39FF14 !important',
-                    color: '#000 !important',
-                  },
-                  '&.MuiToggleButton-root.Mui-focusVisible': {
-                    bgcolor: '#39FF14 !important',
-                    color: '#000 !important',
-                  },
-                  fontWeight: 600,
-                  fontSize: 13,
-                  py: 1.5,
-                  px: 2,
-                  mb: 1
-                }}
-              >
-                {location.name}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
+            Change Location
+          </Button>
         </Box>
 
         {/* Direction Control */}
@@ -331,74 +287,52 @@ export const SimulationConfigPanel: React.FC = () => {
 
         <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
 
-        {/* Entry Point Selection */}
+        {/* Entry Point */}
         <Box sx={{ mb: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
-            Set Entry Point (Random Trail Locations):
+            Entry Point:
           </Typography>
-          <ToggleButtonGroup
-            value={(() => {
-              if (!entryPoint) return null;
-              return randomLocations.findIndex(loc => 
-                Math.abs(entryPoint[0] - loc.point.longitude) < 1e-5 && 
-                Math.abs(entryPoint[1] - loc.point.latitude) < 1e-5
-              );
-            })()}
-            exclusive
-            onChange={(_event, newValue) => {
-              if (typeof newValue === 'number' && randomLocations[newValue]) {
-                const loc = randomLocations[newValue];
-                setEntryPoint([loc.point.longitude, loc.point.latitude]);
+          <Button
+            onClick={() => {
+              if (trailsData && trailsData.length > 0) {
+                const randomResult = getRandomTrailPointFromMultiple(trailsData);
+                if (randomResult) {
+                  setEntryPoint([randomResult.point.longitude, randomResult.point.latitude]);
+                }
               }
             }}
-            orientation="vertical"
-            aria-label="Entry Point Location"
+            variant="outlined"
+            color="secondary"
             fullWidth
-            sx={{ gap: 1, mb: 2 }}
+            sx={{ 
+              borderRadius: 2, 
+              py: 1.5, 
+              fontWeight: 600,
+              borderColor: '#e91e63',
+              color: '#e91e63',
+              '&:hover': {
+                borderColor: '#e91e63',
+                bgcolor: 'rgba(233, 30, 99, 0.1)'
+              }
+            }}
           >
-            {randomLocations.map((location, index) => (
-              <ToggleButton
-                key={index}
-                value={index}
-                aria-label={location.name}
-                sx={{
-                  justifyContent: 'flex-start',
-                  color: '#fff',
-                  borderColor: '#e91e63',
-                  borderRadius: 2,
-                  '&.Mui-selected': {
-                    bgcolor: '#e91e63 !important',
-                    color: '#fff !important',
-                  },
-                  '&.Mui-focusVisible': {
-                    bgcolor: '#e91e63 !important',
-                    color: '#fff !important',
-                  },
-                  '&:focus': {
-                    bgcolor: '#e91e63 !important',
-                    color: '#fff !important',
-                  },
-                  '&.MuiToggleButton-root.Mui-selected': {
-                    bgcolor: '#e91e63 !important',
-                    color: '#fff !important',
-                  },
-                  '&.MuiToggleButton-root.Mui-focusVisible': {
-                    bgcolor: '#e91e63 !important',
-                    color: '#fff !important',
-                  },
-                  fontWeight: 600,
-                  fontSize: 13,
-                  py: 1.5,
-                  px: 2,
-                  mb: 1
-                }}
-              >
-                {location.name}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-          <Button variant="outlined" color="secondary" fullWidth onClick={clearEntryPoint} sx={{ borderRadius: 2, py: 1, fontWeight: 600 }}>
-            Reset Entry Point
+            Change Entry Point
+          </Button>
+          <Button 
+            variant="outlined" 
+            color="secondary" 
+            fullWidth 
+            onClick={clearEntryPoint} 
+            sx={{ 
+              borderRadius: 2, 
+              py: 1, 
+              fontWeight: 600,
+              mt: 1,
+              borderColor: '#666',
+              color: '#666'
+            }}
+          >
+            Clear Entry Point
           </Button>
         </Box>
 

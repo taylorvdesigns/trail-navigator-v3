@@ -33,6 +33,7 @@ import { usePOIs } from '../hooks/usePOIs';
 import { useLocation } from '../contexts/LocationContext';
 import { useSimulationConfigMode } from '../contexts/SimulationConfigContext';
 import { useUser } from '../contexts/UserContext';
+import { LocationProvider } from '../contexts/LocationContext';
 import { SimulationConfigPanel } from './SimulationConfigPanel/SimulationConfigPanel';
 import { EntryPointModal } from './EntryPointModal/EntryPointModal';
 import { useWordPressConfig } from '../hooks/useWordPressConfig';
@@ -366,11 +367,12 @@ export const AppContent: React.FC = () => {
 
   return (
     <AnalyticsProvider>
-      <AppLayout 
-        currentView={currentView} 
-        onViewChange={handleViewChange}
-        title={focusedGroup || undefined}
-      >
+      <LocationProvider trailsData={trailData}>
+        <AppLayout 
+          currentView={currentView} 
+          onViewChange={handleViewChange}
+          title={focusedGroup || undefined}
+        >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <SimulationModeModal open={showSimModal} onClose={() => setShowSimModal(false)} onSimulate={handleSimulate} />
         <EntryPointModal 
@@ -428,6 +430,7 @@ export const AppContent: React.FC = () => {
       </Box>
       
     </AppLayout>
+      </LocationProvider>
     
     {/* POI Modal */}
     <Dialog
