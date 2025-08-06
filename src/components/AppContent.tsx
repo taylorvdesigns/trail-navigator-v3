@@ -75,6 +75,7 @@ export const convertToTrailConfig = (wpTrail: WordPressTrailConfig, trailData?: 
  */
 function isUserNearAnyTrail(currentLocation: [number, number] | null, allTrailData: any[] | null, threshold = 100): boolean {
   if (!currentLocation || !allTrailData) return false;
+  
   for (const trail of allTrailData) {
     if (!trail?.points) continue;
     // Find the nearest point on the trail to the user
@@ -294,14 +295,17 @@ export const AppContent: React.FC = () => {
   // Check if user is near any trail
   const isOnTrail = useMemo(() => isUserNearAnyTrail(currentLocation, trailData), [currentLocation, trailData]);
 
-  // Show simulation modal if not on trail and not in simulation config mode
+  // Show simulation modal ONLY if ?mode=sim is in URL and user is not on trail
   useEffect(() => {
     // Check if simulation mode is in URL
     const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
     const isSimulationModeInURL = modeParam === 'sim';
     
-    if (!isOnTrail && !isSimulationConfigMode && !hasChosenSimulationMode && !isSimulationModeInURL) {
+
+    
+    // Only show simulation modal if ?mode=sim is in URL AND user is not on trail
+    if (isSimulationModeInURL && !isOnTrail && !isSimulationConfigMode && !hasChosenSimulationMode) {
       setShowSimModal(true);
     } else {
       setShowSimModal(false);

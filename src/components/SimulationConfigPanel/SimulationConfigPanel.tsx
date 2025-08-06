@@ -3,10 +3,10 @@ import { Box, Typography, Divider, FormControlLabel, Switch, ToggleButton, Toggl
 
 import { useLocation } from '../../contexts/LocationContext';
 import { useDesign } from '../../contexts/DesignContext';
-import { TEST_LOCATIONS } from '../../config/appSettings';
 import { TRAIL_ROUTES } from '../../config/routes.config';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useUser } from '../../contexts/UserContext';
+import { getRandomTrailPointFromMultiple } from '../../utils/trail';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -34,7 +34,8 @@ export const SimulationConfigPanel: React.FC = () => {
     simDirection,
     setSimDirection
   } = useLocation();
-  const [selectedLocation, setSelectedLocation] = useState(0);
+  const [selectedLocation, setSelectedLocation] = useState<number | null>(null);
+  const [randomLocations, setRandomLocations] = useState<Array<{ point: any; trailIndex: number; name: string }>>([]);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
   const { middleCardVariant, setMiddleCardVariant } = useDesign();
@@ -44,17 +45,34 @@ export const SimulationConfigPanel: React.FC = () => {
     setSimulationMode(true);
   }, [setSimulationMode]);
 
-  // Update selectedLocation when test location changes
+  // Generate random locations when trail data is available
   useEffect(() => {
-    if (currentLocation) {
+    if (trailsData && trailsData.length > 0) {
+      const locations = [];
+      for (let i = 0; i < 4; i++) {
+        const randomResult = getRandomTrailPointFromMultiple(trailsData);
+        if (randomResult) {
+          locations.push({
+            ...randomResult,
+            name: `Random Location ${i + 1}`
+          });
+        }
+      }
+      setRandomLocations(locations);
+    }
+  }, [trailsData]);
+
+  // Update selectedLocation when current location changes
+  useEffect(() => {
+    if (currentLocation && randomLocations.length > 0) {
       const TOL = 1e-5;
-      const idx = TEST_LOCATIONS.findIndex(loc =>
-        Math.abs(loc.coordinates[0] - currentLocation[1]) < TOL &&
-        Math.abs(loc.coordinates[1] - currentLocation[0]) < TOL
+      const idx = randomLocations.findIndex(loc =>
+        Math.abs(loc.point.longitude - currentLocation[0]) < TOL &&
+        Math.abs(loc.point.latitude - currentLocation[1]) < TOL
       );
       if (idx !== -1) setSelectedLocation(idx);
     }
-  }, [currentLocation]);
+  }, [currentLocation, randomLocations]);
 
   // Find the main trail polyline (first trail)
   const trailPoints = trailsData && trailsData[0]?.points ? trailsData[0].points : [];
@@ -101,13 +119,17 @@ export const SimulationConfigPanel: React.FC = () => {
   const handleReset = () => {
     // Resetting simulation
     setIsSimPlaying(false);
-    setTestLocation(selectedLocation);
+    if (selectedLocation !== null && randomLocations[selectedLocation]) {
+      const location = randomLocations[selectedLocation];
+      setTestLocation([location.point.longitude, location.point.latitude]);
+    }
   };
 
-  const handleLocationChange = (_event: React.MouseEvent<HTMLElement>, newValue: number) => {
-    if (typeof newValue === 'number' && newValue !== selectedLocation) {
-      setTestLocation(newValue);
+  const handleLocationChange = (_event: React.MouseEvent<HTMLElement>, newValue: number | null) => {
+    if (newValue !== null && randomLocations[newValue]) {
       setSelectedLocation(newValue);
+      const location = randomLocations[newValue];
+      setTestLocation([location.point.longitude, location.point.latitude]);
     }
   };
 
@@ -171,7 +193,7 @@ export const SimulationConfigPanel: React.FC = () => {
             fullWidth
             sx={{ gap: 1 }}
           >
-            {TEST_LOCATIONS.map((location, index) => (
+            {randomLocations.map((location, index) => (
               <ToggleButton
                 key={index}
                 value={index}
@@ -312,18 +334,21 @@ export const SimulationConfigPanel: React.FC = () => {
         {/* Entry Point Selection */}
         <Box sx={{ mb: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
-            Set Entry Point (Test Locations):
+            Set Entry Point (Random Trail Locations):
           </Typography>
           <ToggleButtonGroup
             value={(() => {
               if (!entryPoint) return null;
-              return TEST_LOCATIONS.findIndex(loc => entryPoint[0] === loc.coordinates[0] && entryPoint[1] === loc.coordinates[1]);
+              return randomLocations.findIndex(loc => 
+                Math.abs(entryPoint[0] - loc.point.longitude) < 1e-5 && 
+                Math.abs(entryPoint[1] - loc.point.latitude) < 1e-5
+              );
             })()}
             exclusive
             onChange={(_event, newValue) => {
-              if (typeof newValue === 'number') {
-                const loc = TEST_LOCATIONS[newValue];
-                setEntryPoint([loc.coordinates[0], loc.coordinates[1]]);
+              if (typeof newValue === 'number' && randomLocations[newValue]) {
+                const loc = randomLocations[newValue];
+                setEntryPoint([loc.point.longitude, loc.point.latitude]);
               }
             }}
             orientation="vertical"
@@ -331,7 +356,7 @@ export const SimulationConfigPanel: React.FC = () => {
             fullWidth
             sx={{ gap: 1, mb: 2 }}
           >
-            {TEST_LOCATIONS.map((location, index) => (
+            {randomLocations.map((location, index) => (
               <ToggleButton
                 key={index}
                 value={index}

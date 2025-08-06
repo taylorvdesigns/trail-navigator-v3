@@ -91,4 +91,39 @@ export const sortPOIsByLocation = (pois: POI[], currentPosition: number): Sorted
   sorted.behind.sort((a, b) => Math.abs(a.distance || 0) - Math.abs(b.distance || 0));
 
   return sorted;
+};
+
+/**
+ * Get a random point from a trail
+ */
+export const getRandomTrailPoint = (trailPoints: TrailPoint[]): TrailPoint | null => {
+  if (!trailPoints.length) return null;
+  
+  const randomIndex = Math.floor(Math.random() * trailPoints.length);
+  return trailPoints[randomIndex];
+};
+
+/**
+ * Get a random point from multiple trails
+ */
+export const getRandomTrailPointFromMultiple = (allTrailData: any[]): { point: TrailPoint; trailIndex: number } | null => {
+  if (!allTrailData.length) return null;
+  
+  // Filter out trails without points
+  const trailsWithPoints = allTrailData.filter(trail => trail?.points?.length > 0);
+  if (!trailsWithPoints.length) return null;
+  
+  // Select a random trail
+  const randomTrailIndex = Math.floor(Math.random() * trailsWithPoints.length);
+  const selectedTrail = trailsWithPoints[randomTrailIndex];
+  
+  // Get a random point from the selected trail
+  const randomPoint = getRandomTrailPoint(selectedTrail.points);
+  
+  if (!randomPoint) return null;
+  
+  return {
+    point: randomPoint,
+    trailIndex: randomTrailIndex
+  };
 }; 

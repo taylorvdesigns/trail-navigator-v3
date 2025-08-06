@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { TEST_LOCATIONS } from '../config/appSettings';
+import { getRandomTrailPointFromMultiple } from '../utils/trail';
 
 export interface LocationContextType {
   currentLocation: [number, number] | null;
@@ -7,7 +7,7 @@ export interface LocationContextType {
   setCurrentLocation: (location: [number, number]) => void;
   isSimulationMode: boolean;
   setSimulationMode: (mode: boolean) => void;
-  setTestLocation: (index: number) => void;
+  setTestLocation: (coordinates: [number, number]) => void;
   simDirection: 'top' | 'bottom';
   setSimDirection: (dir: 'top' | 'bottom') => void;
   entryPoint: [number, number] | null;
@@ -89,22 +89,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [isSimulationMode]);
 
-  // Set default test location when simulation mode is enabled
-  useEffect(() => {
-    if (isSimulationMode && !currentLocation) {
-      const defaultIndex = 1; // 'Between Downtown and Unity'
-      const defaultLocation = TEST_LOCATIONS[defaultIndex];
-      if (defaultLocation) {
-        setCurrentLocation([defaultLocation.coordinates[1], defaultLocation.coordinates[0]]);
-      }
-    }
-  }, [isSimulationMode, currentLocation]);
 
-  const setTestLocation = (index: number) => {
-    const location = TEST_LOCATIONS[index];
-    if (location) {
-      setCurrentLocation([location.coordinates[1], location.coordinates[0]]);
-    }
+
+  const setTestLocation = (coordinates: [number, number]) => {
+    setCurrentLocation(coordinates);
   };
 
   const clearEntryPoint = () => {
