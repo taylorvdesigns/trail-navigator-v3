@@ -14,7 +14,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 const SPEED_MULTIPLIERS = [1, 2, 4];
 const SPEED_LABELS = { 1: '1x', 2: '2x', 4: '4x' };
 
-export const DevPanel: React.FC = () => {
+export const SimulationConfigPanel: React.FC = () => {
   const { 
     currentLocation, 
     setTestLocation, 
@@ -39,7 +39,7 @@ export const DevPanel: React.FC = () => {
   const { locomotionMode } = useUser();
   const { middleCardVariant, setMiddleCardVariant } = useDesign();
 
-  // Automatically enable simulation mode when DevPanel mounts
+  // Automatically enable simulation mode when SimulationConfigPanel mounts
   useEffect(() => {
     setSimulationMode(true);
   }, [setSimulationMode]);
@@ -153,7 +153,7 @@ export const DevPanel: React.FC = () => {
         },
       }}>
         <Typography variant="h5" sx={{ mb: 3, color: '#39FF14', textAlign: 'center', fontWeight: 700 }}>
-          Development Mode
+          Simulation Configuration
         </Typography>
         <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
         

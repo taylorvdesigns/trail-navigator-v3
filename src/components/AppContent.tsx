@@ -31,9 +31,9 @@ import { NotFoundView } from '../views/NotFoundView';
 import { ViewMode, WordPressTrailConfig, TrailConfig, POI } from '../types/index';
 import { usePOIs } from '../hooks/usePOIs';
 import { useLocation } from '../contexts/LocationContext';
-import { useDevMode } from '../contexts/DevContext';
+import { useSimulationConfigMode } from '../contexts/SimulationConfigContext';
 import { useUser } from '../contexts/UserContext';
-import { DevPanel } from './DevPanel/DevPanel';
+import { SimulationConfigPanel } from './SimulationConfigPanel/SimulationConfigPanel';
 import { EntryPointModal } from './EntryPointModal/EntryPointModal';
 import { useWordPressConfig } from '../hooks/useWordPressConfig';
 import { useTrailsData } from '../hooks/useTrailsData';
@@ -126,9 +126,9 @@ export const AppContent: React.FC = () => {
     // console.log('Search params:', routerLocation.search);
   }, [routerLocation.pathname, routerLocation.search]);
   
-  // Location and development mode context
+  // Location and simulation config mode context
   const { currentLocation, entryPoint } = useLocation();
-  const { isDevMode } = useDevMode();
+  const { isSimulationConfigMode } = useSimulationConfigMode();
 
   /**
    * Memoize the trails configuration to prevent unnecessary re-renders
@@ -158,8 +158,8 @@ export const AppContent: React.FC = () => {
     allTrailData: navViewTrailData // Rename to avoid conflict
   } = useNavViewV3({ allTrails: trails, allTrailData: trailData, junctions, pois });
 
-  // Only use devTab to force DevPanel view when route is /dev
-  const [devTab, setDevTab] = useState<boolean>(false);
+  // Only use simConfigTab to force SimulationConfigPanel view when route is /simconfig
+  const [simConfigTab, setSimConfigTab] = useState<boolean>(false);
 
   // Entry point modal state
   const [entryModalOpen, setEntryModalOpen] = useState(false);
@@ -193,28 +193,28 @@ export const AppContent: React.FC = () => {
 
 
 
-  // Show entry point modal if no entry point is set and not in dev mode and user hasn't chosen simulation mode
+  // Show entry point modal if no entry point is set and not in sim config mode and user hasn't chosen simulation mode
   useEffect(() => {
-    // Check if we're on the dev route (additional check for timing issues)
+          // Check if we're on the sim config route (additional check for timing issues)
     const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
-    const isOnDevRoute = modeParam === 'dev' || routerLocation.pathname.startsWith('/dev/');
+    const isOnSimConfigRoute = modeParam === 'simconfig' || routerLocation.pathname.startsWith('/simconfig/');
     const isSimulationModeInURL = modeParam === 'sim';
     
 
     
     // Don't show entry point modal if:
     // 1. User has an entry point, OR
-    // 2. User is in dev mode, OR  
+    // 2. User is in simulation config mode, OR  
     // 3. User has chosen simulation mode, OR
-    // 4. User is on dev route, OR
+          // 4. User is on sim config route, OR
     // 5. URL contains ?mode=sim (simulation mode in URL)
-    if (entryPoint || isDevMode || hasChosenSimulationMode || isOnDevRoute || isSimulationModeInURL) {
+    if (entryPoint || isSimulationConfigMode || hasChosenSimulationMode || isOnSimConfigRoute || isSimulationModeInURL) {
       setEntryModalOpen(false);
     } else {
       setEntryModalOpen(true);
     }
-  }, [entryPoint, isDevMode, hasChosenSimulationMode, routerLocation.pathname, routerLocation.search]);
+  }, [entryPoint, isSimulationConfigMode, hasChosenSimulationMode, routerLocation.pathname, routerLocation.search]);
 
   // Show distance tracking modal if user is on trail but no distance tracking entry point is set
   useEffect(() => {
@@ -235,12 +235,12 @@ export const AppContent: React.FC = () => {
       setDistanceTrackingModalOpen(false);
       return;
     }
-    if ((isDevMode || routerLocation.pathname === '/nav') && !hasConfirmedEntryPointThisSession) {
+    if ((isSimulationConfigMode || routerLocation.pathname === '/nav') && !hasConfirmedEntryPointThisSession) {
       setDistanceTrackingModalOpen(true);
     } else {
       setDistanceTrackingModalOpen(false);
     }
-  }, [currentLocation, entryPoint, isDevMode, routerLocation.pathname, hasConfirmedEntryPointThisSession, hasChosenSimulationMode]);
+  }, [currentLocation, entryPoint, isSimulationConfigMode, routerLocation.pathname, hasConfirmedEntryPointThisSession, hasChosenSimulationMode]);
 
   // For testing: allow resetting the distance tracking modal
   React.useEffect(() => {
@@ -255,9 +255,9 @@ export const AppContent: React.FC = () => {
 
   // Determine current view
   let currentView: ViewMode;
-  if (isDevMode && (devTab || routerLocation.pathname === '/dev' || routerLocation.pathname === '/simconfig')) {
-    currentView = 'dev';
-  } else {
+      if (isSimulationConfigMode && (simConfigTab || routerLocation.pathname === '/simconfig' || routerLocation.pathname === '/simconfig')) {
+      currentView = 'simconfig';
+    } else {
     currentView = routerLocation.pathname === '/nav' ? 'nav'
       : routerLocation.pathname === '/list' ? 'list'
       : 'map';
@@ -284,29 +284,29 @@ export const AppContent: React.FC = () => {
     }
   }, [state, usedNavState]);
 
-  // Reset devTab if dev mode is exited
+  // Reset simConfigTab if simulation config mode is exited
   React.useEffect(() => {
-    if (!isDevMode && devTab) {
-      setDevTab(false);
+    if (!isSimulationConfigMode && simConfigTab) {
+      setSimConfigTab(false);
     }
-  }, [isDevMode, devTab]);
+  }, [isSimulationConfigMode, simConfigTab]);
 
   // Check if user is near any trail
   const isOnTrail = useMemo(() => isUserNearAnyTrail(currentLocation, trailData), [currentLocation, trailData]);
 
-  // Show simulation modal if not on trail and not in dev mode
+  // Show simulation modal if not on trail and not in simulation config mode
   useEffect(() => {
     // Check if simulation mode is in URL
     const searchParams = new URLSearchParams(routerLocation.search);
     const modeParam = searchParams.get('mode');
     const isSimulationModeInURL = modeParam === 'sim';
     
-    if (!isOnTrail && !isDevMode && !hasChosenSimulationMode && !isSimulationModeInURL) {
+    if (!isOnTrail && !isSimulationConfigMode && !hasChosenSimulationMode && !isSimulationModeInURL) {
       setShowSimModal(true);
     } else {
       setShowSimModal(false);
     }
-  }, [isOnTrail, isDevMode, hasChosenSimulationMode, routerLocation.search]);
+  }, [isOnTrail, isSimulationConfigMode, hasChosenSimulationMode, routerLocation.search]);
 
   // Handler for simulation mode
   const handleSimulate = () => {
@@ -325,7 +325,7 @@ export const AppContent: React.FC = () => {
 
   const handleViewChange = (view: ViewMode) => {
     
-    if (view === 'dev' && !isDevMode) {
+    if (view === 'simconfig' && !isSimulationConfigMode) {
       return;
     }
     
@@ -334,13 +334,13 @@ export const AppContent: React.FC = () => {
     const modeParam = searchParams.get('mode');
     const devQuery = modeParam === 'sim' ? '?mode=sim' : '';
     
-    if (isDevMode && view === 'dev') {
-      setDevTab(true);
+    if (isSimulationConfigMode && view === 'simconfig') {
+      setSimConfigTab(true);
       const targetPath = '/simconfig' + devQuery;
       navigate(targetPath);
       return;
     } else {
-      setDevTab(false);
+      setSimConfigTab(false);
     }
     switch(view) {
       case 'map':
@@ -369,18 +369,23 @@ export const AppContent: React.FC = () => {
       >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <SimulationModeModal open={showSimModal} onClose={() => setShowSimModal(false)} onSimulate={handleSimulate} />
-        <EntryPointModal open={entryModalOpen} onClose={() => setEntryModalOpen(false)} />
         <EntryPointModal 
-          open={distanceTrackingModalOpen} 
-          onClose={() => setDistanceTrackingModalOpen(false)} 
-          showDistanceTracking={true}
+          open={entryModalOpen || distanceTrackingModalOpen} 
+          onClose={() => {
+            setEntryModalOpen(false);
+            setDistanceTrackingModalOpen(false);
+          }} 
           pois={pois}
           trails={trails}
-          onConfirmEntryPoint={() => setHasConfirmedEntryPointThisSession(true)}
+          onConfirmEntryPoint={() => {
+            setHasConfirmedEntryPointThisSession(true);
+            setEntryModalOpen(false);
+            setDistanceTrackingModalOpen(false);
+          }}
         />
 
-        {currentView === 'dev' ? (
-          <DevPanel />
+        {currentView === 'simconfig' ? (
+          <SimulationConfigPanel />
         ) : (
           <Routes>
             <Route path="/" element={<Navigate to="/map" replace />} />
@@ -411,7 +416,7 @@ export const AppContent: React.FC = () => {
               />
             } />
             <Route path="/trail/:id" element={<TrailView />} />
-            <Route path="/simconfig" element={<DevPanel />} />
+            <Route path="/simconfig" element={<SimulationConfigPanel />} />
             <Route path="/debug-trail-structure" element={<DebugTrailStructure />} />
             <Route path="*" element={<NotFoundView />} />
           </Routes>

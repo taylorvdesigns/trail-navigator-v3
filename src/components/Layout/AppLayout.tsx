@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, AppBar, Toolbar, Typography, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { Map, Navigation, List, Settings } from '@mui/icons-material';
 import { ViewMode } from '../../types';
-import { useDevMode } from '../../contexts/DevContext';
+import { useSimulationConfigMode } from '../../contexts/SimulationConfigContext';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface AppLayoutProps {
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onViewChange, title }) => {
-  const { isDevMode } = useDevMode();
+  const { isSimulationConfigMode } = useSimulationConfigMode();
   const defaultTitle = "SWAMP RABBIT TRAIL NAVIGATOR";
   const displayTitle = title || defaultTitle;
   return (
@@ -69,10 +69,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentView, onV
           value="list"
           icon={<List />}
         />
-        {isDevMode && (
+        {isSimulationConfigMode && (
           <BottomNavigationAction
-            label="DEV"
-            value="dev"
+            label="SIM"
+            value="simconfig"
             icon={<Settings />}
           />
         )}

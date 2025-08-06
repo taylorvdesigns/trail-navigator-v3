@@ -4,7 +4,6 @@ import { Box, Button, Typography, List, ListItem, ListItemText, ListItemButton, 
 import { Modal } from '../Modal/Modal';
 import { useLocation } from '../../contexts/LocationContext';
 import { EntryPointMapPicker } from './EntryPointMapPicker';
-import { TRAIL_ROUTES } from '../../config/routes.config';
 import { POI, TrailConfig } from '../../types';
 import { MapContainer, TileLayer, Polyline, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -16,9 +15,8 @@ import { useTrailsData } from '../../hooks/useTrailsData';
 interface EntryPointModalProps {
   open: boolean;
   onClose: () => void;
-  showDistanceTracking?: boolean; // New prop to control which flow to show
-  pois?: POI[]; // Add POI data for distance tracking flow
-  trails?: TrailConfig[]; // Add trails data for distance tracking flow
+  pois?: POI[]; // POI data for group selection
+  trails?: TrailConfig[]; // Trails data for map picker
   onConfirmEntryPoint?: () => void;
 }
 
@@ -145,7 +143,6 @@ const DistanceTrackingMapPicker: React.FC<{
 export const EntryPointModal: React.FC<EntryPointModalProps> = ({ 
   open, 
   onClose, 
-  showDistanceTracking = false,
   pois,
   trails,
   onConfirmEntryPoint
@@ -158,7 +155,7 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
 
   // On open, check for last entry point in localStorage
   React.useEffect(() => {
-    if (open && showDistanceTracking) {
+    if (open) {
       const stored = localStorage.getItem('entryPoint');
       if (stored) {
         try {
@@ -171,49 +168,19 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
         } catch {}
       }
       setStep('initial');
-    } else if (open) {
-      setStep('initial');
     }
-  }, [open, showDistanceTracking]);
+  }, [open]);
 
-  // Placeholder: Use current location (simulate with a fixed point for now)
-  const handleUseCurrentLocation = () => {
-    // TODO: Snap to nearest trail point
-    setEntryPoint([-82.3940, 34.8526]); // Example: Greenville, SC
-    onClose();
-  };
 
-  const handlePickOnMap = () => {
-    setShowMap(true);
-  };
 
   const handleMapConfirm = (location: [number, number]) => {
-    if (showDistanceTracking) {
-      setEntryPoint(location);
-      if (onConfirmEntryPoint) onConfirmEntryPoint();
-      onClose();
-    } else {
-      setEntryPoint(location);
-      setShowMap(false);
-      onClose();
-    }
+    setEntryPoint(location);
+    if (onConfirmEntryPoint) onConfirmEntryPoint();
+    onClose();
   };
 
   const handleMapCancel = () => {
-    if (showDistanceTracking) {
-      setStep('poi-selection');
-    } else {
-      setShowMap(false);
-    }
-  };
-
-  // Distance tracking flow handlers
-  const handleDistanceTrackingYes = () => {
-    setStep('knows-location');
-  };
-
-  const handleDistanceTrackingNo = () => {
-    onClose();
+    setStep('poi-selection');
   };
 
   const handleKnowsLocationYes = () => {
@@ -221,7 +188,7 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
   };
 
   const handleKnowsLocationNo = () => {
-    onClose();
+    setStep('map-picker');
   };
 
   const handlePOISelection = (poiGroupName: string) => {
@@ -253,164 +220,102 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
     }));
   }, [pois]);
 
-  // Show distance tracking flow if requested
-  if (showDistanceTracking) {
-    return (
-      <Modal open={open} onClose={onClose}>
-        {step === 'initial' && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
-              Would you like the app to show you how far you've gone on the trail today?
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleDistanceTrackingYes}
-              sx={{ width: '100%' }}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleDistanceTrackingNo}
-              sx={{ width: '100%' }}
-            >
-              No
-            </Button>
-          </Box>
-        )}
-
-        {step === 'knows-location' && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
-              Do you know where you got on the trail?
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleKnowsLocationYes}
-              sx={{ width: '100%' }}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleKnowsLocationNo}
-              sx={{ width: '100%' }}
-            >
-              No
-            </Button>
-            <Button
-              variant="text"
-              onClick={handleBackToInitial}
-              sx={{ mt: 1 }}
-            >
-              Back
-            </Button>
-          </Box>
-        )}
-
-        {step === 'poi-selection' && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
-              Select the area where you got on the trail:
-            </Typography>
-            <Box sx={{ width: '100%', maxHeight: 300, overflow: 'auto' }}>
-              <List>
-                {poiGroups.map((group) => (
-                  <ListItem key={group.name} disablePadding>
-                    <ListItemButton onClick={() => handlePOISelection(group.name)}>
-                      <ListItemText 
-                        primary={group.name}
-                        secondary={`${group.count} location${group.count > 1 ? 's' : ''}`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-            <Button
-              variant="text"
-              onClick={handleBackToInitial}
-              sx={{ mt: 1 }}
-            >
-              Back
-            </Button>
-          </Box>
-        )}
-
-        {step === 'map-picker' && (
-          <DistanceTrackingMapPicker
-            selectedPOIGroup={selectedPOIGroup!}
-            pois={pois!}
-            trails={trails!}
-            onConfirm={handleMapConfirm}
-            onCancel={handleMapCancel}
-          />
-        )}
-
-        {step === 'reuse-last' && lastEntryPoint && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
-            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
-              Did you get on the trail at the same location as last time?
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                setEntryPoint(lastEntryPoint);
-                if (onConfirmEntryPoint) onConfirmEntryPoint();
-              }}
-              sx={{ width: '100%' }}
-            >
-              Yes, use the same starting point
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setStep('initial')}
-              sx={{ width: '100%' }}
-            >
-              No, pick a new starting point
-            </Button>
-          </Box>
-        )}
-      </Modal>
-    );
-  }
-
-  // Original entry point modal flow
+  // Consolidated entry point modal flow
   return (
-    <Modal open={open} onClose={onClose} title="Where did you get on the trail?">
-      {showMap ? (
-        <EntryPointMapPicker
-          trails={TRAIL_ROUTES}
-          onConfirm={handleMapConfirm}
-          onCancel={handleMapCancel}
-        />
-      ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320 }}>
+    <Modal open={open} onClose={onClose}>
+      {step === 'initial' && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
+          <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
+            Where did you get on the trail?
+          </Typography>
           <Button
             variant="contained"
             color="primary"
-            onClick={handleUseCurrentLocation}
+            onClick={handleKnowsLocationYes}
             sx={{ width: '100%' }}
           >
-            Use My Current Location
+            I know the area
           </Button>
-          <Typography variant="body2" sx={{ color: '#888' }}>or</Typography>
           <Button
             variant="outlined"
             color="primary"
-            onClick={handlePickOnMap}
+            onClick={handleKnowsLocationNo}
             sx={{ width: '100%' }}
           >
-            Pick on Map
+            I need to pick on the map
+          </Button>
+        </Box>
+      )}
+
+      {step === 'poi-selection' && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
+          <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
+            Select the area where you got on the trail:
+          </Typography>
+          <Box sx={{ width: '100%', maxHeight: 300, overflow: 'auto' }}>
+            <List>
+              {poiGroups.map((group) => (
+                <ListItem key={group.name} disablePadding>
+                  <ListItemButton onClick={() => handlePOISelection(group.name)}>
+                    <ListItemText 
+                      primary={group.name}
+                      secondary={`${group.count} location${group.count > 1 ? 's' : ''}`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+          <Button
+            variant="text"
+            onClick={handleBackToInitial}
+            sx={{ mt: 1 }}
+          >
+            Back
+          </Button>
+        </Box>
+      )}
+
+      {step === 'map-picker' && (
+        <DistanceTrackingMapPicker
+          selectedPOIGroup={selectedPOIGroup!}
+          pois={pois!}
+          trails={trails!}
+          onConfirm={handleMapConfirm}
+          onCancel={handleMapCancel}
+        />
+      )}
+
+      {step === 'reuse-last' && lastEntryPoint && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 320, p: 2 }}>
+          <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'white' }}>
+            Did you get on the trail at the same location as last time?
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              if (lastEntryPoint) {
+                setEntryPoint(lastEntryPoint);
+                if (onConfirmEntryPoint) onConfirmEntryPoint();
+              }
+            }}
+            sx={{ width: '100%' }}
+          >
+            Yes, use the same starting point
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setStep('initial')}
+            sx={{ width: '100%' }}
+          >
+            No, pick a new starting point
           </Button>
         </Box>
       )}
     </Modal>
   );
+
+
 }; 

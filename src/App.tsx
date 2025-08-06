@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { LocationProvider } from './contexts/LocationContext';
 import { UserProvider } from './contexts/UserContext';
-import { DevProvider } from './contexts/DevContext';
+import { SimulationConfigProvider } from './contexts/SimulationConfigContext';
 import { DesignProvider } from './contexts/DesignContext';
 import { AppContent } from './components/AppContent';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -30,12 +30,12 @@ export const App: React.FC = () => {
         <ThemeProvider>
           <UserProvider>
             <LocationProvider>
-              <DevProvider>
+              <SimulationConfigProvider>
                 <DesignProvider>
                   <CssBaseline />
                   <AppContent />
                 </DesignProvider>
-              </DevProvider>
+              </SimulationConfigProvider>
             </LocationProvider>
           </UserProvider>
         </ThemeProvider>
