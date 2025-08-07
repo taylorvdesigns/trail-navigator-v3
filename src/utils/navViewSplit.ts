@@ -118,8 +118,28 @@ export function getNavViewSplitData(
         const otherTrailConfig = allTrails.find(t => t.id === otherTrailId);
         const otherTrailStops = allStops.filter(s => s.trailId === otherTrailId);
         
+
+        
+        // Find the specific junction stop we want to split at
+        // This ensures we use the correct junction (e.g., Orange Line Junction) 
+        // instead of any junction in the trail list
+        let mainTrailJunctionStop = null;
+        if (foundJunction) {
+          const junctionId = foundJunction.id;
+          // Look for the specific junction with the exact ID format
+          mainTrailJunctionStop = otherTrailStops.find(s => 
+            s.type === 'junction' && 
+            s.id === `junction-${junctionId}-${otherTrailId}`
+          );
+        }
+        
+
+        
         // Use directional logic to determine which stops are left vs right
-        const { left, right } = getDirectionalStops(otherTrailStops, junctionStop, userLocation, simDirection);
+        // This splits the trail stops into left/right branches based on the junction
+        const { left, right } = getDirectionalStops(otherTrailStops, mainTrailJunctionStop || junctionStop, userLocation, simDirection);
+        
+
 
         if (left.length > 0) {
           leftBranch = {

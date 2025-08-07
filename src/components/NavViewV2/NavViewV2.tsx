@@ -177,6 +177,8 @@ const SplitView: React.FC<SplitViewProps> = ({
   const rightColRef = useRef<HTMLDivElement>(null);
   const rightContentRef = useRef<HTMLDivElement>(null);
   const [rightContentHeight, setRightContentHeight] = useState<number>(0);
+  
+
 
   // Measure the right content height
   useLayoutEffect(() => {
@@ -370,12 +372,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       // Default "forwards" direction. Stops with greater distance are ahead.
       // The list is already sorted closest to farthest.
       const aheadStops = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) > userDistance);
-      console.log('NavView: Ahead stops found', aheadStops.map(s => ({
-        id: s.id,
-        type: s.type,
-        name: s.name,
-        distance: s.metadata.distance
-      })));
+
       return aheadStops;
     }
   }, [stops, userStop, activeTrailId, simDirection, entryPoint]);
@@ -396,12 +393,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       // We need to reverse the list to sort them from closest to farthest.
       const stopsBehind = stops.filter(s => s.trailId === activeTrailId && (s.metadata.distance || 0) < userDistance);
       const behindStops = stopsBehind.slice().reverse();
-      console.log('NavView: Behind stops found', behindStops.map(s => ({
-        id: s.id,
-        type: s.type,
-        name: s.name,
-        distance: s.metadata.distance
-      })));
+
       return behindStops;
     }
   }, [stops, userStop, activeTrailId, simDirection, entryPoint]);
@@ -420,14 +412,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     simDirection
   ), [activeTrailId, aheadStops, stops, allTrails, junctions, navViewCurrentLocation, allTrailData, simDirection]);
 
-  console.log('NavView: Ahead split data', {
-    beforeJunction: aheadSplitData.beforeJunction.length,
-    junctionStop: aheadSplitData.junctionStop?.name,
-    leftBranch: aheadSplitData.leftBranch?.stops.length,
-    rightBranch: aheadSplitData.rightBranch?.stops.length,
-    afterJunction: aheadSplitData.afterJunction.length,
-    hasSplit: !!(aheadSplitData.leftBranch || aheadSplitData.rightBranch)
-  });
+
 
   // Get split view data for behind section
   // The behindStops list is now always correctly sorted (closest to farthest), so we no longer need to reverse it here.
@@ -444,14 +429,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     simDirection
   ), [activeTrailId, behindStops, stops, allTrails, junctions, navViewCurrentLocation, allTrailData, simDirection]);
 
-  console.log('NavView: Behind split data', {
-    beforeJunction: behindSplitData.beforeJunction.length,
-    junctionStop: behindSplitData.junctionStop?.name,
-    leftBranch: behindSplitData.leftBranch?.stops.length,
-    rightBranch: behindSplitData.rightBranch?.stops.length,
-    afterJunction: behindSplitData.afterJunction.length,
-    hasSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch)
-  });
+
 
   // Determine the correct endpoint name for the heading
   let endpointName = 'Unknown';
@@ -518,11 +496,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
         const userCoords: [number, number] = [userStop.metadata.coordinates[1], userStop.metadata.coordinates[0]];
         const entryCoords: [number, number] = [entryPointStop.metadata.coordinates[1], entryPointStop.metadata.coordinates[0]];
         const networkDistance = calculatePreciseNetworkDistance(graph, userCoords, entryCoords);
-        console.log('NavView: Entry point distance', {
-          networkDistance,
-          entryPointDistanceMiles: metersToMiles(networkDistance || 0),
-          entryPointOnSameTrail: entryPointStop.trailId === activeTrailId
-        });
+
       }
 
       
@@ -590,19 +564,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       ...(behindSplitData.beforeJunction || []),
     ];
 
-    console.log('NavView: All stops for metrics', {
-      aheadStops: aheadStops.length,
-      behindStops: behindStops.length,
-      aheadLeftBranch: aheadSplitData.leftBranch?.stops.length || 0,
-      aheadRightBranch: aheadSplitData.rightBranch?.stops.length || 0,
-      behindLeftBranch: behindSplitData.leftBranch?.stops.length || 0,
-      behindRightBranch: behindSplitData.rightBranch?.stops.length || 0,
-      aheadAfterJunction: aheadSplitData.afterJunction.length,
-      aheadBeforeJunction: aheadSplitData.beforeJunction.length,
-      behindAfterJunction: behindSplitData.afterJunction.length,
-      behindBeforeJunction: behindSplitData.beforeJunction.length,
-      totalAllStops: allStops.length
-    });
+
     
     // Calculate metrics for each stop
     allStops.forEach(stop => {
@@ -676,16 +638,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     const hasAheadSplit = !!(aheadSplitData.leftBranch || aheadSplitData.rightBranch);
     const hasBehindSplit = !!(behindSplitData.leftBranch || behindSplitData.rightBranch);
     
-    console.log('NavView: View mode determination', {
-      hasAheadSplit,
-      hasBehindSplit,
-      aheadLeftBranch: aheadSplitData.leftBranch?.stops.length || 0,
-      aheadRightBranch: aheadSplitData.rightBranch?.stops.length || 0,
-      behindLeftBranch: behindSplitData.leftBranch?.stops.length || 0,
-      behindRightBranch: behindSplitData.rightBranch?.stops.length || 0,
-      behindBeforeJunction: behindSplitData.beforeJunction.length,
-      behindAfterJunction: behindSplitData.afterJunction.length
-    });
+
     
     // Only reset aheadFocus if split view disappears
     if (!hasAheadSplit) {
@@ -1086,19 +1039,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const renderStopList = (stops: Stop[], color?: string) => {
     const listColor = color || activeTrail.color;
     
-    // Debug what stops are being rendered
-    if (stops.length > 0) {
-      console.log('NavView: Rendering stop list', {
-        stopCount: stops.length,
-        stops: stops.map(s => ({
-          id: s.id,
-          type: s.type,
-          name: s.name,
-          distance: s.metadata.distance,
-          trailId: s.trailId
-        }))
-      });
-    }
+
     
     return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
   };
@@ -1198,13 +1139,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     document.removeEventListener('touchend', onDragEnd);
   };
   
-  console.log('NavView: View mode condition', {
-    aheadHeight,
-    MAX_AHEAD_HEIGHT,
-    shouldUseStickyMode: aheadHeight < MAX_AHEAD_HEIGHT,
-    hasAheadSplit: !!(aheadSplitData.leftBranch || aheadSplitData.rightBranch),
-    hasBehindSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch)
-  });
+
 
   return (
     <div ref={containerRef} style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#23272a', minHeight: 0, flex: 1 }}>
@@ -1306,14 +1241,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               flex: 1, // Take remaining space
               minHeight: 0, // Allow shrinking
             }}>
-              {(() => {
-                console.log('NavView: Behind section in sticky mode', {
-                  behindBeforeJunction: behindSplitData.beforeJunction.length,
-                  behindAfterJunction: behindSplitData.afterJunction.length,
-                  hasBehindSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch)
-                });
-                return null;
-              })()}
+
               {/* <SectionHeader>
                 Behind You
               </SectionHeader> */}
@@ -1322,6 +1250,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
               {(behindSplitData.leftBranch || behindSplitData.rightBranch) ? (
                 <div style={{ width: '100%' }}>
+
                   <SplitView
                     leftContent={renderStopList(behindSplitData.leftBranch?.stops || [], behindSplitData.leftBranch?.color)}
                     rightContent={renderStopList(behindSplitData.rightBranch?.stops || [], behindSplitData.rightBranch?.color)}
@@ -1479,17 +1408,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     // alignItems: 'stretch', // REMOVE for block layout
                   }}
                 >
-                  {(() => {
-                    console.log('NavView: Behind section in split/drag mode', {
-                      behindBeforeJunction: behindSplitData.beforeJunction.length,
-                      behindAfterJunction: behindSplitData.afterJunction.length,
-                      hasBehindSplit: !!(behindSplitData.leftBranch || behindSplitData.rightBranch),
-                      behindRef: behindStickyRef.current?.scrollHeight,
-                      behindClientHeight: behindStickyRef.current?.clientHeight,
-                      padding: '0 16px 40px 16px'
-                    });
-                    return null;
-                  })()}
+
                   {/* <SectionHeader>
                     Behind You
                   </SectionHeader> */}

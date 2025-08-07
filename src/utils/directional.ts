@@ -28,6 +28,8 @@ export function getDirectionalStops(
   userLocation: [number, number], // [latitude, longitude]
   simDirection?: 'top' | 'bottom'
 ): DirectionalStops {
+  
+
   // The ID is structured like `junction-${rawJunctionId}-${trailId}`.
   // We need to find the corresponding junction stop on the main trail.
   const junctionIdParts = junctionStop.id.split('-');
@@ -35,15 +37,18 @@ export function getDirectionalStops(
     return { left: [], right: [] };
   }
   const rawJunctionId = junctionIdParts[1];
+  
 
-  // Now find the junction stop in the main trail list that shares the same raw ID.
-  const mainTrailJunctionStop = mainTrailStops.find(s => s.type === 'junction' && s.id.startsWith(`junction-${rawJunctionId}-`));
+
+  // Find the specific junction stop in the main trail list
+  // This ensures we use the correct junction as the split point
+  const mainTrailJunctionStop = mainTrailStops.find(s => s.id === junctionStop.id);
 
   if (!mainTrailJunctionStop) {
     return { left: [], right: [] };
   }
 
-  // Use the index of the junction *on the main trail* to split the stops.
+  // Use the index of the specific junction to split the stops into left/right paths
   const junctionIndex = mainTrailStops.findIndex(s => s.id === mainTrailJunctionStop.id);
 
   if (junctionIndex === -1) {
@@ -57,6 +62,8 @@ export function getDirectionalStops(
   
   // Path 2 is the part of the main trail *after* the junction stop.
   const path2 = mainTrailStops.slice(junctionIndex + 1);
+  
+
 
   if (path1.length === 0 || path2.length === 0) {
     // This isn't a T-junction where a split is needed, so return empty.

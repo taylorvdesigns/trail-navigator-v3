@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 
-type MiddleCardVariant = 'default' | 'v2' | 'v3';
+type MiddleCardVariant = 'default' | 'v1' | 'v2' | 'v3';
 
 interface DesignContextType {
   middleCardVariant: MiddleCardVariant;

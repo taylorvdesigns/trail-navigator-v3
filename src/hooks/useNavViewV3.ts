@@ -317,14 +317,7 @@ export function useNavViewV3({ allTrails, allTrailData, junctions, pois }: UseNa
       return (a.metadata.distance || 0) - (b.metadata.distance || 0);
     });
 
-    console.log('useNavViewV3: Stops summary', {
-      totalStops: sortedStops.length,
-      activeTrailId,
-      userDistance: finalUserStop?.metadata.distance,
-      entryPointDistance: entryPointStop?.metadata.distance,
-      entryPointTrailId: entryPointStop?.trailId,
-      entryPointOnSameTrail: entryPointStop?.trailId === activeTrailId
-    });
+
     
 
 

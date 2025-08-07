@@ -27,9 +27,11 @@ export const MiddleCardVariant: React.FC<MiddleCardVariantProps> = (props) => {
     case 'v2':
       return <NavContextCardV2 {...props} />;
     case 'v3':
-      return <NavContextCardV3 {...props} />;
+      return <NavContextCardV3 {...props} />; // Now shows the old V1 design
+    case 'v1':
+      return <NavContextCard {...props} />; // Now shows the old V3 design
     case 'default':
     default:
-      return <NavContextCard {...props} />;
+      return <NavContextCard {...props} />; // Default to the old V3 design
   }
 }; 
