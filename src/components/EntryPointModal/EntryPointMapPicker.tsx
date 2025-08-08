@@ -82,9 +82,15 @@ export const EntryPointMapPicker: React.FC<EntryPointMapPickerProps> = ({ trails
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GrayscaleMapLayer />
-          {allTrailPoints.length > 0 && (
-            <Polyline positions={allTrailPoints} color="#39FF14" weight={5} />
-          )}
+          {/* Draw one polyline per trail to avoid connecting end-to-start across trails */}
+          {trailsData && trailsData.length > 0 && trailsData.map((trail, idx) => (
+            <Polyline
+              key={trail.id || idx}
+              positions={trail.points.map(pt => [pt.latitude, pt.longitude] as [number, number])}
+              color={trail.color || '#39FF14'}
+              weight={5}
+            />
+          ))}
           {selected && (
             <Marker position={selected} icon={startIcon}>
               <div style={{

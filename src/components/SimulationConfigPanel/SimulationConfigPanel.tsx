@@ -8,6 +8,8 @@ import { useTrailsData } from '../../hooks/useTrailsData';
 import { useUser } from '../../contexts/UserContext';
 import { useWordPressConfig } from '../../hooks/useWordPressConfig';
 import { getRandomTrailPointFromMultiple, getRandomTrailPoint, findNearestTrailPoint } from '../../utils/trail';
+import { EntryPointModal } from '../EntryPointModal/EntryPointModal';
+import { usePOIs } from '../../hooks/usePOIs';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -35,6 +37,9 @@ export const SimulationConfigPanel: React.FC = () => {
     simDirection,
     setSimDirection
   } = useLocation();
+  const { pois } = usePOIs();
+  const [isEntryPointModalOpen, setIsEntryPointModalOpen] = useState(false);
+  const [isUserLocModalOpen, setIsUserLocModalOpen] = useState(false);
   const [currentRandomLocation, setCurrentRandomLocation] = useState<{ point: any; trailIndex: number; name: string } | null>(null);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
@@ -179,6 +184,24 @@ export const SimulationConfigPanel: React.FC = () => {
       justifyContent: 'center',
       alignItems: 'center',
     }}>
+      {/* Map pickers */}
+      <EntryPointModal
+        open={isEntryPointModalOpen}
+        onClose={() => setIsEntryPointModalOpen(false)}
+        pois={pois}
+        trails={TRAIL_ROUTES}
+        onConfirmEntryPoint={() => setIsEntryPointModalOpen(false)}
+        onConfirmCoordinates={(lngLat) => setEntryPoint(lngLat)}
+      />
+      {/* Reuse modal to pick user location (writes entryPoint in modal; we clear after and set location separately if needed) */}
+      <EntryPointModal
+        open={isUserLocModalOpen}
+        onClose={() => setIsUserLocModalOpen(false)}
+        pois={pois}
+        trails={TRAIL_ROUTES}
+        onConfirmEntryPoint={() => setIsUserLocModalOpen(false)}
+        onConfirmCoordinates={(lngLat) => setTestLocation(lngLat)}
+      />
       <Box sx={{ 
         p: 4, 
         maxWidth: 420, 
@@ -250,7 +273,27 @@ export const SimulationConfigPanel: React.FC = () => {
               }
             }}
           >
-            Change Location
+            New Random Location
+          </Button>
+          <Button
+            onClick={() => setIsUserLocModalOpen(true)}
+            variant="outlined"
+            color="primary"
+            fullWidth
+            sx={{ 
+              borderRadius: 2, 
+              py: 1.5, 
+              fontWeight: 600,
+              mt: 1,
+              borderColor: '#39FF14',
+              color: '#39FF14',
+              '&:hover': {
+                borderColor: '#39FF14',
+                bgcolor: 'rgba(57, 255, 20, 0.1)'
+              }
+            }}
+          >
+            Pick Location on Map
           </Button>
         </Box>
 
@@ -401,7 +444,27 @@ export const SimulationConfigPanel: React.FC = () => {
               }
             }}
           >
-            Change Entry Point
+            New Random Location
+          </Button>
+          <Button 
+            variant="outlined" 
+            color="secondary" 
+            fullWidth 
+            onClick={() => setIsEntryPointModalOpen(true)} 
+            sx={{ 
+              borderRadius: 2, 
+              py: 1.5, 
+              fontWeight: 600,
+              mt: 1,
+              borderColor: '#e91e63',
+              color: '#e91e63',
+              '&:hover': {
+                borderColor: '#e91e63',
+                bgcolor: 'rgba(233, 30, 99, 0.1)'
+              }
+            }}
+          >
+            Pick Entry Point on Map
           </Button>
           <Button 
             variant="outlined" 

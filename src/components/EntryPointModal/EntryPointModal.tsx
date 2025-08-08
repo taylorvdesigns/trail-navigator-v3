@@ -18,6 +18,8 @@ interface EntryPointModalProps {
   pois?: POI[]; // POI data for group selection
   trails?: TrailConfig[]; // Trails data for map picker
   onConfirmEntryPoint?: () => void;
+  // Optional: receive confirmed coordinates as [lng, lat] so caller can handle (e.g., set user location)
+  onConfirmCoordinates?: (lngLat: [number, number]) => void;
 }
 
 // Distance tracking map picker component
@@ -105,9 +107,15 @@ const DistanceTrackingMapPicker: React.FC<{
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           <GrayscaleMapLayer />
-          {allTrailPoints.length > 0 && (
-            <Polyline positions={allTrailPoints} color="#39FF14" weight={5} />
-          )}
+          {/* Draw one polyline per trail to avoid connecting disparate trails */}
+          {trailsData && trailsData.length > 0 && trailsData.map((trail, idx) => (
+            <Polyline
+              key={trail.id || idx}
+              positions={trail.points.map(pt => [pt.latitude, pt.longitude] as [number, number])}
+              color={trail.color || '#39FF14'}
+              weight={5}
+            />
+          ))}
           {selectedPoint && (
             <Marker position={selectedPoint} icon={startIcon}>
               <div style={{
@@ -145,7 +153,8 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
   onClose, 
   pois,
   trails,
-  onConfirmEntryPoint
+  onConfirmEntryPoint,
+  onConfirmCoordinates
 }) => {
   const { setEntryPoint } = useLocation();
   const [showMap, setShowMap] = useState(false);
@@ -173,8 +182,14 @@ export const EntryPointModal: React.FC<EntryPointModalProps> = ({
 
 
 
-  const handleMapConfirm = (location: [number, number]) => {
-    setEntryPoint(location);
+  const handleMapConfirm = (locationLatLng: [number, number]) => {
+    // Convert [lat, lng] from map to [lng, lat] for app state
+    const lngLat: [number, number] = [locationLatLng[1], locationLatLng[0]];
+    if (onConfirmCoordinates) {
+      onConfirmCoordinates(lngLat);
+    } else {
+      setEntryPoint(lngLat);
+    }
     if (onConfirmEntryPoint) onConfirmEntryPoint();
     onClose();
   };
