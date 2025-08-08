@@ -9,6 +9,7 @@ import { MapContainer, TileLayer, Polyline, Marker, useMapEvents } from 'react-l
 import L from 'leaflet';
 
 import { GrayscaleMapLayer } from '../MapView/GrayscaleMapLayer';
+import { useTrailColors } from '../../hooks/useTrailColors';
 import { useTrailsData } from '../../hooks/useTrailsData';
 
 
@@ -32,6 +33,7 @@ const DistanceTrackingMapPicker: React.FC<{
 }> = ({ selectedPOIGroup, pois, trails, onConfirm, onCancel }) => {
   const { data: trailsData, isLoading } = useTrailsData(trails);
   const [selectedPoint, setSelectedPoint] = useState<[number, number] | null>(null);
+  const getTrailColor = useTrailColors();
 
   // Get POIs for the selected group
   const groupPOIs = pois.filter(poi => poi.post_tags?.[0]?.name === selectedPOIGroup);
@@ -112,7 +114,7 @@ const DistanceTrackingMapPicker: React.FC<{
             <Polyline
               key={trail.id || idx}
               positions={trail.points.map(pt => [pt.latitude, pt.longitude] as [number, number])}
-              color={trail.color || '#39FF14'}
+              color={getTrailColor(trail.id, trail.color || '#39FF14')}
               weight={5}
             />
           ))}

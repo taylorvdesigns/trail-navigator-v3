@@ -12,7 +12,7 @@ const cache = new NodeCache({
 });
 
 // WordPress configuration
-const WORDPRESS_URL = 'https://srtmaps.elev8maps.com';
+const WORDPRESS_URL = process.env.WP_BASE_URL || process.env.REACT_APP_WP_BASE_URL || 'https://srtmaps.elev8maps.com';
 
 module.exports = async (req, res) => {
   console.log('DEBUG: Categories API endpoint hit');

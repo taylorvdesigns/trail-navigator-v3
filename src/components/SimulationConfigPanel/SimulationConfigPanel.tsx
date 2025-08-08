@@ -10,6 +10,7 @@ import { useWordPressConfig } from '../../hooks/useWordPressConfig';
 import { getRandomTrailPointFromMultiple, getRandomTrailPoint, findNearestTrailPoint } from '../../utils/trail';
 import { EntryPointModal } from '../EntryPointModal/EntryPointModal';
 import { usePOIs } from '../../hooks/usePOIs';
+import { useTheme as useAppTheme } from '../../contexts/ThemeContext';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -40,6 +41,7 @@ export const SimulationConfigPanel: React.FC = () => {
   const { pois } = usePOIs();
   const [isEntryPointModalOpen, setIsEntryPointModalOpen] = useState(false);
   const [isUserLocModalOpen, setIsUserLocModalOpen] = useState(false);
+  const { isDarkMode, toggleDarkMode } = useAppTheme();
   const [currentRandomLocation, setCurrentRandomLocation] = useState<{ point: any; trailIndex: number; name: string } | null>(null);
   const { data: trailsData } = useTrailsData(TRAIL_ROUTES);
   const { locomotionMode } = useUser();
@@ -591,6 +593,33 @@ export const SimulationConfigPanel: React.FC = () => {
           <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
             UI Design Testing
           </Typography>
+          {/* Appearance (Light/Dark) */}
+          <Box sx={{ ml: 2, mb: 2 }}>
+            <Typography variant="body2" sx={{ mb: 0.5, color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>
+              Appearance
+            </Typography>
+            <ToggleButtonGroup
+              value={isDarkMode ? 'dark' : 'light'}
+              exclusive
+              onChange={(_e, val) => {
+                if (val === null) return;
+                const wantDark = val === 'dark';
+                if (wantDark !== isDarkMode) toggleDarkMode();
+              }}
+              fullWidth
+              sx={{ gap: 1, mb: 1 }}
+            >
+              <ToggleButton value="light" aria-label="Light Mode" sx={{ color: '#fff', borderRadius: 2 }}>
+                Light
+              </ToggleButton>
+              <ToggleButton value="dark" aria-label="Dark Mode" sx={{ color: '#fff', borderRadius: 2 }}>
+                Dark
+              </ToggleButton>
+            </ToggleButtonGroup>
+            <Typography variant="caption" sx={{ color: '#aaa' }}>
+              Temporary location for testing; will be moved to main Settings.
+            </Typography>
+          </Box>
           
           {/* Nav View Section */}
           <Box sx={{ ml: 2, mb: 2 }}>

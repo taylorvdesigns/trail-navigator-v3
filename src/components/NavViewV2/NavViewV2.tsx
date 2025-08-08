@@ -17,6 +17,7 @@ import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom'
 import Split from 'react-split';
 import { determineTrailHeading, getEndpointNameForHeading } from '../../utils/trailHeading';
 import './NavViewV2.css';
+import { useTrailColors } from '../../hooks/useTrailColors';
 
 
 // Component loaded
@@ -347,6 +348,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   });
   // Get trail graph for network distance calculations
   const { graph } = useTrailGraph();
+  const getTrailColor = useTrailColors();
   
   // Get user location and entry point data
   const { entryPoint, currentLocation, previousLocation, simDirection, isSimulationMode } = useLocation();
@@ -748,14 +750,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     isLast: boolean = false,
     opts?: { onJunctionRightClick?: () => void; showJunctionArrow?: boolean }
   ) => {
-    let stopColor = color || activeTrail.color;
+    let stopColor = color || getTrailColor(stop.trailId, activeTrail.color);
     const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
     // For junctions, use the color of the trail it connects to (not the current trail)
     if (stop.type === 'junction' && stop.metadata.branchTrailIds && stop.metadata.branchTrailIds.length > 0) {
       const connectedTrailId = stop.metadata.branchTrailIds[0]; // Get the first connected trail
       const connectedTrail = allTrails.find(t => t.id === connectedTrailId);
       if (connectedTrail) {
-        stopColor = connectedTrail.color;
+        stopColor = getTrailColor(connectedTrail.id, connectedTrail.color);
       }
       // Render junction with special background and text/line/circle color
       return (

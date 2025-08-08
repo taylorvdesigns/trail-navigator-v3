@@ -7,6 +7,7 @@ import L from 'leaflet';
 import { TrailConfig } from '../../types/index';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { GrayscaleMapLayer } from '../MapView/GrayscaleMapLayer';
+import { useTrailColors } from '../../hooks/useTrailColors';
 
 interface EntryPointMapPickerProps {
   trails: TrailConfig[];
@@ -36,6 +37,7 @@ const startIcon = new L.DivIcon({
 
 export const EntryPointMapPicker: React.FC<EntryPointMapPickerProps> = ({ trails, onConfirm, onCancel }) => {
   const { data: trailsData, isLoading } = useTrailsData(trails);
+  const getTrailColor = useTrailColors();
   // Flatten all trail points
   const allTrailPoints = trailsData && trailsData.length > 0
     ? trailsData.flatMap(trail => trail.points.map(pt => [pt.latitude, pt.longitude] as [number, number]))
@@ -87,7 +89,7 @@ export const EntryPointMapPicker: React.FC<EntryPointMapPickerProps> = ({ trails
             <Polyline
               key={trail.id || idx}
               positions={trail.points.map(pt => [pt.latitude, pt.longitude] as [number, number])}
-              color={trail.color || '#39FF14'}
+              color={getTrailColor(trail.id, trail.color || '#39FF14')}
               weight={5}
             />
           ))}
