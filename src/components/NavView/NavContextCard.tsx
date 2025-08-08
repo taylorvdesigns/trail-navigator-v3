@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonWalking, faPersonRunning, faBiking, faPersonWalking as faPersonWalkingAccessible } from '@fortawesome/free-solid-svg-icons';
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { LocomotionMode } from '../../types/index';
+import { useTheme as useMuiTheme } from '@mui/material/styles';
 
 interface NavContextCardProps {
   destination: string;
@@ -64,8 +65,12 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
     ? entryPointDistanceMiles 
     : distanceMiles; // fallback to user's trail distance
 
-  // Dynamic accent color based on trail color (fallback to green)
-  const highlightColor = borderColor || '#4CAF50';
+  const muiTheme = useMuiTheme();
+  const highlightColor = borderColor || (muiTheme as any).palette.primary.main;
+  const chipText = (muiTheme as any).extra?.tokens?.navChipText || '#242424';
+  const pillBg = (muiTheme as any).extra?.tokens?.navPillBg || (muiTheme as any).palette.background.paper;
+  const divider = (muiTheme as any).palette.divider;
+  const textPrimary = (muiTheme as any).palette.text.primary;
 
   return (
     <>
@@ -110,8 +115,8 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
         }}>
           {/* AHEAD OF YOU Pill */}
           <Box sx={{
-            backgroundColor: '#666',
-            color: '#242424',
+            backgroundColor: divider,
+            color: textPrimary,
             px: 2,
             py: 0.5,
             borderRadius: 99,
@@ -141,8 +146,8 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
                 width: 60,
                 height: 60,
                 borderRadius: '50%',
-                backgroundColor: '#e91e63', // Pink color
-                border: '3px solid #fff', // White stroke
+              backgroundColor: (muiTheme as any).palette.secondary.main,
+              border: `3px solid ${(muiTheme as any).palette.background.paper}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -170,7 +175,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
 
             {/* Locomotion Text */}
             <Typography sx={{
-              color: '#fff',
+              color: textPrimary,
               fontSize: '0.8rem',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -183,8 +188,8 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
 
           {/* BEHIND YOU Pill */}
           <Box sx={{
-            backgroundColor: '#666',
-            color: '#242424',
+            backgroundColor: divider,
+            color: textPrimary,
             px: 2,
             py: 0.5,
             borderRadius: 99,
@@ -224,8 +229,8 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              borderRight: '1px solid #666',
-              borderBottom: '1px solid #666',
+              borderRight: `1px solid ${divider}`,
+              borderBottom: `1px solid ${divider}`,
               position: 'relative',
             }}>
               <FontAwesomeIcon
@@ -243,11 +248,11 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              borderBottom: '1px solid #666',
+              borderBottom: `1px solid ${divider}`,
               p: 1,
             }}>
               <Typography sx={{
-                color: '#fff',
+                color: textPrimary,
                 fontSize: '0.6rem',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -259,7 +264,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               </Typography>
               <Box sx={{
                 backgroundColor: highlightColor,
-                color: '#242424',
+                color: chipText,
                 px: 1.5,
                 py: 0.25,
                 borderRadius: 99,
@@ -278,11 +283,11 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              borderRight: '1px solid #666',
+              borderRight: `1px solid ${divider}`,
               p: 1,
             }}>
               <Typography sx={{
-                color: '#fff',
+                color: textPrimary,
                 fontSize: '0.6rem',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -294,7 +299,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               </Typography>
               <Box sx={{
                 backgroundColor: highlightColor,
-                color: '#242424',
+                color: chipText,
                 px: 1.5,
                 py: 0.25,
                 borderRadius: 99,
@@ -317,7 +322,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               p: 1,
             }}>
               <Typography sx={{
-                color: '#fff',
+                color: textPrimary,
                 fontSize: '0.6rem',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -329,7 +334,7 @@ export const NavContextCard: React.FC<NavContextCardProps> = ({
               </Typography>
               <Box sx={{
                 backgroundColor: highlightColor,
-                color: '#242424',
+                color: chipText,
                 px: 1.5,
                 py: 0.25,
                 borderRadius: 99,

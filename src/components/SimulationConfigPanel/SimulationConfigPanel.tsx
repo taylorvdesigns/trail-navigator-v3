@@ -210,10 +210,10 @@ export const SimulationConfigPanel: React.FC = () => {
         margin: '32px auto',
         overflowY: 'auto',
         flex: 1,
-        bgcolor: 'rgba(34, 34, 34, 0.98)',
+        bgcolor: (theme) => theme.palette.mode === 'light' ? theme.palette.background.default : 'rgba(34, 34, 34, 0.98)',
         borderRadius: 4,
-        boxShadow: '0 4px 24px 0 rgba(0,0,0,0.25)',
-        border: '1px solid #222',
+        boxShadow: (theme) => theme.palette.mode === 'light' ? 'none' : '0 4px 24px rgba(0,0,0,0.25)',
+        border: (theme) => `1px solid ${theme.palette.divider}`,
         '&::-webkit-scrollbar': {
           width: '8px',
         },
@@ -228,14 +228,14 @@ export const SimulationConfigPanel: React.FC = () => {
           background: '#666',
         },
       }}>
-        <Typography variant="h5" sx={{ mb: 3, color: '#39FF14', textAlign: 'center', fontWeight: 700 }}>
+        <Typography variant="h5" sx={{ mb: 3, color: 'primary.main', textAlign: 'center', fontWeight: 700 }}>
           Simulation Configuration
         </Typography>
-        <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+        <Divider sx={{ mb: 3 }} />
         
         {/* Current Location */}
         <Box sx={{ mt: 2, mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
             Current Location:
           </Typography>
           
@@ -301,7 +301,7 @@ export const SimulationConfigPanel: React.FC = () => {
 
         {/* Direction Control */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
             Direction:
           </Typography>
           <Typography variant="body2" sx={{ mb: 1, color: '#ccc', fontSize: '0.8rem' }}>
@@ -323,7 +323,7 @@ export const SimulationConfigPanel: React.FC = () => {
               value="top"
               aria-label="Northbound"
               sx={{
-                color: '#fff',
+                color: 'text.primary',
                 borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
@@ -358,7 +358,7 @@ export const SimulationConfigPanel: React.FC = () => {
               value="bottom"
               aria-label="Southbound"
               sx={{
-                color: '#fff',
+                color: 'text.primary',
                 borderColor: '#2196f3',
                 borderRadius: 2,
                 '&.Mui-selected': {
@@ -396,7 +396,7 @@ export const SimulationConfigPanel: React.FC = () => {
 
         {/* Entry Point */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
             Entry Point:
           </Typography>
           
@@ -490,7 +490,7 @@ export const SimulationConfigPanel: React.FC = () => {
 
         {/* Simulation Controls */}
         <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
             Simulation Controls:
           </Typography>
           
@@ -529,7 +529,7 @@ export const SimulationConfigPanel: React.FC = () => {
 
           {/* Speed Control */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Typography variant="body2" sx={{ color: '#fff' }}>Speed:</Typography>
+            <Typography variant="body2" sx={{ color: 'text.primary' }}>Speed:</Typography>
             <ToggleButtonGroup
               value={simSpeedMultiplier}
               exclusive
@@ -576,12 +576,12 @@ export const SimulationConfigPanel: React.FC = () => {
                 }}
               />
             }
-            label={<Typography sx={{ color: '#FFFFFF', fontSize: '0.9rem' }}>Loop Simulation</Typography>}
+            label={<Typography sx={{ color: 'text.primary', fontSize: '0.9rem' }}>Loop Simulation</Typography>}
             sx={{ mt: 1, mb: 1, ml: 1 }}
           />
 
           {/* Status Display */}
-          <Typography variant="body2" sx={{ color: '#fff', mt: 1 }}>
+          <Typography variant="body2" sx={{ color: 'text.primary', mt: 1 }}>
             State: {isSimPlaying ? 'Playing' : 'Paused'} | Speed: {simSpeedMultiplier}x | Mode: {locomotionMode} | Loop: {simLoop ? 'On' : 'Off'}
           </Typography>
         </Box>
@@ -590,12 +590,12 @@ export const SimulationConfigPanel: React.FC = () => {
 
         {/* UI Design Testing */}
         <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, color: '#fff' }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
             UI Design Testing
           </Typography>
           {/* Appearance (Light/Dark) */}
           <Box sx={{ ml: 2, mb: 2 }}>
-            <Typography variant="body2" sx={{ mb: 0.5, color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>
+            <Typography variant="body2" sx={{ mb: 0.5, color: 'text.primary', fontWeight: 600, fontSize: '0.9rem' }}>
               Appearance
             </Typography>
             <ToggleButtonGroup
@@ -609,10 +609,10 @@ export const SimulationConfigPanel: React.FC = () => {
               fullWidth
               sx={{ gap: 1, mb: 1 }}
             >
-              <ToggleButton value="light" aria-label="Light Mode" sx={{ color: '#fff', borderRadius: 2 }}>
+              <ToggleButton value="light" aria-label="Light Mode" sx={{ color: 'text.primary', borderRadius: 2 }}>
                 Light
               </ToggleButton>
-              <ToggleButton value="dark" aria-label="Dark Mode" sx={{ color: '#fff', borderRadius: 2 }}>
+              <ToggleButton value="dark" aria-label="Dark Mode" sx={{ color: 'text.primary', borderRadius: 2 }}>
                 Dark
               </ToggleButton>
             </ToggleButtonGroup>
@@ -623,10 +623,10 @@ export const SimulationConfigPanel: React.FC = () => {
           
           {/* Nav View Section */}
           <Box sx={{ ml: 2, mb: 2 }}>
-            <Typography variant="body2" sx={{ mb: 0.5, color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>
+            <Typography variant="body2" sx={{ mb: 0.5, color: 'text.primary', fontWeight: 600, fontSize: '0.9rem' }}>
               Nav View
             </Typography>
-            <Typography variant="body2" sx={{ mb: 1, color: '#ccc', fontSize: '0.8rem' }}>
+            <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary', fontSize: '0.8rem' }}>
               Middle Card Design
             </Typography>
             <ToggleButtonGroup
@@ -645,7 +645,7 @@ export const SimulationConfigPanel: React.FC = () => {
                 value="default"
                 aria-label="Default Design"
                 sx={{
-                  color: '#fff',
+                  color: 'text.primary',
                   borderColor: '#9c27b0',
                   borderRadius: 2,
                   '&.Mui-selected': {
@@ -680,7 +680,7 @@ export const SimulationConfigPanel: React.FC = () => {
                 value="v2"
                 aria-label="Design V2"
                 sx={{
-                  color: '#fff',
+                  color: 'text.primary',
                   borderColor: '#9c27b0',
                   borderRadius: 2,
                   '&.Mui-selected': {
@@ -715,7 +715,7 @@ export const SimulationConfigPanel: React.FC = () => {
                 value="v3"
                 aria-label="Design V3"
                 sx={{
-                  color: '#fff',
+                  color: 'text.primary',
                   borderColor: '#9c27b0',
                   borderRadius: 2,
                   '&.Mui-selected': {

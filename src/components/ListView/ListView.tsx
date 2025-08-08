@@ -517,7 +517,7 @@ export const ListView: React.FC<ListViewProps> = ({
                                 ) : (
                                   <PlaceIcon sx={{ color: 'primary.main', fontSize: 20 }} />
                                 )}
-                                <Typography component="span" variant="subtitle1" sx={{ color: 'white' }}>
+                                <Typography component="span" variant="subtitle1" sx={{ color: 'text.primary' }}>
                                   {poi.title.rendered}
                                 </Typography>
                               </Box>

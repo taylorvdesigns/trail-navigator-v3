@@ -19,7 +19,7 @@ export function createMuiThemeFromConfig(
       }
     : {
         mode: 'light',
-        primary: { main: '#2E7D32' },
+        primary: { main: '#cf3100' },
         secondary: { main: '#1565C0' },
         warning: { main: '#FB8C00' },
         text: { primary: '#111111', secondary: '#4B5563' },

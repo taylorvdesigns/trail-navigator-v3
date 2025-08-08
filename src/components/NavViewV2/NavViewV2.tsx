@@ -18,6 +18,8 @@ import Split from 'react-split';
 import { determineTrailHeading, getEndpointNameForHeading } from '../../utils/trailHeading';
 import './NavViewV2.css';
 import { useTrailColors } from '../../hooks/useTrailColors';
+import { useTheme as useMuiTheme } from '@mui/material/styles';
+import { useColorToken } from '../../hooks/useColorToken';
 
 
 // Component loaded
@@ -349,6 +351,8 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   // Get trail graph for network distance calculations
   const { graph } = useTrailGraph();
   const getTrailColor = useTrailColors();
+  const muiTheme = useMuiTheme();
+  const getToken = useColorToken();
   
   // Get user location and entry point data
   const { entryPoint, currentLocation, previousLocation, simDirection, isSimulationMode } = useLocation();
@@ -759,50 +763,55 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
       if (connectedTrail) {
         stopColor = getTrailColor(connectedTrail.id, connectedTrail.color);
       }
-      // Render junction with special background and text/line/circle color
+      // Render junction with special background.
+      // Light mode: white content; Dark mode: content matches background for subtle contrast
+      const junctionContentColor = (muiTheme as any).palette?.mode === 'dark'
+        ? (muiTheme as any).palette?.background?.default || '#23272a'
+        : '#fff';
+      // Render junction pill
       return (
-        <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333`, background: stopColor, borderRadius: 8 }}>
+        <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid ${(muiTheme as any).palette.divider}`, background: stopColor, borderRadius: 8 }}>
           {/* Distance (left) */}
           <StopCol width={36} direction="column">
-            <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+            <Typography variant="caption" sx={{ lineHeight: 1, fontWeight: 500, color: junctionContentColor }}>
               {metrics.distanceMiles !== null ? metrics.distanceMiles.toFixed(1) : '--'}
             </Typography>
-            <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em' }}>
+            <Typography variant="caption" sx={{ lineHeight: 1, fontSize: '0.75em', color: junctionContentColor }}>
               mi
             </Typography>
           </StopCol>
           {/* Subway line & dot (center) */}
           <StopCol width={36} sx={{ position: 'relative', minHeight: 52 }}>
-            <SubwayLine color={'#242424'} />
-            <StopMarker color={'#242424'} sx={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' }} />
+            <SubwayLine color={junctionContentColor} />
+            <StopMarker color={junctionContentColor} sx={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' }} />
           </StopCol>
           {/* ETA (right of line) */}
           <StopCol width={36} direction="column">
             {metrics.etaMinutes !== null && metrics.etaMinutes >= 60 ? (
               <>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
-                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  <Typography variant="caption" sx={{ lineHeight: 1, fontWeight: 500, color: junctionContentColor }}>
                     {Math.floor(Math.round(metrics.etaMinutes) / 60)}
                   </Typography>
-                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                  <Typography variant="caption" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5, color: junctionContentColor }}>
                     hr
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
-                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                  <Typography variant="caption" sx={{ lineHeight: 1, fontWeight: 500, color: junctionContentColor }}>
                     {Math.round(metrics.etaMinutes) % 60}
                   </Typography>
-                  <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                  <Typography variant="caption" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5, color: junctionContentColor }}>
                     min
                   </Typography>
                 </Box>
               </>
             ) : (
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
-                <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontWeight: 500 }}>
+                <Typography variant="caption" sx={{ lineHeight: 1, fontWeight: 500, color: junctionContentColor }}>
                   {metrics.etaMinutes !== null ? Math.round(metrics.etaMinutes) : '--'}
                 </Typography>
-                <Typography variant="caption" color="#242424" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5 }}>
+                <Typography variant="caption" sx={{ lineHeight: 1, fontSize: '0.75em', ml: 0.5, color: junctionContentColor }}>
                   min
                 </Typography>
               </Box>
@@ -814,7 +823,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               variant="subtitle1" 
               sx={{ 
                 fontWeight: 600, 
-                color: '#242424', 
+                color: junctionContentColor, 
                 fontSize: '0.8rem',
                 cursor: 'default',
               }}
@@ -850,7 +859,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 }
               }}
             >
-              <FontAwesomeIcon icon={faCircleArrowRight} style={{ color: '#242424', fontSize: 18 }} />
+              <FontAwesomeIcon icon={faCircleArrowRight} style={{ color: junctionContentColor, fontSize: 18 }} />
             </Box>
           )}
         </StopRow>
@@ -860,7 +869,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     // Special rendering for entry point with distinctive pin icon and styling
     if (stop.type === 'entry') {
       return (
-        <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333` }}>
+        <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid ${(muiTheme as any).palette.divider}` }}>
           {/* Distance from user to entry point (left column) */}
           <StopCol width={36} direction="column">
             <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
@@ -873,7 +882,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
           {/* Trail line with centered pin icon (center column) */}
           <StopCol width={36} sx={{ position: 'relative', minHeight: 52 }}>
             <SubwayLine color={stopColor} />
-            {/* Pin icon in circle with trail color background and dark border */}
+            {/* Pin icon in circle with trail color background and outline */}
             <Box sx={{ 
               left: '50%', 
               top: '50%', 
@@ -886,12 +895,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               height: 28,
               backgroundColor: stopColor,
               borderRadius: '50%',
-              border: '2px solid #242424',
+              border: (muiTheme as any).palette.mode === 'light' ? '2px solid #fff' : '2px solid #242424',
             }}>
               <FontAwesomeIcon 
                 icon={faMapPin} 
                 style={{ 
-                  color: '#242424', 
+                  color: (muiTheme as any).palette.mode === 'light' ? '#fff' : '#242424', 
                   fontSize: '16px'
                 }} 
               />
@@ -934,13 +943,14 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             <Box
               sx={{
                 backgroundColor: stopColor,
-                color: '#242424',
+                color: (muiTheme as any).palette.mode === 'light' ? '#fff' : getToken('entryPillText', '#242424'),
                 borderRadius: '12px',
                 padding: '4px 12px',
                 display: 'inline-block',
                 fontWeight: 600,
                 fontSize: '0.75rem',
                 cursor: 'default',
+                border: (muiTheme as any).palette.mode === 'light' ? '2px solid #fff' : `2px solid ${getToken('entryPillText', '#242424')}`,
               }}
             >
               {stop.name}
@@ -951,10 +961,13 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     }
 
     if (stop.type === 'endpoint') {
+      const endpointContentColor = (muiTheme as any).palette?.mode === 'light'
+        ? '#fff'
+        : getToken('endpointPillText', '#242424');
       return (
         <Box key={stop.id} sx={{ position: 'relative', pt: 0, pb: 1 }}>
-          <TrailEndCard color={stopColor} sx={{ background: stopColor, color: '#242424', borderRadius: 50, display: 'flex', alignItems: 'center', padding: '0.5em 1.5em' }}>
-            <TrailEndMarker color={'#242424'} />
+          <TrailEndCard elevation={0} color={stopColor} sx={{ background: stopColor, color: endpointContentColor, borderRadius: 50, display: 'flex', alignItems: 'center', padding: '0.5em 1.5em', boxShadow: 'none' }}>
+            <TrailEndMarker color={endpointContentColor} />
             <Box sx={{ width: 180, flex: 1, minWidth: 0 }}>
               <Typography 
                 variant="body2" 
@@ -965,7 +978,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  color: '#242424',
+                  color: endpointContentColor, 
                   fontWeight: 700
                 }}
               >
@@ -978,7 +991,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
     }
 
     return (
-      <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid #333` }}>
+      <StopRow key={stop.id} sx={{ borderBottom: isLast ? 'none' : `1px solid ${(muiTheme as any).palette.divider}` }}>
         {/* Distance (left) */}
         <StopCol width={36} direction="column">
           <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1, fontWeight: 500 }}>
@@ -1181,7 +1194,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
 
 
   return (
-    <div ref={containerRef} style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#23272a', minHeight: 0, flex: 1 }}>
+    <div ref={containerRef} style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0, flex: 1, background: (muiTheme as any).palette?.background?.default || undefined as any }}>
       {aheadHeight < MAX_AHEAD_HEIGHT ? (
         // Sticky mode: ahead section natural height, middle directly below, behind fills rest
         <>

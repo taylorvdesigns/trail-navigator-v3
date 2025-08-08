@@ -29,6 +29,8 @@ import L from 'leaflet';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import { LocationContext } from '../../contexts/LocationContext';
 import { GrayscaleMapLayer } from './GrayscaleMapLayer';
+import { useTrailColors } from '../../hooks/useTrailColors';
+import { useTheme as useMuiTheme } from '@mui/material/styles';
 import { useTrailsData } from '../../hooks/useTrailsData';
 import { useTrailJunctions } from '../../hooks/useTrailJunctions';
 import { useTrailGraph } from '../../hooks/useTrailGraph';
@@ -780,13 +782,15 @@ export const MapView: React.FC<MapViewProps> = ({
   };
 
   // Map POI id to assigned trail color
+  const getTrailColor = useTrailColors();
+  const muiTheme = useMuiTheme();
   const poiTrailColorMap = useMemo(() => {
     if (!pois || !trailsData) return {};
     const assignments = assignPOIsToTrails(pois, trailsData, 100);
     const colorMap: Record<string, string> = {};
     for (const [trailId, poisForTrail] of Array.from(assignments.entries())) {
       const trail = trailsData.find(t => t.id === trailId);
-      const color = trail?.color || '#43D633'; // default to green
+      const color = getTrailColor(trail?.id, trail?.color || '#43D633');
       for (const poi of poisForTrail) {
         colorMap[poi.id] = color;
       }
@@ -881,15 +885,17 @@ export const MapView: React.FC<MapViewProps> = ({
           top: 16,
           right: 16,
           zIndex: 1000,
-          bgcolor: 'rgba(0, 0, 0, 0.8)',
+          bgcolor: (theme) => theme.palette.mode === 'light' ? theme.palette.background.paper : 'rgba(0, 0, 0, 0.8)',
           borderRadius: 2,
           p: 1,
           display: 'flex',
           alignItems: 'center',
           gap: 1,
-          color: 'white',
+          color: (theme) => theme.palette.text.primary,
           fontSize: '12px',
           fontWeight: 500,
+          border: (theme) => theme.palette.mode === 'light' ? `1px solid ${theme.palette.divider}` : 'none',
+          boxShadow: (theme) => theme.palette.mode === 'light' ? '0 2px 6px rgba(0,0,0,0.15)' : 'none',
         }}
       >
         <Box
@@ -905,7 +911,7 @@ export const MapView: React.FC<MapViewProps> = ({
             type="checkbox"
             checked={showPOIGroupLabels}
             onChange={(e) => setShowPOIGroupLabels(e.target.checked)}
-            style={{ margin: 0 }}
+            style={{ margin: 0, accentColor: (muiTheme as any).palette.primary.main }}
           />
           Hub Names
         </Box>
@@ -982,7 +988,9 @@ export const MapView: React.FC<MapViewProps> = ({
         zoomControl={true}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url={(muiTheme as any).palette.mode === 'light'
+            ? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+            : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           eventHandlers={{
             loading: () => {},
@@ -990,7 +998,7 @@ export const MapView: React.FC<MapViewProps> = ({
             tileerror: (e: any) => {},
           }}
         />
-        <GrayscaleMapLayer />
+        {(muiTheme as any).palette.mode === 'dark' && <GrayscaleMapLayer />}
         <Pane name="group-labels" style={{ zIndex: 1000 }} />
         <Pane name="selected-poi" style={{ zIndex: 9999 }} />
         {/* Initial bounds fitting is handled in whenReady callback to avoid conflicts */}
@@ -1089,7 +1097,7 @@ export const MapView: React.FC<MapViewProps> = ({
             key={`trail-${index}`}
             positions={trail.coordinates || []}
             pathOptions={{
-              color: trail.color || '#1e90ff',
+              color: getTrailColor(trail.id, trail.color || (muiTheme as any).palette.primary.main),
               weight: 4,
               opacity: 0.8
             }}
@@ -1425,7 +1433,9 @@ export const MapView: React.FC<MapViewProps> = ({
           const isLabelHighlighted = labelHighlightedPOI && labelHighlightedPOI.id === poi.id;
           
           // Use trail color for marker, or #242424 if label is highlighted or POI is selected
-          const markerColor = (isLabelHighlighted || isSelected || isMapViewSelected) ? '#242424' : (poiTrailColorMap[poi.id] || '#43D633');
+          const markerColor = (isLabelHighlighted || isSelected || isMapViewSelected)
+            ? '#242424'
+            : (poiTrailColorMap[poi.id] || (muiTheme as any).palette.primary.main);
           
           // Get marker size based on zoom level
           const markerSize = getMarkerSize(isHighlighted, currentZoom);
@@ -1435,7 +1445,7 @@ export const MapView: React.FC<MapViewProps> = ({
           const categoryIcon = getCategoryIcon(poi);
           
           // Create marker HTML with category icon if available and zoomed in
-          let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? '#e53935' : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
+          let markerHtml = `<div style='width:${markerSize}px;height:${markerSize}px;background:${isHighlighted ? (muiTheme as any).palette.error.main : markerColor};border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.18);`;
           
           // POI icon rendering based on zoom level and category data availability
           
@@ -1521,8 +1531,8 @@ export const MapView: React.FC<MapViewProps> = ({
                     iconSize: [1, 1], // Small size to avoid visual marker
                     iconAnchor: [0.5, 0], // Center horizontally, anchor at top
                     html: `<div style="
-                      background: ${labelHighlightedPOI && labelHighlightedPOI.id === poi.id ? '#f0f0f0' : 'white'};
-                      color: #333;
+                      background: ${labelHighlightedPOI && labelHighlightedPOI.id === poi.id ? '#f0f0f0' : '#fff'};
+                      color: ${(muiTheme as any).palette.text.primary};
                       padding: 4px 8px;
                       border-radius: 4px;
                       font-size: 12px;
