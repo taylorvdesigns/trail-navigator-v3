@@ -3,7 +3,7 @@ import { Box, Paper, Typography, styled } from '@mui/material';
 import { LocomotionMode, Stop, TrailConfig, POI, TrailPoint } from '../../types';
 import { Junction, getNavViewSplitData } from '../../utils/navViewSplit';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightLong, faMapPin } from '@fortawesome/free-solid-svg-icons';
+import { faRightLong, faMapPin, faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 import { useNavViewV3 } from '../../hooks/useNavViewV3';
 import { useLocation } from '../../contexts/LocationContext';
@@ -219,7 +219,7 @@ const SplitView: React.FC<SplitViewProps> = ({
             width: leftColWidth,
             minWidth: 0,
             zIndex: 2,
-            display: 'block',
+            display: 'flex',
             alignSelf: 'stretch', // force stretch
             height: 'auto', // allow to grow with content
             // border: '3px solid green', // DEBUG
@@ -227,7 +227,15 @@ const SplitView: React.FC<SplitViewProps> = ({
           onClick={onLeftClick}
           {...(leftSwipeHandlers || {})}
         >
-          {leftContent}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: leftAlign === 'flex-end' ? 'flex-end' : (leftAlign === 'center' ? 'center' : 'flex-start'),
+            height: '100%',
+            position: 'relative'
+          }}>
+            {leftContent}
+          </div>
         </div>
         <div
           ref={rightColRef}
@@ -249,7 +257,7 @@ const SplitView: React.FC<SplitViewProps> = ({
           <div style={{ 
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: rightAlign === 'flex-end' ? 'flex-end' : 'flex-start',
+            justifyContent: rightAlign === 'flex-end' ? 'flex-end' : (rightAlign === 'center' ? 'center' : 'flex-start'),
             height: '100%',
             position: 'relative'
           }}>
@@ -596,30 +604,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const stickyMiddleSectionRef = useRef<HTMLDivElement>(null);
   const stickyNavContextCardRef = useRef<HTMLDivElement>(null);
 
-  React.useLayoutEffect(() => {
-    // Split/drag mode
-    if (
-      splitPaneRef.current &&
-      middleSectionRef.current &&
-      navContextCardRef.current
-    ) {
-      // Check if any element is wider than viewport
-      const viewportWidth = window.innerWidth;
-      const splitPaneWidth = splitPaneRef.current.offsetWidth;
-      const middleSectionWidth = middleSectionRef.current.offsetWidth;
-      const navContextCardWidth = navContextCardRef.current.offsetWidth;
-      
-      if (splitPaneWidth > viewportWidth) {
-        console.warn('DEBUG (split): Split pane is wider than viewport!', { splitPaneWidth, viewportWidth });
-      }
-      if (middleSectionWidth > viewportWidth) {
-        console.warn('DEBUG (split): Middle section is wider than viewport!', { middleSectionWidth, viewportWidth });
-      }
-      if (navContextCardWidth > viewportWidth) {
-        console.warn('DEBUG (split): NavContextCard is wider than viewport!', { navContextCardWidth, viewportWidth });
-      }
-    }
-  }, [aheadHeight]);
+  // Removed temporary layout debug warnings
 
   /**
    * Calculates and stores the precise network distance from entry point to user's current location
@@ -631,6 +616,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   // Sliding split view state for ahead and behind
   const [aheadFocus, setAheadFocus] = useState<'left' | 'right'>('left');
   const [behindFocus, setBehindFocus] = useState<'left' | 'right'>('left');
+
+  // Helper: determine if the center junction pill should show the arrow
+  const shouldShowJunctionArrow = (splitData: ReturnType<typeof getNavViewSplitData>): boolean => {
+    // Show the arrow whenever a junctionStop is detected (i.e., split logic is triggered)
+    return !!splitData.junctionStop;
+  };
 
   // Preserve sliding state when split data changes but still exists
   // Only reset when split view disappears entirely
@@ -658,12 +649,18 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
   const handleAheadRight = () => {
     setAheadFocus('right');
   };
+  const toggleAheadRight = () => {
+    setAheadFocus(prev => (prev === 'right' ? 'left' : 'right'));
+  };
   // Swipe/tap handlers for behind split
   const handleBehindLeft = () => {
     setBehindFocus('left');
   };
   const handleBehindRight = () => {
     setBehindFocus('right');
+  };
+  const toggleBehindRight = () => {
+    setBehindFocus(prev => (prev === 'right' ? 'left' : 'right'));
   };
 
   // Close button handlers for split views
@@ -745,7 +742,12 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
    * @param isLast - Whether this is the last stop in the list
    * @returns JSX element for the stop
    */
-  const renderStop = (stop: Stop, color?: string, isLast: boolean = false) => {
+  const renderStop = (
+    stop: Stop,
+    color?: string,
+    isLast: boolean = false,
+    opts?: { onJunctionRightClick?: () => void; showJunctionArrow?: boolean }
+  ) => {
     let stopColor = color || activeTrail.color;
     const metrics = stopMetricsMap[stop.id] || { distanceMiles: null, etaMinutes: null };
     // For junctions, use the color of the trail it connects to (not the current trail)
@@ -805,7 +807,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
             )}
           </StopCol>
           {/* POI Name (rightmost, flexes) */}
-          <StopCol sx={{ flex: 1, justifyContent: 'flex-start', pl: 1 }}>
+          <StopCol sx={{ flex: 1, justifyContent: 'flex-start', pl: 1, pr: 4 }}>
             <Typography 
               variant="subtitle1" 
               sx={{ 
@@ -819,6 +821,36 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
               {stop.metadata.groupCount && ` (${stop.metadata.groupCount})`}
             </Typography>
           </StopCol>
+          {/* Right-side arrow icon inside the junction pill (single-column only) */}
+          {opts?.showJunctionArrow && (
+            <Box
+              onClick={(e) => {
+                e.stopPropagation();
+                opts?.onJunctionRightClick && opts.onJunctionRightClick();
+              }}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                zIndex: 3
+              }}
+              aria-label="View right branch"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  opts?.onJunctionRightClick && opts.onJunctionRightClick();
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faCircleArrowRight} style={{ color: '#242424', fontSize: 18 }} />
+            </Box>
+          )}
         </StopRow>
       );
     }
@@ -1036,12 +1068,17 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
    * @param color - Optional color override for all stops in the list
    * @returns Array of JSX elements for the stops
    */
-  const renderStopList = (stops: Stop[], color?: string) => {
+  const renderStopList = (
+    stops: Stop[],
+    color?: string
+  ) => {
     const listColor = color || activeTrail.color;
     
 
     
-    return stops.map((stop, index) => renderStop(stop, listColor, index === stops.length - 1));
+    return stops.map((stop, index) =>
+      renderStop(stop, listColor, index === stops.length - 1)
+    );
   };
   
   /**
@@ -1174,7 +1211,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 <SplitView
                   leftContent={renderStopList(aheadSplitData.leftBranch?.stops.slice().reverse() || [], aheadSplitData.leftBranch?.color)}
                   rightContent={renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
-                  leftAlign="flex-start"
+                  leftAlign="flex-end"
                   rightAlign="flex-end"
                   rightColWidth="calc(50% - 0px)"
                   leftColWidth="calc(50% - 85px)"
@@ -1187,8 +1224,19 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                   onClose={handleAheadClose}
                 />
               )}
-              {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
-              {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
+              {(() => {
+                const showArrow = shouldShowJunctionArrow(aheadSplitData);
+                return aheadSplitData.junctionStop && renderStop(
+                  aheadSplitData.junctionStop,
+                  activeTrail.color,
+                  false,
+                  { onJunctionRightClick: toggleAheadRight, showJunctionArrow: showArrow }
+                );
+              })()}
+              {renderStopList(
+                aheadSplitData.beforeJunction.slice().reverse(),
+                activeTrail.color
+              )}
             </div>
             {/* Middle Section - Current Location (Unified) */}
             <div ref={stickyMiddleSectionRef} style={{ 
@@ -1246,8 +1294,19 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                 Behind You
               </SectionHeader> */}
               {/* Sliding split view for behind */}
-              {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
-              {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
+              {renderStopList(
+                behindSplitData.beforeJunction,
+                activeTrail.color
+              )}
+              {(() => {
+                const showArrow = shouldShowJunctionArrow(behindSplitData);
+                return behindSplitData.junctionStop && renderStop(
+                  behindSplitData.junctionStop,
+                  activeTrail.color,
+                  false,
+                  { onJunctionRightClick: toggleBehindRight, showJunctionArrow: showArrow }
+                );
+              })()}
               {(behindSplitData.leftBranch || behindSplitData.rightBranch) ? (
                 <div style={{ width: '100%' }}>
 
@@ -1312,7 +1371,7 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                   <SplitView
                     leftContent={renderStopList(aheadSplitData.leftBranch?.stops.slice().reverse() || [], aheadSplitData.leftBranch?.color)}
                     rightContent={renderStopList(aheadSplitData.rightBranch?.stops.slice().reverse() || [], aheadSplitData.rightBranch?.color)}
-                    leftAlign="flex-start"
+                    leftAlign="flex-end"
                     rightAlign="flex-end"
                     rightColWidth="calc(50% - 0px)"
                     leftColWidth="calc(50% - 85px)"
@@ -1325,8 +1384,19 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     onClose={handleAheadClose}
                   />
                 )}
-                {aheadSplitData.junctionStop && renderStop(aheadSplitData.junctionStop, activeTrail.color)}
-                {renderStopList(aheadSplitData.beforeJunction.slice().reverse(), activeTrail.color)}
+                {(() => {
+                  const showArrow = shouldShowJunctionArrow(aheadSplitData);
+                  return aheadSplitData.junctionStop && renderStop(
+                    aheadSplitData.junctionStop,
+                    activeTrail.color,
+                    false,
+                    { onJunctionRightClick: toggleAheadRight, showJunctionArrow: showArrow }
+                  );
+                })()}
+                {renderStopList(
+                  aheadSplitData.beforeJunction.slice().reverse(),
+                  activeTrail.color
+                )}
               </div>
               {/* Middle + Behind Section */}
               <div ref={middleSectionRef} style={{
@@ -1413,8 +1483,19 @@ export const NavViewV2: React.FC<NavViewV2Props> = ({
                     Behind You
                   </SectionHeader> */}
                   {/* Sliding split view for behind */}
-                  {renderStopList(behindSplitData.beforeJunction, activeTrail.color)}
-                  {behindSplitData.junctionStop && renderStop(behindSplitData.junctionStop, activeTrail.color)}
+                  {renderStopList(
+                    behindSplitData.beforeJunction,
+                    activeTrail.color
+                  )}
+                  {(() => {
+                    const showArrow = shouldShowJunctionArrow(behindSplitData);
+                    return behindSplitData.junctionStop && renderStop(
+                      behindSplitData.junctionStop,
+                      activeTrail.color,
+                      false,
+                      { onJunctionRightClick: toggleBehindRight, showJunctionArrow: showArrow }
+                    );
+                  })()}
                   {(behindSplitData.leftBranch || behindSplitData.rightBranch) && (
                     <div style={{ width: '100%' }}>
                       <SplitView

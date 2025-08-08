@@ -46,6 +46,41 @@ export function getNavViewSplitData(
   junctionId?: string,
   simDirection?: 'top' | 'bottom'
 ): NavViewSplitData {
+  /**
+   * Move endpoint stops to the bottom of a branch list while preserving
+   * the relative order of non-endpoint items. Keeps columns intuitive.
+   */
+  const moveEndpointsLast = (stops: Stop[]): Stop[] => {
+    const nonEndpoints = stops.filter(s => s.type !== 'endpoint');
+    const endpoints = stops.filter(s => s.type === 'endpoint');
+    return [...nonEndpoints, ...endpoints];
+  };
+
+  /**
+   * Sort a branch's stops by their along-trail proximity to the junction
+   * that anchors the split, using the junction's along-trail distance on
+   * the branch. Falls back to original order if distances are unavailable.
+   */
+  const sortByProximityToBranchJunction = (
+    stops: Stop[],
+    junction: Junction | null,
+    branchTrailId: string,
+    allStopsList: Stop[]
+  ): Stop[] => {
+    if (!junction) return stops;
+    const branchJunctionStop = allStopsList.find(
+      s => s.type === 'junction' && s.id === `junction-${junction.id}-${branchTrailId}`
+    );
+    const branchJxnDist = branchJunctionStop?.metadata.distance ?? null;
+    if (branchJxnDist === null) return stops;
+    const sorted = stops.slice().sort((a, b) => {
+      const da = Math.abs((a.metadata.distance || 0) - branchJxnDist);
+      const db = Math.abs((b.metadata.distance || 0) - branchJxnDist);
+      return da - db;
+    });
+    return sorted;
+  };
+
   // STEP 1: Find the junction either by ID or by searching nearby stops
   let junctionIndex = -1;
   let foundJunction: Junction | null = null;
@@ -142,15 +177,19 @@ export function getNavViewSplitData(
 
 
         if (left.length > 0) {
+          // Keep order from junction outward; ensure endpoints last
+          const leftOrdered = moveEndpointsLast(left);
           leftBranch = {
-            stops: left,
+            stops: leftOrdered,
             name: `Left on ${otherTrailConfig?.name || 'Trail'}`,
             color: otherTrailConfig?.color || '#808080'
           };
         }
         if (right.length > 0) {
+          // Keep order from junction outward; ensure endpoints last
+          const rightOrdered = moveEndpointsLast(right);
           rightBranch = {
-            stops: right,
+            stops: rightOrdered,
             name: `Right on ${otherTrailConfig?.name || 'Trail'}`,
             color: otherTrailConfig?.color || '#808080'
           };
@@ -198,9 +237,18 @@ export function getNavViewSplitData(
         
         // Filter out junction stops from the branch trail to avoid duplication in the right column
         const branchStopsWithoutJunctions = branchTrailStops.filter(s => s.type !== 'junction');
-        
+
+        // Reorder by proximity to the junction, then move endpoints to the end
+        const proximityOrdered = sortByProximityToBranchJunction(
+          branchStopsWithoutJunctions,
+          foundJunction,
+          turnPathTrailId,
+          allStops
+        );
+        const finalBranchStops = moveEndpointsLast(proximityOrdered);
+
         rightBranch = {
-          stops: branchStopsWithoutJunctions,
+          stops: finalBranchStops,
           name: `View ${turnTrailConfig?.name || 'Branch'}`,
           color: turnTrailConfig?.color || '#808080'
         };
