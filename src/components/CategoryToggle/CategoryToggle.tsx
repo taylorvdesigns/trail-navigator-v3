@@ -117,23 +117,23 @@ export const CategoryToggle: React.FC = () => {
                 borderRadius: '4px !important', // 2px rounded corners (4px = 2px in Material-UI)
                 border: 'none !important',
                 '&.Mui-selected': {
-                  bgcolor: 'white',
-                  color: '#63686e',
+                  bgcolor: 'background.default',
+                  color: 'text.primary',
                   '&:hover': {
-                    bgcolor: '#f5f5f5'
+                    bgcolor: 'action.hover'
                   },
                   '& .MuiSvgIcon-root, & svg': {
-                    color: '#63686e !important'
+                    color: 'text.primary !important'
                   }
                 },
                 '&:not(.Mui-selected)': {
-                  bgcolor: '#63686e',
-                  color: 'white',
+                  bgcolor: 'grey.600',
+                  color: 'common.white',
                   '&:hover': {
-                    bgcolor: '#7a7f85'
+                    bgcolor: 'grey.700'
                   },
                   '& .MuiSvgIcon-root, & svg': {
-                    color: 'white !important'
+                    color: 'common.white !important'
                   }
                 }
               }}

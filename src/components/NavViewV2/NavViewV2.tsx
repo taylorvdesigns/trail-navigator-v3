@@ -180,7 +180,7 @@ const SplitView: React.FC<SplitViewProps> = ({
   const rightColRef = useRef<HTMLDivElement>(null);
   const rightContentRef = useRef<HTMLDivElement>(null);
   const [rightContentHeight, setRightContentHeight] = useState<number>(0);
-  
+  const muiTheme = useMuiTheme();
 
 
   // Measure the right content height
@@ -282,16 +282,18 @@ const SplitView: React.FC<SplitViewProps> = ({
                   bottom: rightAlign === 'flex-end' ? '10px' : 'auto',
                   height: rightContentHeight > 0 ? `${rightContentHeight}px` : 'auto',
                   width: 40,
-                  background: '#35393d',
+                  background: muiTheme.palette.mode === 'light' ? muiTheme.palette.background.paper : '#35393d',
                   border: 'none',
                   borderRadius: 3,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  outline: 'none',
+                  boxShadow: 'none',
                   opacity: 0.9,
                   transition: 'opacity 0.2s',
-                  color: 'white',
+                  color: muiTheme.palette.mode === 'light' ? muiTheme.palette.text.primary : 'white',
                   fontSize: '2rem',
                   fontWeight: 700
                 }}
@@ -299,7 +301,7 @@ const SplitView: React.FC<SplitViewProps> = ({
                 onMouseLeave={e => (e.currentTarget.style.opacity = '0.9')}
                 aria-label="Close right column"
               >
-                <FontAwesomeIcon icon={faRightLong} style={{ color: '#23272a', marginLeft: -11 }} />
+                <FontAwesomeIcon icon={faRightLong} style={{ color: muiTheme.palette.background.default, marginLeft: -11 }} />
               </button>
             )}
           </div>

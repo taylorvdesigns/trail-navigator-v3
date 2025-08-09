@@ -128,18 +128,20 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
         }
       }}
       PaperProps={{
-        sx: {
-          bgcolor: 'grey.900',
-          color: 'common.white',
-          zIndex: 9999999
-        }
+        sx: (theme) => ({
+          bgcolor: 'background.paper',
+          color: 'text.primary',
+          zIndex: 9999999,
+          border: `1px solid ${theme.palette.divider}`,
+          boxShadow: 6
+        })
       }}
     >
-      <DialogTitle sx={{ pr: 6, textAlign: 'center', fontWeight: 700, fontSize: '1.3rem' }}>
+      <DialogTitle sx={{ pr: 6, textAlign: 'center', fontWeight: 700, fontSize: '1.3rem', color: 'text.primary' }}>
         {details?.name || poiName}
         <IconButton
           onClick={onClose}
-          sx={{ position: 'absolute', right: 8, top: 8, color: 'common.white' }}
+          sx={{ position: 'absolute', right: 8, top: 8, color: 'text.secondary' }}
         >
           <CloseIcon />
         </IconButton>
@@ -283,7 +285,7 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
             {details.reviews && details.reviews.length > 0 && (
               <Box>
                 <Typography variant="subtitle1" sx={{ mb: 1 }}>Recent Reviews</Typography>
-                {details.reviews.map((review, index) => {
+            {details.reviews.map((review, index) => {
                   // Handle new API text structure
                   const reviewText = typeof review.text === 'string' 
                     ? review.text 
@@ -296,14 +298,14 @@ export const GooglePlacesModal: React.FC<GooglePlacesModalProps> = ({
                   const timeDescription = review.relative_time_description || review.relativePublishTimeDescription || '';
                   
                   return (
-                    <Box key={index} sx={{ mb: 2, p: 2, bgcolor: 'grey.800', borderRadius: 1 }}>
+                <Box key={index} sx={{ mb: 2, p: 2, bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.100' : 'grey.800'), borderRadius: 1 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                         <Rating value={review.rating} readOnly size="small" />
                         <Typography variant="body2" color="text.secondary">
                           by {authorName} • {timeDescription}
                         </Typography>
                       </Box>
-                      <Typography variant="body2">
+                  <Typography variant="body2" color="text.primary">
                         {reviewText.length > 200 
                           ? `${reviewText.substring(0, 200)}...` 
                           : reviewText

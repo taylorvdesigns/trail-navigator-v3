@@ -99,7 +99,7 @@ export const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({
               left: '10px',
               right: '10px',
               height: drawerHeight,
-              bgcolor: '#242424',
+              bgcolor: 'background.paper',
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
               borderTop: `2px solid ${theme.palette.divider}`,

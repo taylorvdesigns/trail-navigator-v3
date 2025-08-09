@@ -41,6 +41,67 @@ export const findNearestTrailPoint = (
 };
 
 /**
+ * Find the nearest point on a trail polyline (considers line segments, not only vertices)
+ * Returns the closest point on the polyline with planar approximation, sufficient for short distances
+ */
+export const findNearestPointOnPolyline = (
+  location: [number, number],
+  trailPoints: TrailPoint[]
+): { point: { latitude: number; longitude: number }; distance: number; index: number; t: number } | null => {
+  if (!trailPoints.length) return null;
+
+  // Convert lat/lon to approximate planar meters using equirectangular projection
+  const R = 6371e3;
+  const toXY = (lat: number, lon: number, refLat: number) => {
+    const rad = Math.PI / 180;
+    const x = R * (lon * rad) * Math.cos(refLat * rad);
+    const y = R * (lat * rad);
+    return { x, y };
+  };
+
+  const { latitude: lat0Guess } = trailPoints[0];
+  const refLat = lat0Guess;
+  const p = toXY(location[0], location[1], refLat);
+
+  let minDist = Infinity;
+  let bestPoint = { latitude: trailPoints[0].latitude, longitude: trailPoints[0].longitude };
+  let bestIndex = 0;
+  let bestT = 0;
+
+  for (let i = 0; i < trailPoints.length - 1; i++) {
+    const a = trailPoints[i];
+    const b = trailPoints[i + 1];
+    const aXY = toXY(a.latitude, a.longitude, refLat);
+    const bXY = toXY(b.latitude, b.longitude, refLat);
+
+    const abx = bXY.x - aXY.x;
+    const aby = bXY.y - aXY.y;
+    const apx = p.x - aXY.x;
+    const apy = p.y - aXY.y;
+
+    const abLen2 = abx * abx + aby * aby;
+    const t = abLen2 === 0 ? 0 : Math.max(0, Math.min(1, (apx * abx + apy * aby) / abLen2));
+    const cx = aXY.x + t * abx;
+    const cy = aXY.y + t * aby;
+    const dx = p.x - cx;
+    const dy = p.y - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < minDist) {
+      minDist = dist;
+      bestIndex = i;
+      bestT = t;
+      // Convert back to lat/lon approximately
+      const lon = (cx / (R * Math.cos(refLat * (Math.PI / 180)))) / (Math.PI / 180);
+      const lat = (cy / R) / (Math.PI / 180);
+      bestPoint = { latitude: lat, longitude: lon };
+    }
+  }
+
+  return { point: bestPoint, distance: minDist, index: bestIndex, t: bestT };
+};
+
+/**
  * Calculate the distance between two points using the Haversine formula
  */
 export const calculateDistance = (

@@ -38,6 +38,7 @@ import { useTrailGraph } from '../../hooks/useTrailGraph';
 import { useUser } from '../../contexts/UserContext';
 import * as mapUtils from 'utils/mapUtils';
 import { assignPOIsToTrails } from '../../utils/poi';
+import { findNearestPointOnPolyline, calculateDistance } from '../../utils/trail';
 import { useContext } from 'react';
 import { slugToTagName } from '../../utils/poi';
 import { haversine } from '../../utils/distance';
@@ -786,12 +787,63 @@ export const MapView: React.FC<MapViewProps> = ({
   const muiTheme = useMuiTheme();
   const poiTrailColorMap = useMemo(() => {
     if (!pois || !trailsData) return {};
-    const assignments = assignPOIsToTrails(pois, trailsData, 100);
+    // Use a more robust nearest computation projecting to the closest polyline segment
+    const assignments = new Map<string, POI[]>();
+    for (const trail of trailsData) {
+      assignments.set(trail.id, []);
+    }
+
+    const proximityThresholdMeters = 120; // slightly more forgiving near junction areas
+    const poiAssignedTrail: Record<string, string> = {};
+    for (const poi of pois) {
+      if (!poi.coordinates) continue;
+      let bestTrailId: string | null = null;
+      let bestDist = Infinity;
+      for (const trail of trailsData) {
+        const res = findNearestPointOnPolyline([poi.coordinates[1], poi.coordinates[0]], trail.points || []);
+        if (res && res.distance < bestDist) {
+          bestDist = res.distance;
+          bestTrailId = trail.id;
+        }
+      }
+      if (bestTrailId && bestDist <= proximityThresholdMeters) {
+        assignments.get(bestTrailId)!.push(poi);
+        poiAssignedTrail[poi.id] = bestTrailId;
+      }
+    }
     const colorMap: Record<string, string> = {};
     for (const [trailId, poisForTrail] of Array.from(assignments.entries())) {
       const trail = trailsData.find(t => t.id === trailId);
       const color = getTrailColor(trail?.id, trail?.color || '#43D633');
       for (const poi of poisForTrail) {
+        colorMap[poi.id] = color;
+      }
+    }
+
+    // Fallback: for POIs not assigned to any trail, borrow the closest assigned POI's trail
+    const neighborFallbackMeters = 250;
+    const assignedPois = pois.filter(p => poiAssignedTrail[p.id]);
+    const unassignedPois = pois.filter(p => !poiAssignedTrail[p.id]);
+
+    for (const poi of unassignedPois) {
+      if (!poi.coordinates) continue;
+      const [lon, lat] = [poi.coordinates[0], poi.coordinates[1]];
+      // Prefer neighbors that share at least one tag
+      const poiTags = new Set((poi.post_tags || []).map((t: any) => t.name));
+      let nearest: { d: number; trailId: string } | null = null;
+      for (const neighbor of assignedPois) {
+        if (!neighbor.coordinates) continue;
+        const sharesTag = neighbor.post_tags?.some((t: any) => poiTags.has(t.name));
+        // Slight preference if shares tag by scaling distance
+        const weight = sharesTag ? 0.8 : 1.0;
+        const d = weight * calculateDistance(lat, lon, neighbor.coordinates[1], neighbor.coordinates[0]);
+        if (!nearest || d < nearest.d) {
+          nearest = { d, trailId: poiAssignedTrail[neighbor.id] };
+        }
+      }
+      if (nearest && nearest.d <= neighborFallbackMeters) {
+        const trail = trailsData.find(t => t.id === nearest!.trailId);
+        const color = getTrailColor(trail?.id, trail?.color || '#43D633');
         colorMap[poi.id] = color;
       }
     }

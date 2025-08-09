@@ -99,9 +99,9 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
           borderRadius: 3,
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-          background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-          border: '1px solid #333'
+          boxShadow: 6,
+          backgroundColor: 'background.paper',
+          border: theme => `1px solid ${theme.palette.divider}`
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -110,7 +110,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
           position: 'relative', 
           p: 3, 
           pb: 2,
-          borderBottom: '1px solid #333'
+          borderBottom: theme => `1px solid ${theme.palette.divider}`
         }}>
           <Button
             onClick={onClose}
@@ -120,10 +120,10 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
               right: 12,
               minWidth: 'auto',
               p: 1,
-              color: '#999',
+              color: theme => theme.palette.text.secondary,
               '&:hover': {
-                color: '#fff',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                color: theme => theme.palette.text.primary,
+                backgroundColor: theme => theme.palette.action.hover
               }
             }}
           >
@@ -134,7 +134,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
             sx={{ 
               textAlign: 'left', 
               fontWeight: '600',
-              color: '#fff',
+              color: 'text.primary',
               fontSize: '1.1rem',
               lineHeight: 1.3,
               pr: 4 // Space for close button
@@ -148,7 +148,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
               variant="body2" 
               sx={{ 
                 textAlign: 'left', 
-                color: '#999',
+                color: 'text.secondary',
                 fontSize: '0.85rem',
                 fontWeight: '400',
                 mt: 0.5,
@@ -166,15 +166,15 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
             textAlign: 'center', 
             mb: 3,
             p: 2,
-            backgroundColor: 'rgba(25, 118, 210, 0.1)',
+            backgroundColor: theme => (theme.palette.mode === 'light' ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.06)'),
             borderRadius: 2,
-            border: '1px solid rgba(25, 118, 210, 0.3)'
+            border: theme => `1px solid ${theme.palette.divider}`
           }}>
             <Typography 
               variant="h4" 
               sx={{ 
                 fontWeight: '700', 
-                color: '#1976d2',
+                color: 'primary.main',
                 fontSize: '1.8rem',
                 mb: 0.5
               }}
@@ -187,7 +187,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
             <Typography 
               variant="body2" 
               sx={{ 
-                color: '#999',
+                color: 'text.secondary',
                 fontSize: '0.9rem',
                 fontWeight: '500'
               }}
@@ -201,7 +201,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
             <Typography 
               variant="subtitle2" 
               sx={{ 
-                color: '#ccc',
+                color: 'text.secondary',
                 mb: 2,
                 fontWeight: '600',
                 fontSize: '0.9rem',
@@ -218,8 +218,8 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
               mb: 2.5,
               p: 1.5,
               borderRadius: 1.5,
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
+              backgroundColor: theme => (theme.palette.mode === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)'),
+              border: theme => `1px solid ${theme.palette.divider}`
             }}>
               <FontAwesomeIcon 
                 icon={faPersonWalking} 
@@ -230,7 +230,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
                   width: 20
                 }} 
               />
-              <Typography variant="body1" sx={{ color: '#fff', fontWeight: '500' }}>
+              <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: '500' }}>
                 {formatETA(distanceAndTimes.walkingTime)} walking
               </Typography>
             </Box>
@@ -241,8 +241,8 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
               mb: 2.5,
               p: 1.5,
               borderRadius: 1.5,
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
+              backgroundColor: theme => (theme.palette.mode === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)'),
+              border: theme => `1px solid ${theme.palette.divider}`
             }}>
               <FontAwesomeIcon 
                 icon={faPersonRunning} 
@@ -253,7 +253,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
                   width: 20
                 }} 
               />
-              <Typography variant="body1" sx={{ color: '#fff', fontWeight: '500' }}>
+              <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: '500' }}>
                 {formatETA(distanceAndTimes.runningTime)} running
               </Typography>
             </Box>
@@ -263,8 +263,8 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
               alignItems: 'center',
               p: 1.5,
               borderRadius: 1.5,
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
+              backgroundColor: theme => (theme.palette.mode === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)'),
+              border: theme => `1px solid ${theme.palette.divider}`
             }}>
               <FontAwesomeIcon 
                 icon={faPersonBiking} 
@@ -275,7 +275,7 @@ export const POIDistanceModal: React.FC<POIDistanceModalProps> = ({
                   width: 20
                 }} 
               />
-              <Typography variant="body1" sx={{ color: '#fff', fontWeight: '500' }}>
+              <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: '500' }}>
                 {formatETA(distanceAndTimes.bikingTime)} biking
               </Typography>
             </Box>
